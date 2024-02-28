@@ -1,8 +1,6 @@
 // navigation/TabNavigator.js
 import React from 'react';
-import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Feather, MaterialCommunityIcons, MaterialIcons, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
 import TabBarIcon from '@components/TabBarIcon';
 import { HomeScreen, CartScreen, CategoriesScreen, MyOrdersScreen, ProfileScreen } from '@screens';
 const Tab = createBottomTabNavigator();
