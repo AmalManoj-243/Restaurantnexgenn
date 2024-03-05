@@ -19,7 +19,7 @@ const COLORS = {
   black: '#000',
   lightBlack: '#151718', // Consider renaming to maintain consistency
   blue: '#5D5FEE',
-  appTheme: '#2e294e',
+  primaryThemeColor: '#2e294e',
   orange: '#F37021'
 };
 
@@ -68,7 +68,7 @@ const BUTTON_SIZE = {
 };
 
 // Default export: THEME object containing all theme-related constants
-const THEME = {
+export {
   FONT_FAMILY,
   COLORS,
   FONT_SIZE,
@@ -79,5 +79,5 @@ const THEME = {
   SIZE
 };
 
-export default THEME;
+// export default THEME;
 

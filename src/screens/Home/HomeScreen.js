@@ -1,21 +1,19 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { View, Image, Dimensions, TouchableOpacity, StyleSheet, Platform, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import THEME from '@constants/theme';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 import Text from '@components/Text';
-import CarouselPagination from '@components/Home/CarouselPagination';
+import { CarouselPagination, ImageContainer, ListHeader } from '@components/Home';
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { fetchProducts } from '@api/services/generalApi';
 import ProductsList from './ProductLIst';
-import { FlashList } from '@shopify/flash-list';
+
 const { width, height } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
 
   const [products, setProducts] = useState([]);
   const [offset, setOffset] = useState(0);
-  console.log("🚀 ~ HomeScreen ~ offset:", offset)
-  // const bottomSheetRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
@@ -26,7 +24,7 @@ const HomeScreen = ({ navigation }) => {
   const fetchInitialProducts = async () => {
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset: 0, limit: 10 });
+      const fetchedProducts = await fetchProducts({ offset: 0, limit: 20 });
       setProducts(fetchedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -54,19 +52,17 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+
   const formatData = (dataList, numColumns) => {
-    const totalRows = Math.ceil(dataList.length / numColumns);
-    const totalItems = totalRows * numColumns;
-
+    const totalRows = Math.ceil(dataList.length / numColumns); //total rows = 20/3 = 7
+    const totalItems = totalRows * numColumns; //total items = 7 * 3 = 21
     const formattedData = [...dataList];
-
     if (dataList.length < totalItems) {
-      const emptyItemCount = totalItems - dataList.length;
+      const emptyItemCount = totalItems - dataList.length; // empty items count = 21 - 20
       for (let i = 0; i < emptyItemCount; i++) {
-        formattedData.push({ name: 'blank', empty: true });
+        formattedData.push({ key: 'blank', empty: true });
       }
     }
-
     return formattedData;
   };
 
@@ -81,25 +77,18 @@ const HomeScreen = ({ navigation }) => {
     )
   }
 
-
-
-
-
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
   };
 
   // Define different snap points based on screen height
   const snapPoints = useMemo(() => {
-    if (height < 800) {
-      return ["45%", "83%"];
-    } else {
-      return ["50%", "85%"];
-    }
+    return height < 800 ? ["45%", "83%"] : ["50%", "85%"];
   }, [height]);
 
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: THEME.COLORS.appTheme }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primaryThemeColor }}>
       <View style={{ flex: 1, backgroundColor: 'white', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
 
         {/* Header */}
@@ -114,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
             <Image source={require('@assets/images/Home/Header/search.png')} style={{ width: 20, height: 20 }} tintColor="white" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Options')}>
-            <Text style={{ color: 'white', fontFamily: THEME.FONT_FAMILY.urbanistLight }}>What are you looking for ?</Text>
+            <Text style={{ color: 'white', fontFamily: FONT_FAMILY.urbanistLight }}>What are you looking for ?</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Scanner')}>
             <Image source={require('@assets/images/Home/Header/barcode_scanner.png')} style={{ width: 20, height: 20 }} tintColor="white" />
@@ -133,20 +122,19 @@ const HomeScreen = ({ navigation }) => {
 
         {/* Bottom sheet */}
         <BottomSheet snapPoints={snapPoints}>
-          {/* <View style={{
-              flex: 1,
-              alignItems: "center",
-            }}>
-            </View> */}
+          {/* Product list header */}
+          <ListHeader title="Products" />
+          {/* flatlist */}
           <BottomSheetFlatList
             data={formatData(products, 3)}
+            numColumns={3}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={styles.listContainer}
-            // onEndReached={fetchMoreProducts}
-            onEndReachedThreshold={0.1} // Adjust the threshold as needed
+            contentContainerStyle={{ paddingBottom: '25%' }}
+            onEndReached={fetchMoreProducts}
+            showsVerticalScrollIndicator={false}
+            onEndReachedThreshold={0.1} 
             ListFooterComponent={loading && <ActivityIndicator size="large" color="#0000ff" />}
-            numColumns={3}
           />
         </BottomSheet>
       </View>
@@ -154,42 +142,9 @@ const HomeScreen = ({ navigation }) => {
   );
 }
 
-const ImageContainer = ({ source, onPress, backgroundColor, title }) => (
-  <View style={styles.imageContainer}>
-    <Image source={source} style={styles.image} />
-    <TouchableOpacity style={[styles.buttonContainer, { backgroundColor }]} onPress={onPress}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
-  </View>
-);
+
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    height: 100,
-    width: width * 0.3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'black',
-    borderWidth: 0.5,
-    borderRadius: 10
-  },
-  image: {
-    width: width * 0.25,
-    height: width * 0.11,
-    resizeMode: 'contain',
-  },
-  buttonContainer: {
-    width: '85%',
-    paddingVertical: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    // marginVertical:5
-    marginTop: 5,
-  },
-  buttonText: {
-    color: THEME.COLORS.white,
-    fontFamily: THEME.FONT_FAMILY.urbanistBold
-  },
   itemInvisible: {
     backgroundColor: 'transparent',
   },

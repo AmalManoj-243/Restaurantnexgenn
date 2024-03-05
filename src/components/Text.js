@@ -1,4 +1,4 @@
-import THEME from '@constants/theme';
+import { FONT_FAMILY } from '@constants/theme';
 import React from 'react';
 import { Text as RNText, StyleSheet } from 'react-native';
 
@@ -8,7 +8,7 @@ const Text = ({ style, fontFamily, children }) => {
 
 const styles = StyleSheet.create({
   defaultText: {
-   fontFamily: THEME.FONT_FAMILY.urbanistMedium
+   fontFamily: FONT_FAMILY.urbanistMedium
   },
 });
 

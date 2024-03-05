@@ -1,4 +1,5 @@
 import React from 'react';
+import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
@@ -8,9 +9,16 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'; // Import
 import StackNavigator from '@navigation/StackNavigator';
 
 export default function App() {
+
+  LogBox.ignoreLogs(["new NativeEventEmitter"]);
+  LogBox.ignoreAllLogs();
+
+  LogBox.ignoreLogs([
+    "Non-serializable values were found in the navigation state",
+  ]);
+
   return (
-    
-    <GestureHandlerRootView style={{flex:1}}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <SafeAreaProvider>
           <BottomSheetModalProvider>

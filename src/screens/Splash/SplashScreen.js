@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Text, LogBox } from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
-import THEME from '@constants/theme';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 
 const SplashScreen = () => {
-
-    LogBox.ignoreLogs(["new NativeEventEmitter"]);
-LogBox.ignoreAllLogs();
-
-
-  LogBox.ignoreLogs([
-    "Non-serializable values were found in the navigation state",
-  ]);
 
     const navigation = useNavigation();
     const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -74,8 +66,8 @@ const styles = StyleSheet.create({
     versionText: {
         fontSize: 16,
         marginTop: 20,
-        color: THEME.COLORS.orange,
-        fontFamily: THEME.FONT_FAMILY.urbanistMedium,
+        color: COLORS.orange,
+        fontFamily: FONT_FAMILY.urbanistMedium,
     },
 });
 

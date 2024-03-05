@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     paginationDot: {
-        // width: 12,
         height: 8,
         borderRadius: 4,
         marginHorizontal: 6,

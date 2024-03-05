@@ -1,12 +1,11 @@
 // components/TabBarIcon.js
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import THEME from '@constants/theme';
-
+import { COLORS, FONT_FAMILY, SIZE, FONT_SIZE, ICON_SIZE, BORDER_RADIUS } from '@constants/theme';
 const TabBarIcon = ({ iconComponent, label, focused }) => (
   <View style={styles.container}>
-    <View style={[styles.iconContainer, { backgroundColor: focused ? THEME.COLORS.white : THEME.COLORS.appTheme }]}>
-      <Image source={iconComponent} style={styles.icon} tintColor={focused ? THEME.COLORS.lightBlack : THEME.COLORS.white} />
+    <View style={[styles.iconContainer, { backgroundColor: focused ? COLORS.white : COLORS.primaryThemeColor }]}>
+      <Image source={iconComponent} style={styles.icon} tintColor={focused ? COLORS.lightBlack : COLORS.white} />
     </View>
     <Text style={styles.label}>{label}</Text>
   </View>
@@ -20,18 +19,18 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: THEME.SIZE.widthMedium,
-    height: THEME.SIZE.tabIconHeight,
-    borderRadius: THEME.BORDER_RADIUS.iconRadius,
+    width: SIZE.widthMedium,
+    height: SIZE.tabIconHeight,
+    borderRadius: BORDER_RADIUS.iconRadius,
   },
   icon: {
-    width: THEME.ICON_SIZE.small,
-    height: THEME.ICON_SIZE.small,
+    width: ICON_SIZE.small,
+    height: ICON_SIZE.small,
   },
   label: {
-    color: THEME.COLORS.white,
-    fontSize: THEME.FONT_SIZE.small,
-    fontFamily: THEME.FONT_FAMILY.urbanistMedium,
+    color: COLORS.white,
+    fontSize: FONT_SIZE.small,
+    fontFamily: FONT_FAMILY.urbanistMedium,
   },
 });
 
