@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Text from '@components/Text';
-import { COLORS } from '@constants/theme';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 
 const ProductsList = ({ item, onPress }) => {
 
@@ -28,12 +28,12 @@ const ProductsList = ({ item, onPress }) => {
                 onLoad={() => setImageLoading(false)}
                 onError={() => setImageLoading(false)}
             />
-            <View style={{ paddingTop: 50 }}></View>
+            <View style={{ paddingTop: 50 }} />
             <View style={styles.textContainer}>
                 <Text style={styles.name}>{truncatedName}</Text>
             </View>
-            <View style={[styles.bottomBar, { backgroundColor:COLORS.orange }]}>
-            <Text style={styles.price}>Price:{item?.portal_price}{' '}AED</Text>
+            <View style={[styles.bottomBar, { backgroundColor: COLORS.white }]}>
+                <Text style={styles.price}>PRICE{' '}:{' '}{item?.portal_price}{' '}AED</Text>
             </View>
         </TouchableOpacity>
     );
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 10,
         marginTop: 5,
-        // borderColor: '#F37021',
+        borderColor: 'grey',
         backgroundColor: "white",
     },
     image: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        bottom: -50,
+        bottom: -60,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -77,12 +77,12 @@ const styles = StyleSheet.create({
     },
     price: {
         fontSize: 12,
-        color: '#fff',
-        fontFamily: 'Urbanist-Bold',
+        color: 'grey',
+        fontFamily: FONT_FAMILY.urbanistRegular,
     },
     bottomBar: {
         position: 'absolute',
-        bottom: 0,
+        bottom: 10,
         left: 0,
         right: 0,
         paddingVertical: 5,

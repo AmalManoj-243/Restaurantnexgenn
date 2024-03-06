@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { View, Dimensions, StyleSheet, ActivityIndicator } from 'react-native';
-import { CarouselPagination, ImageContainer, ListHeader, Header, NavigationHeader } from '@components/Home';
+import { CarouselPagination, ImageContainer, ListHeader, Header, NavigationBar } from '@components/Home';
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { fetchProducts } from '@api/services/generalApi';
 import { CommonContainer } from '@components/common';
@@ -90,9 +90,9 @@ const HomeScreen = ({ navigation }) => {
       {/* Header */}
       <Header />
       {/* Navigation Header */}
-      <NavigationHeader
+      <NavigationBar
         onSearchPress={() => navigation.navigate('')}
-        onOptionsPress={() => navigation.navigate('')}
+        onOptionsPress={() => navigation.navigate('OptionsScreen')}
         onScannerPress={() => navigation.navigate('')}
       />
       {/* Carousel */}

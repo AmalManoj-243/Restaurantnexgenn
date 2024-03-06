@@ -20,7 +20,9 @@ const COLORS = {
   lightBlack: '#151718', // Consider renaming to maintain consistency
   blue: '#5D5FEE',
   primaryThemeColor: '#2e294e',
-  orange: '#F37021'
+  orange: '#F37021',
+  lightGrey: '	#D3D3D3',
+  grey: '#F0F0F0'
 };
 
 // sizes

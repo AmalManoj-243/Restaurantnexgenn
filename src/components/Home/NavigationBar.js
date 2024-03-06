@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { FONT_FAMILY } from '@constants/theme';
 import Text from '@components/Text';
 
-const NavigationHeader = ({ onSearchPress, onOptionsPress, onScannerPress }) => {
+const NavigationBar = ({ onSearchPress, onOptionsPress, onScannerPress }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onSearchPress}>
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NavigationHeader;
+export default NavigationBar;
