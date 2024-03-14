@@ -1,8 +1,9 @@
 // src/navigation/StackNavigator.js
+
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppNavigator from "./AppNavigator";
-import { SplashScreen } from "@screens";
+import { ProductsScreen, SplashScreen } from "@screens";
 import { OptionsScreen } from "@screens/Home/Options";
 
 const Stack = createNativeStackNavigator();
@@ -10,14 +11,13 @@ const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Splash">
-
-      {/*-----------------------------------> SPLASH SCREEN <--------------------------------- */}
+      {/* Splash Screen */}
       <Stack.Screen
         name="Splash"
         component={SplashScreen}
         options={{ headerShown: false }}
       />
-
+      {/* App Navigator - Bottom Tabs */}
       <Stack.Screen
         name="AppNavigator"
         component={AppNavigator}
@@ -27,6 +27,12 @@ const StackNavigator = () => {
       <Stack.Screen
         name="OptionsScreen"
         component={OptionsScreen}
+        options={{ headerShown: false }}
+      />
+      {/* Products */}
+      <Stack.Screen
+        name="Products"
+        component={ProductsScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

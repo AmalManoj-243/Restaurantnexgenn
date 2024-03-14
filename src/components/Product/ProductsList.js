@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Text from '@components/Text';
-import { COLORS, FONT_FAMILY } from '@constants/theme';
+import { FONT_FAMILY } from '@constants/theme';
 
 const ProductsList = ({ item, onPress }) => {
 

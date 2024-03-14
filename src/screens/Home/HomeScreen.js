@@ -5,7 +5,7 @@ import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { fetchProducts } from '@api/services/generalApi';
 import { ProductsList } from '@components/Product';
 import { RoundedContainer, SafeAreaView } from '@components/containers';
-
+import { formatData } from '@utils/formatters';
 
 const { height } = Dimensions.get('window');
 
@@ -50,21 +50,6 @@ const HomeScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
-
-
-  const formatData = (dataList, numColumns) => {
-    const totalRows = Math.ceil(dataList.length / numColumns); //total rows = 20/3 = 7
-    const totalItems = totalRows * numColumns; //total items = 7 * 3 = 21
-    const formattedData = [...dataList];
-    if (dataList.length < totalItems) {
-      const emptyItemCount = totalItems - dataList.length; // empty items count = 21 - 20
-      for (let i = 0; i < emptyItemCount; i++) {
-        formattedData.push({ key: 'blank', empty: true });
-      }
-    }
-    return formattedData;
-  };
-
 
   const renderItem = ({ item }) => {
     if (item.empty) {

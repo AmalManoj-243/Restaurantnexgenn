@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList } from 'react-native'
-import NavigationHeader from '@components/Header/NavigationHeader'
+import { NavigationHeader } from '@components/Header';
 import { RoundedContainer, SafeAreaView } from '@components/containers'
 import { ListItem } from '@components/Options';
 
