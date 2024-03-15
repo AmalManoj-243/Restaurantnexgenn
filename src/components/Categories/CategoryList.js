@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Text from '@components/Text';
 import { FONT_FAMILY } from '@constants/theme';
 
-const ProductsList = ({ item, onPress, showPrice }) => {
-
-    const textContainerPosition = showPrice ? -60 : -80
+const CategoryList = ({ item, onPress }) => {
 
     const errorImage = require('@assets/images/error/error.png');
     useEffect(() => {
@@ -34,14 +32,11 @@ const ProductsList = ({ item, onPress, showPrice }) => {
             <View style={[styles.textContainer, { bottom: textContainerPosition }]}>
                 <Text style={styles.name}>{truncatedName}</Text>
             </View>
-            {showPrice && <View style={[styles.bottomBar, { backgroundColor: 'transparent' }]}>
-                <Text style={styles.price}>Price{' '}:{' '}{item?.portal_price}{' '}AED</Text>
-            </View>}
         </TouchableOpacity>
     );
 };
 
-export default ProductsList;
+export default CategoryList;
 
 const styles = StyleSheet.create({
     container: {
@@ -66,7 +61,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        // bottom: -60,
+        bottom: -80,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -76,21 +71,5 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
         color: '#2E2B2B',
         fontFamily: FONT_FAMILY.urbanistBold
-    },
-    price: {
-        fontSize: 12,
-        color: 'grey',
-        fontFamily: FONT_FAMILY.urbanistBold,
-    },
-    bottomBar: {
-        position: 'absolute',
-        bottom: 8,
-        left: 0,
-        right: 0,
-        paddingVertical: 5,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });

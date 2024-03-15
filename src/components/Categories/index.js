@@ -1,2 +1,2 @@
-import ProductsList from "./CategoriesList";
-export { ProductsList }
+import CategoryList from "./CategoryList";
+export { CategoryList }
