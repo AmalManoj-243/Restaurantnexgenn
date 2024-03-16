@@ -1,5 +1,5 @@
-import { View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Text from '@components/Text';
 import { FONT_FAMILY } from '@constants/theme';
 
@@ -17,7 +17,7 @@ const CategoryList = ({ item, onPress }) => {
 
     const [imageLoading, setImageLoading] = useState(true);
     const truncatedName =
-        item?.product_name?.length > 15 ? item?.product_name?.substring(0, 14) + '...' : item?.product_name;
+        item?.category_name?.length > 15 ? item?.category_name?.substring(0, 14) + '...' : item?.category_name;
 
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
@@ -29,7 +29,7 @@ const CategoryList = ({ item, onPress }) => {
                 onError={() => setImageLoading(false)}
             />
             <View style={{ paddingTop: 50 }} />
-            <View style={[styles.textContainer, { bottom: textContainerPosition }]}>
+            <View style={styles.textContainer}>
                 <Text style={styles.name}>{truncatedName}</Text>
             </View>
         </TouchableOpacity>

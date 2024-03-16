@@ -1,22 +1,37 @@
 // api/services/generalApi.js
+
 import { get } from "./utils";
 import { API_ENDPOINTS } from "./endpoints";
 import handleApiError from "../utils/handleApiError";
 
 export const fetchProducts = async ({ offset, limit, categoryId, searchText }) => {
   try {
-    const params = {
+    const queryParams = {
       product_name: searchText,
       offset,
       limit,
+      ...(categoryId !== undefined && { category_id: categoryId }),
     };
-    if (categoryId !== undefined) {
-      params.category_id = categoryId;
-    }
-    const response = await get(API_ENDPOINTS.VIEW_PRODUCTS, params);
+    // console.log("🚀 ~ fetchProducts ~ queryParams:", queryParams)
+    const response = await get(API_ENDPOINTS.VIEW_PRODUCTS, queryParams);
     return response.data;
   } catch (error) {
     handleApiError(error);
-    throw error; 
+    throw error;
+  }
+};
+
+export const fetchCategories = async ({ offset, limit, searchText }) => {
+  try {
+    const queryParams = {
+      category_name: searchText,
+      offset,
+      limit,
+    };
+    const response = await get(API_ENDPOINTS.VIEW_CATEGORIES, queryParams);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
   }
 };

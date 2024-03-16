@@ -11,7 +11,10 @@ import { RoundedContainer, SafeAreaView, SearchContainer } from '@components/con
 import { debounce } from 'lodash';
 import styles from './styles';
 
-const ProductsScreen = ({ navigation }) => {
+const ProductsScreen = ({ navigation, route }) => {
+
+  const categoryId = route?.params?.id
+
   const [products, setProducts] = useState([]);
   const [offset, setOffset] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -24,7 +27,7 @@ const ProductsScreen = ({ navigation }) => {
       setOffset(0);
       setProducts([]);
       fetchInitialProducts();
-    }, [searchText])
+    }, [searchText, categoryId])
   );
 
   useEffect(() => {
@@ -37,7 +40,11 @@ const ProductsScreen = ({ navigation }) => {
     console.log('Fetch initial products');
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset: 0, limit: 20, searchText });
+      const params = { offset: 0, limit: 20, searchText };
+      if (categoryId) {
+        params.categoryId = categoryId;
+      }
+      const fetchedProducts = await fetchProducts(params);
       setProducts(fetchedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -51,7 +58,11 @@ const ProductsScreen = ({ navigation }) => {
     if (loading || allDataLoaded) return;
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset, limit: 20, searchText });
+      const params = { offset, limit: 20, searchText };
+      if (categoryId) {
+        params.categoryId = categoryId;
+      }
+      const fetchedProducts = await fetchProducts(params);
       if (fetchedProducts.length === 0) {
         setAllDataLoaded(true);
       } else {
@@ -98,6 +109,7 @@ const ProductsScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={0.2}
           ListFooterComponent={loading && <Loader visible={loading} animationSource={require('@assets/animations/loading.json')} />}
+          estimatedItemSize={100}
         />
       </RoundedContainer>
     </SafeAreaView>

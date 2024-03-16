@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View } from 'react-native';
 import { NavigationHeader } from '@components/Header';
-import { ProductsList } from '@components/Product';
-import { fetchProducts } from '@api/services/generalApi';
+import { fetchCategories } from '@api/services/generalApi';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 import { formatData } from '@utils/formatters';
@@ -10,9 +9,12 @@ import { Loader } from '@components/Loader';
 import { RoundedContainer, SafeAreaView, SearchContainer } from '@components/containers';
 import { debounce } from 'lodash';
 import styles from './styles';
+import { CategoryList } from '@components/Categories';
+import { EmptyState } from '@components/common';
 
 const CategoriesScreen = ({ navigation }) => {
-  const [products, setProducts] = useState([]);
+
+  const [categories, setCategories] = useState([]);
   const [offset, setOffset] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,44 +24,44 @@ const CategoriesScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       setOffset(0);
-      setProducts([]);
-      fetchInitialProducts();
+      setCategories([]);
+      fetchInitialCategories();
     }, [searchText])
   );
 
   useEffect(() => {
     if (isFocused) {
-      fetchInitialProducts();
+      fetchInitialCategories();
     }
   }, [isFocused]);
 
-  const fetchInitialProducts = useCallback(async () => {
-    console.log('Fetch initial products');
+  const fetchInitialCategories = useCallback(async () => {
+    console.log('Fetch initial categories');
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset: 0, limit: 20, searchText });
-      setProducts(fetchedProducts);
+      const fetchedCategories = await fetchCategories({ offset: 0, limit: 20, searchText });
+      setCategories(fetchedCategories);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching categories:', error);
     } finally {
       setLoading(false);
     }
   }, [searchText]);
 
-  const fetchMoreProducts = async () => {
-    console.log('Fetch more products');
+  const fetchAdditionalCategories = async () => {
+    console.log('Fetch more categories');
     if (loading || allDataLoaded) return;
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset, limit: 20, searchText });
-      if (fetchedProducts.length === 0) {
+      const fetchedCategories = await fetchCategories({ offset, limit: 20, searchText });
+      if (fetchedCategories.length === 0) {
         setAllDataLoaded(true);
       } else {
-        setProducts([...products, ...fetchedProducts]);
+        setCategories([...categories, ...fetchedCategories]);
         setOffset(offset + 1);
       }
     } catch (error) {
-      console.error('Error fetching more products:', error);
+      console.error('Error fetching more categories:', error);
     } finally {
       setLoading(false);
     }
@@ -80,25 +82,33 @@ const CategoriesScreen = ({ navigation }) => {
     if (item.empty) {
       return <View style={[styles.itemStyle, styles.itemInvisible]} />;
     }
-    return <ProductsList item={item} onPress={() => console.log('Product selected:', item)} />;
+    return <CategoryList item={item} onPress={() => navigation.navigate('Products', { id: item._id })} />;
   };
+
+  const renderEmptyState = () => (
+    <EmptyState imageSource={require('@assets/images/EmptyData/empty_data.png')} message={'No Items Found'} />
+  );
+
+  const renderContent = () => (
+    <FlashList
+      data={formatData(categories, 3)}
+      numColumns={3}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+      contentContainerStyle={{ padding: 10, paddingBottom: 100 }}
+      onEndReached={fetchAdditionalCategories}
+      showsVerticalScrollIndicator={false}
+      onEndReachedThreshold={0.2}
+      ListFooterComponent={loading && <Loader visible={loading} animationSource={require('@assets/animations/loading.json')} />}
+    />
+  );
 
   return (
     <SafeAreaView>
       <NavigationHeader title="Categories" onBackPress={() => navigation.goBack()} />
       <SearchContainer placeholder="Search Categories" onChangeText={handleSearchTextChange} />
       <RoundedContainer>
-        <FlashList
-          data={formatData(products, 3)}
-          numColumns={3}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ padding: 10, paddingBottom: 50 }}
-          onEndReached={fetchMoreProducts}
-          showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={0.2}
-          ListFooterComponent={loading && <Loader visible={loading} animationSource={require('@assets/animations/loading_up_down.json')} />}
-        />
+        {categories.length === 0 ? renderEmptyState() : renderContent()}
       </RoundedContainer>
     </SafeAreaView>
   );
