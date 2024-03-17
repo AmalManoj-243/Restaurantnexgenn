@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppNavigator from "./AppNavigator";
 import { ProductsScreen, SplashScreen } from "@screens";
 import { OptionsScreen } from "@screens/Home/Options";
+import { TaskManagerScreen } from "@screens/Home/Options/TaskManager";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,11 @@ const StackNavigator = () => {
       <Stack.Screen
         name="OptionsScreen"
         component={OptionsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TaskManagerScreen"
+        component={TaskManagerScreen}
         options={{ headerShown: false }}
       />
       {/* Products */}
