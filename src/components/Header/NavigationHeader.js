@@ -4,16 +4,19 @@ import Text from '@components/Text';
 import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { AntDesign } from '@expo/vector-icons';
 
-const NavigationHeader = ({ title, onBackPress }) => {
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={onBackPress} style={styles.goBackContainer}>
-            <AntDesign name="left" size={20} color="white"/>
+const NavigationHeader = ({ title, onBackPress, color = COLORS.white, backgroundColor = COLORS.primaryThemeColor }) => {
 
-                {/* <Image source={require('@assets/images/header/left_arrow.png')} style={styles.arrowImage} /> */}
+    const isPrimaryTheme = backgroundColor === COLORS.primaryThemeColor;
+
+    const logoSource = isPrimaryTheme ? require('@assets/images/header/transparent_logo_header.png') : require('@assets/images/header/logo_header.png');
+
+    return (
+        <View style={[styles.container, { backgroundColor }]}>
+            <TouchableOpacity onPress={onBackPress} style={styles.goBackContainer}>
+                <AntDesign name="left" size={20} color={color} />
             </TouchableOpacity>
-            <Text style={styles.title}>{title}</Text>
-            <Image source={require('@assets/images/header/logo_header.png')} style={styles.logoImage} />
+            <Text style={[styles.title, { color }]}>{title}</Text>
+            <Image source={logoSource} style={styles.logoImage} />
         </View>
     );
 };
@@ -25,14 +28,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 10,
         paddingHorizontal: 15,
-        backgroundColor: COLORS.primaryThemeColor,
     },
     goBackContainer: {
         marginRight: 15,
     },
     title: {
-        color: COLORS.white,
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: FONT_FAMILY.urbanistBold,
         flex: 1,
         paddingLeft: 10,
@@ -40,8 +41,6 @@ const styles = StyleSheet.create({
     logoImage: {
         width: '30%',
         height: '130%',
-        // resizeMode: 'contain', // Adjust the resizeMode as needed
-        // overflow: 'hidden'
     },
 });
 

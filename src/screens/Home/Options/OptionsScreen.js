@@ -5,6 +5,7 @@ import { RoundedContainer, SafeAreaView } from '@components/containers'
 import { ListItem } from '@components/Options';
 import { formatData } from '@utils/formatters';
 import { EmptyItem } from '@components/common/empty';
+import { COLORS } from '@constants/theme';
 
 const OptionsScreen = ({ navigation }) => {
   const options =
@@ -13,7 +14,7 @@ const OptionsScreen = ({ navigation }) => {
       { title: 'Scan Barcode', image: require('@assets/images/Home/options/scan_barcode.png'), onPress: () => navigation.navigate('ScanBarcode') },
       { title: 'Product Enquiry', image: require('@assets/images/Home/options/product_enquiry.png'), onPress: () => navigation.navigate('') },
       { title: 'Purchase Requisition', image: require('@assets/images/Home/options/product_purchase_requisition.png'), onPress: () => navigation.navigate('') },
-      { title: 'Transaction Auditing', image: require('@assets/images/Home/options/transaction_auditing.png'), onPress: () => navigation.navigate('') },
+      { title: 'Transaction Auditing', image: require('@assets/images/Home/options/transaction_auditing.png'), onPress: () => navigation.navigate('AuditScreen') },
       { title: 'Task Manager', image: require('@assets/images/Home/options/task_manager.png'), onPress: () => navigation.navigate('TaskManagerScreen') },
       { title: 'Market Study', image: require('@assets/images/Home/options/market_study.png'), onPress: () => navigation.navigate('') },
       { title: 'Attendance', image: require('@assets/images/Home/options/attendance.png'), onPress: () => navigation.navigate('') },
@@ -29,12 +30,14 @@ const OptionsScreen = ({ navigation }) => {
   
 
   return (
-    <SafeAreaView>
+    <SafeAreaView backgroundColor={COLORS.white}>
       <NavigationHeader
         title="Options"
+        color={COLORS.black}
+        backgroundColor={COLORS.white}
         onBackPress={() => navigation.goBack()}
       />
-      <RoundedContainer>
+      <RoundedContainer backgroundColor={COLORS.primaryThemeColor}>
         <FlatList
           data={formatData(options, 2)}
           showsVerticalScrollIndicator={false}

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f1f1f1',
-    margin: 3,
+    margin: 5,
   },
   image: {
     width: 50,
@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   title: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: FONT_FAMILY.urbanistBold,
-    color: '#909090',
+    color: 'black',
     alignSelf: 'center'
   },
 });

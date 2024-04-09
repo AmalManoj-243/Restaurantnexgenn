@@ -4,9 +4,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { COLORS } from '@constants/theme';
 
-const RoundedContainer = ({ children }) => {
+const RoundedContainer = ({ children, backgroundColor=COLORS.white }) => {
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.white, borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
+    <View style={{ flex: 1, backgroundColor: backgroundColor, borderTopLeftRadius: 25, borderTopRightRadius: 25 }}>
       {children}
     </View>
   );
