@@ -2,10 +2,11 @@ import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { FONT_FAMILY } from '@constants/theme';
 import Text from '@components/Text';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const NavigationBar = ({ onSearchPress, onOptionsPress, onScannerPress }) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity  activeOpacity={0.8} style={styles.container} onPress={onOptionsPress}>
       <TouchableOpacity onPress={onSearchPress}>
         <Image source={require('@assets/images/Home/Header/search.png')} style={styles.icon} />
       </TouchableOpacity>
@@ -15,7 +16,7 @@ const NavigationBar = ({ onSearchPress, onOptionsPress, onScannerPress }) => {
       <TouchableOpacity onPress={onScannerPress}>
         <Image source={require('@assets/images/Home/Header/barcode_scanner.png')} style={styles.icon} />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -76,7 +76,8 @@ const InventoryDetails = ({ navigation, route }) => {
                 backgroundColor={COLORS.boxTheme}
                 onPress={() => navigation.navigate('InventoryForm', {
                   items: inventoryDetails?.items || [],
-                  boxId: inventoryDetails?._id
+                  boxId: inventoryDetails?._id,
+                  boxName: inventoryDetails?.name
                 })}
               />
             </ButtonContainer>)
@@ -89,7 +90,8 @@ const InventoryDetails = ({ navigation, route }) => {
                 backgroundColor={COLORS.boxTheme}
                 onPress={() => navigation.navigate('InventoryForm', {
                   items: inventoryDetails?.items || [],
-                  boxId: inventoryDetails?._id
+                  boxId: inventoryDetails?._id,
+                  boxName: inventoryDetails?.name
                 })}
               />
             </ButtonContainer>)

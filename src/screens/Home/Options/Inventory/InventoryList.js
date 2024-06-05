@@ -2,21 +2,24 @@ import React from 'react';
 import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import Text from '@components/Text';
 import { FONT_FAMILY } from '@constants/theme';
-// import { truncateString } from '@utils/common';
+import { formatDateTime } from '@utils/common/date';
 
 const InventoryList = ({ item, onPress }) => {
+// console.log("🚀 ~ InventoryList ~ item:", item)
 
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={styles.itemContainer}>
       <View style={styles.leftColumn}>
         <Text style={styles.head}>{item?.boxes?.name || '-'}</Text>
-        <View style={{ justifyContent: 'space-between', flexDirection: 'row', flex: 1 }}>
+        <View style={styles.rightColumn}>
           <Text style={styles.content}>{item?.reason || '-'}</Text>
           <Text style={[styles.contentRight, {color: 'red'}]}>{item?.quantity || '-'}</Text>
         </View>
-        <Text style={styles.content}>{item?.box_status || '-'}</Text>
       </View>
-      <View style={styles.rightColumn}></View>
+      <View style={styles.rightColumn}>
+        <Text style={styles.content}>Date & Time</Text>
+        <Text style={styles.contentRight}>{formatDateTime(item?.updatedAt) || '-'}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -43,8 +46,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rightColumn: {
-    flex: 1,
-    alignItems: 'flex-end',
+    justifyContent: 'space-between', 
+    flexDirection: 'row', 
+    flex: 1 
   },
   head: {
     fontFamily: FONT_FAMILY.urbanistBold,

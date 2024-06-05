@@ -26,7 +26,8 @@ const COLORS = {
   lightGrey: '#D3D3D3',
   grey: '#F0F0F0',
   listText: '#FFFFFF',
-  boxTheme: '#B56727'
+  boxTheme: '#B56727',
+  lightenBoxTheme: '#e5b288'
 };
 
 

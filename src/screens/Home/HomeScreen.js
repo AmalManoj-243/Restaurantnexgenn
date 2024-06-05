@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [backPressCount, setBackPressCount] = useState(0);
-  console.log("🚀 ~ HomeScreen ~ backPressCount:", backPressCount)
+  // console.log("🚀 ~ HomeScreen ~ backPressCount:", backPressCount)
 
   useEffect(() => {
     fetchInitialProducts();

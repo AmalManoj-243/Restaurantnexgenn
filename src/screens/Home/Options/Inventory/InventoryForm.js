@@ -23,16 +23,17 @@ import { showToastMessage } from '@components/Toast';
 import { post } from '@api/services/utils';
 import useAuthStore from '@stores/auth/authStore';
 import Toast from 'react-native-toast-message';
+import Loader from '@components/Loader/Loader';
 
 const InventoryForm = ({ navigation, route }) => {
 
-  const { items = [], boxId } = route?.params || []
+  const { items = [], boxId, boxName = '' } = route?.params || []
   const [itemsList, setItemsList] = useState(items.map(item => ({ ...item, quantity: item.quantity === 0 ? 0 : 1 })));
   const [isVisible, setIsVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [chosenItem, setChosenItem] = useState(null);
+  const [loading, setLoading] = useState(false);
   const currentUser = useAuthStore(state => state.user)
-  // console.log("🚀 ~ InventoryForm ~ currentUser:", currentUser)
 
   const [formData, setFormData] = useState({
     reason: '',
@@ -125,7 +126,7 @@ const InventoryForm = ({ navigation, route }) => {
 
   // Filter items to display only the chosen item or all items
   const displayItems = chosenItem ? [chosenItem] : itemsList;
-  console.log("🚀 ~ InventoryForm ~ chosenItem:", chosenItem)
+  // console.log("🚀 ~ InventoryForm ~ chosenItem:", chosenItem)
 
   const handleChooseItem = (item) => {
     // Toggle chosen state
@@ -170,7 +171,6 @@ const InventoryForm = ({ navigation, route }) => {
   };
 
   const handleInventoryBoxRequest = async () => {
-    console.log('hii')
     if (!formData.reason) {
       showToastMessage('Please select a reason.');
       return;
@@ -180,6 +180,7 @@ const InventoryForm = ({ navigation, route }) => {
       showToastMessage('Please choose an item.');
       return;
     }
+    setLoading(true);
 
     let itemsToSubmit = displayItems.length > 0 ? displayItems : [];
     // console.log("🚀 ~ handleInventoryBoxRequest ~ itemsToSubmit:", itemsToSubmit)
@@ -246,6 +247,8 @@ const InventoryForm = ({ navigation, route }) => {
       }
     } catch (error) {
       console.error("Error submitting request:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -417,6 +420,14 @@ const InventoryForm = ({ navigation, route }) => {
         onBackPress={() => navigation.goBack()}
       />
       <RoundedScrollContainer>
+        <Loader visible={loading} animationSource={require('@assets/animations/loading.json')} />
+        <FormInput
+          label={'Inventory Box'}
+          labelColor={COLORS.boxTheme}
+          editable={false}
+          placeholder={'Box no'}
+          value={boxName}
+        />
         <FormInput
           labelColor={COLORS.boxTheme}
           label={'Select Reasons'}
@@ -453,7 +464,7 @@ const InventoryForm = ({ navigation, route }) => {
           placeholder={'Enter remarks'}
           onChangeText={(text) => handleFieldChange('remarks', text)}
         />
-        <Button backgroundColor={COLORS.boxTheme} title={'Submit'} onPress={handleInventoryBoxRequest} />
+        <Button backgroundColor={loading ? COLORS.lightenBoxTheme : COLORS.boxTheme} title={'Submit'} disabled={loading} onPress={handleInventoryBoxRequest} />
         <View style={{ flex: 1, marginBottom: '20%' }} />
       </RoundedScrollContainer>
       {renderBottomSheet()}

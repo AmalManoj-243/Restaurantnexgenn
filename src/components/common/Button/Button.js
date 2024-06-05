@@ -8,12 +8,14 @@ const Button = ({
   color = 'white',
   onPress = () => { },
   backgroundColor = COLORS.button,
+  disabled = false,
   ...props
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
+      disabled={disabled}
       style={{
         height: 45,
         width: '100%',
