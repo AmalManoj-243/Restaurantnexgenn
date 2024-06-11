@@ -25,3 +25,15 @@ export const post = async (endpoint, data = {}, config ={}) => {
     handleApiError(error)
   }
 };
+
+
+export const put = async (endpoint, data = {}, config ={}) => {
+  try {
+    const url = `${API_BASE_URL}${endpoint}`;
+    console.log('API request:', url, 'with data:', data); 
+    const response = await axios.put(url, data, config);
+    return response.data;
+  } catch (error) {
+    handleApiError(error)
+  }
+};

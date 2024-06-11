@@ -69,13 +69,13 @@ const InventoryDetails = ({ navigation, route }) => {
         <View style={{ marginVertical: 10 }} />
         <Text style={styles.label}>Box Items</Text>
         {inventoryDetails?.items?.length === 0 ? renderEmptyState() : renderContent()}
-        {hasPermission() ? (
+        {/* {hasPermission() ? (
           <ButtonContainer>
             <Button title="Box Opening Request" backgroundColor={COLORS.boxTheme} onPress={() => setIsVisible(true)} />
           </ButtonContainer>
         ) : (
           <Text style={styles.notification}>You do not have permission to open the box request</Text>
-        )}
+        )} */}
         {/* <Button title="Box Opening Request" backgroundColor={COLORS.boxTheme} onPress={() => setIsVisible(true)} /> */}
         <CustomListModal
           isVisible={isVisible}

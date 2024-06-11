@@ -2,12 +2,13 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { View, Dimensions, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
 import { CarouselPagination, ImageContainer, ListHeader, Header, NavigationBar } from '@components/Home';
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { fetchProducts } from '@api/services/generalApi';
+import { fetchCategories } from '@api/services/generalApi';
 import { ProductsList } from '@components/Product';
 import { RoundedContainer, SafeAreaView } from '@components/containers';
 import { formatData } from '@utils/formatters';
 import { COLORS } from '@constants/theme';
 import { showToastMessage } from '@components/Toast';
+import { CategoryList } from '@components/Categories';
 
 const { height } = Dimensions.get('window');
 
@@ -59,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
   const fetchInitialProducts = async () => {
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset: 0, limit: 20 });
+      const fetchedProducts = await fetchCategories({ offset: 0, limit: 20 });
       setProducts(fetchedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -73,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
 
     setLoading(true);
     try {
-      const fetchedProducts = await fetchProducts({ offset, limit: 20 });
+      const fetchedProducts = await fetchCategories({ offset, limit: 20 });
       if (fetchedProducts.length === 0) {
         setAllDataLoaded(true);
       } else {
@@ -92,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
       return <View style={[styles.itemStyle, styles.itemInvisible]} />
     }
     return (
-      <ProductsList item={item} showPrice={true} onPress={() => navigation.navigate('ProductDetail', {detail: item})} />
+      <CategoryList item={item} onPress={() => navigation.navigate('Products', { id: item._id })} />
     )
   }
 
@@ -131,7 +132,7 @@ const HomeScreen = ({ navigation }) => {
         {/* Bottom sheet */}
         <BottomSheet snapPoints={snapPoints}>
           {/* Product list header */}
-          <ListHeader title="Products" />
+          <ListHeader title="Categories" />
           {/* flatlist */}
           <BottomSheetFlatList
             data={formatData(products, 3)}

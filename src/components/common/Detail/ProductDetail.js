@@ -16,6 +16,17 @@ const ProductDetail = ({ navigation, route }) => {
   const currentUser = useAuthStore(state => state.user);
   const warehouseId = currentUser?.warehouse?.warehouse_id || '';
 
+  // const isResponsibleOrEmployee = (inventoryDetails) => {
+  //   const responsiblePersonId = inventoryDetails?.responsible_person?._id;
+  //   const employeeIds =
+  //     inventoryDetails?.employees?.map((employee) => employee._id) || [];
+  //   return (
+  //     currentUser &&
+  //     (currentUser.related_profile._id === responsiblePersonId ||
+  //       employeeIds.includes(currentUser.related_profile._id))
+  //   );
+  // };
+
   const productDetails = async () => {
     const response = await fetchProductDetails(detail?._id);
     setDetails(response[0]);

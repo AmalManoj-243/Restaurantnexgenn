@@ -17,7 +17,8 @@ export const DROP_DOWN_API_ENDPOINTS = {
     SERVICE_RETURN: '/viewServiceReturn/service_return/service_return_dropdown',
     STOCK_TRANSFER: '/viewStockTransfer/stock_transaction/stock_transaction_dropdown',
     SERVICE: '/viewJobRegistration/job_registration/dropdown',
-    VENDOR_BILL: '/viewVendorBill/vendor_bill/vendor_bill_drop_down'
+    VENDOR_BILL: '/viewVendorBill/vendor_bill/vendor_bill_drop_down',
+    EMPLOYEE_DROPDOWN: '/viewEmployees/employee_list/employee_dropdown'
 };
 
 export const DETAIL_API_ENDPOINTS = {

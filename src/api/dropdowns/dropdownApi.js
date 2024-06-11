@@ -40,4 +40,7 @@ export const fetchVendorBillDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.VENDOR_BILL);
 };
 
+export const fetchEmployeesDropdown = async () => {
+  return fetchData(DROP_DOWN_API_ENDPOINTS.EMPLOYEE_DROPDOWN);
+};
 
