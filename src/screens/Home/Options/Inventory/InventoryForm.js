@@ -148,6 +148,7 @@ const InventoryForm = ({ navigation, route }) => {
       inventoryDetails?.items.map((item) => ({
         ...item,
         quantity: reason.id === "viewing" ? 0 : item.quantity === 0 ? 0 : 1,
+        initialQuantity: item?.quantity
       }))
     );
   }, [inventoryDetails?.items, reason.id]);

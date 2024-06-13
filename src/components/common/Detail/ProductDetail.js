@@ -3,29 +3,70 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import Text from '@components/Text';
 import { RoundedScrollContainer, SafeAreaView } from '@components/containers';
 import { NavigationHeader } from '@components/Header';
-import { FONT_FAMILY } from '@constants/theme';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { fetchInventoryDetailsByName, fetchProductDetails } from '@api/details/detailApi';
 import { showToastMessage } from '@components/Toast';
 import useAuthStore from '@stores/auth/authStore';
 import { OverlayLoader } from '@components/Loader';
+import { CustomListModal, EmployeeListModal } from '@components/Modal';
+import { reasons } from '@constants/dropdownConst';
+import { fetchEmployeesDropdown } from '@api/dropdowns/dropdownApi';
 
 const ProductDetail = ({ navigation, route }) => {
   const { detail = {} } = route?.params;
   const [details, setDetails] = useState({});
   const [loading, setLoading] = useState(false);
+  const [getDetail, setGetDetail] = useState(null);
+  const [isVisibleCustomListModal, setIsVisibleCustomListModal] =
+    useState(false);
+  const [isVisibleEmployeeListModal, setIsVisibleEmployeeListModal] =
+    useState(false);
+  const [employee, setEmployee] = useState([]);
   const currentUser = useAuthStore(state => state.user);
   const warehouseId = currentUser?.warehouse?.warehouse_id || '';
 
-  // const isResponsibleOrEmployee = (inventoryDetails) => {
-  //   const responsiblePersonId = inventoryDetails?.responsible_person?._id;
-  //   const employeeIds =
-  //     inventoryDetails?.employees?.map((employee) => employee._id) || [];
-  //   return (
-  //     currentUser &&
-  //     (currentUser.related_profile._id === responsiblePersonId ||
-  //       employeeIds.includes(currentUser.related_profile._id))
-  //   );
-  // };
+  const isResponsibleOrEmployee = (inventoryDetails) => {
+    const responsiblePersonId = inventoryDetails?.responsible_person?._id;
+    const employeeIds = inventoryDetails?.employees?.map((employee) => employee._id) || [];
+    const tempAssigneeIds = inventoryDetails?.temp_assignee?.map((tempAssignee) => tempAssignee._id) || [];
+
+    return (
+      currentUser &&
+      (currentUser.related_profile._id === responsiblePersonId ||
+        employeeIds.includes(currentUser.related_profile._id) ||
+        tempAssigneeIds.includes(currentUser.related_profile._id))
+    );
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const employeeDropdown = await fetchEmployeesDropdown();
+        const extract = employeeDropdown.map((employee) => ({
+          id: employee._id,
+          label: employee.name,
+        }));
+        setEmployee(extract);
+      } catch (error) {
+        console.error("Error fetching dropdown data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleBoxOpeningRequest = (value) => {
+    if (value) {
+      navigation.navigate("InventoryForm", {
+        reason: value,
+        inventoryDetails: getDetail,
+      });
+    }
+  };
+
+  const handleSelectTemporaryAssignee = (value) => {
+    console.log("🚀 ~ handleSelectTemporaryAssignee ~ value:", value);
+  };
 
   const productDetails = async () => {
     const response = await fetchProductDetails(detail?._id);
@@ -36,18 +77,30 @@ const ProductDetail = ({ navigation, route }) => {
     productDetails();
   }, [detail]);
 
+
   const handleBoxNamePress = async (boxName) => {
     setLoading(true);
     try {
-      const inventoryDetails = await fetchInventoryDetailsByName(boxName, warehouseId);
+      const inventoryDetails = await fetchInventoryDetailsByName(
+        boxName,
+        warehouseId
+      );
       if (inventoryDetails.length > 0) {
-        navigation.navigate('InventoryDetails', { inventoryDetails: inventoryDetails[0] });
+        const details = inventoryDetails[0];
+        setGetDetail(details);
+        if (isResponsibleOrEmployee(details)) {
+          setIsVisibleCustomListModal(true);
+        } else {
+          navigation.navigate("InventoryDetails", {
+            inventoryDetails: details,
+          });
+        }
       } else {
-        showToastMessage('No inventory box found for this box no');
+        showToastMessage("No inventory box found for this box no");
       }
     } catch (error) {
-      console.error('Error fetching inventory details by name:', error);
-      showToastMessage('Error fetching inventory details');
+      console.error("Error fetching inventory details by name:", error);
+      showToastMessage("Error fetching inventory details");
     } finally {
       setLoading(false);
     }
@@ -77,10 +130,10 @@ const ProductDetail = ({ navigation, route }) => {
             boxDetail.box_name.map((boxName, idx) => (
               <TouchableOpacity
                 key={`${index}-${idx}`}
-                style={{ marginTop: 10 }}
+                style={{ marginTop: 10,  borderColor: COLORS.primaryThemeColor, padding:5, width:'40%', alignItems:'center', borderRadius:8,  backgroundColor: COLORS.lightGrey }}
                 onPress={() => handleBoxNamePress(boxName)}
               >
-                <Text style={{ fontFamily: FONT_FAMILY.urbanistSemiBold }}>Box Name: {boxName}</Text>
+                <Text style={{ fontFamily: FONT_FAMILY.urbanistBold, color: COLORS.orange, fontSize: 14 }}>Box Name: {boxName}</Text>
               </TouchableOpacity>
             ))
           ))}
@@ -148,6 +201,26 @@ const ProductDetail = ({ navigation, route }) => {
         {renderStockDetails()}
         {renderInventoryBoxDetails()}
       </RoundedScrollContainer>
+      <CustomListModal
+        isVisible={isVisibleCustomListModal}
+        items={reasons}
+        title="Select Reason"
+        onClose={() => setIsVisibleCustomListModal(false)}
+        onValueChange={handleBoxOpeningRequest}
+        onAdd={() => {
+          setIsVisibleEmployeeListModal(true),
+            setIsVisibleCustomListModal(false);
+        }}
+      />
+      <EmployeeListModal
+        isVisible={isVisibleEmployeeListModal}
+        items={employee}
+        boxId={getDetail?._id}
+        title="Select Assignee"
+        onClose={() => setIsVisibleEmployeeListModal(false)}
+        onValueChange={handleSelectTemporaryAssignee}
+      />
+
       {loading && <OverlayLoader visible={true} backgroundColor={true} />}
     </SafeAreaView>
   );

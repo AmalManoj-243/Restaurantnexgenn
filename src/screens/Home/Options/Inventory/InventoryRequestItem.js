@@ -12,7 +12,8 @@ const InventoryRequestItem = ({ item, onPress, onChoose, onQuantityChange }) => 
             <View style={styles.itemContainer}>
                 <Text style={styles.title}>{item.product_name}</Text>
                 <View style={styles.itemRow}>
-                    <Text style={styles.label}>Quantity</Text>
+                    <Text style={styles.label}>Quantity{' '}({item?.initialQuantity ? item?.initialQuantity : '-'})</Text>
+                    {/* <Text style={styles.label}>Quantity{' '}{item?.initialQuantity ? item?.initialQuantity : '-'}</Text> */}
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ backgroundColor: '#f3f3f3', padding: 8, borderRadius: 10, flexDirection: 'row', alignItems: 'center' }}>
                             <TouchableOpacity onPress={() => onQuantityChange(item._id, Math.max(0, item.quantity - 1))}>
@@ -32,7 +33,7 @@ const InventoryRequestItem = ({ item, onPress, onChoose, onQuantityChange }) => 
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <Text style={styles.label}>{item.uom_name}</Text>
+                    <Text style={styles.label}>{item?.uom_name}</Text>
                 </View>
                 {/* <View style={{alignSelf:'flex-end'}}> */}
                 <Button backgroundColor={item?.chosen ? COLORS.lightGrey: COLORS.white} title={item?.chosen ? 'Unchoose' : 'Choose'} color={item?.chosen ? COLORS.black : COLORS.black} paddingHorizontal={20} onPress={() => onChoose(item)} />

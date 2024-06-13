@@ -172,12 +172,6 @@ const InventoryScreen = ({ navigation }) => {
 
   const handleSelectTemporaryAssignee = (value) => {
     console.log("🚀 ~ handleSelectTemporaryAssignee ~ value:", value);
-    // if (value) {
-    //   navigation.navigate('InventoryForm', {
-    //     reason: value,
-    //     inventoryDetails: getDetail
-    //   });
-    // }
   };
   const renderContent = () => (
     <FlashList

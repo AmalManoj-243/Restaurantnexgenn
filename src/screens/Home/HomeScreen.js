@@ -1,29 +1,36 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import { View, Dimensions, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
-import { CarouselPagination, ImageContainer, ListHeader, Header, NavigationBar } from '@components/Home';
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  ActivityIndicator,
+  BackHandler,
+} from "react-native";
+import {
+  CarouselPagination,
+  ImageContainer,
+  ListHeader,
+  Header,
+  NavigationBar,
+} from "@components/Home";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { fetchCategories } from '@api/services/generalApi';
-import { ProductsList } from '@components/Product';
-import { RoundedContainer, SafeAreaView } from '@components/containers';
-import { formatData } from '@utils/formatters';
-import { COLORS } from '@constants/theme';
-import { showToastMessage } from '@components/Toast';
-import { CategoryList } from '@components/Categories';
+import { fetchCategories } from "@api/services/generalApi";
+import { ProductsList } from "@components/Product";
+import { RoundedContainer, SafeAreaView } from "@components/containers";
+import { formatData } from "@utils/formatters";
+import { COLORS } from "@constants/theme";
+import { showToastMessage } from "@components/Toast";
+import { CategoryList } from "@components/Categories";
+import { useDataFetching } from "@hooks";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
-const { height } = Dimensions.get('window');
+const { height } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }) => {
-
-  const [products, setProducts] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [backPressCount, setBackPressCount] = useState(0);
-  // console.log("🚀 ~ HomeScreen ~ backPressCount:", backPressCount)
-
-  useEffect(() => {
-    fetchInitialProducts();
-  }, []);
+  const isFocused = useIsFocused();
+  const { data, loading, fetchData, fetchMoreData } =
+    useDataFetching(fetchCategories);
 
   const handleBackPress = useCallback(() => {
     if (navigation.isFocused()) {
@@ -38,7 +45,10 @@ const HomeScreen = ({ navigation }) => {
   }, [backPressCount, navigation]);
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress
+    );
     return () => backHandler.remove();
   }, [handleBackPress]);
 
@@ -53,49 +63,37 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     // Show toast message when backPressCount changes to 1
     if (backPressCount === 1) {
-      showToastMessage('Press back again to exit');
+      showToastMessage("Press back again to exit");
     }
   }, [backPressCount]);
 
-  const fetchInitialProducts = async () => {
-    setLoading(true);
-    try {
-      const fetchedProducts = await fetchCategories({ offset: 0, limit: 20 });
-      setProducts(fetchedProducts);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
-  const fetchMoreProducts = async () => {
-    if (loading || allDataLoaded) return;
-
-    setLoading(true);
-    try {
-      const fetchedProducts = await fetchCategories({ offset, limit: 20 });
-      if (fetchedProducts.length === 0) {
-        setAllDataLoaded(true);
-      } else {
-        setProducts([...products, ...fetchedProducts]);
-        setOffset(offset + 1);
-      }
-    } catch (error) {
-      console.error('Error fetching more products:', error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (isFocused) {
+      fetchData();
     }
+  }, [isFocused]);
+
+  const handleLoadMore = () => {
+    fetchMoreData();
   };
 
   const renderItem = ({ item }) => {
     if (item.empty) {
-      return <View style={[styles.itemStyle, styles.itemInvisible]} />
+      return <View style={[styles.itemStyle, styles.itemInvisible]} />;
     }
     return (
-      <CategoryList item={item} onPress={() => navigation.navigate('Products', { id: item._id })} />
-    )
-  }
+      <CategoryList
+        item={item}
+        onPress={() => navigation.navigate("Products", { id: item._id })}
+      />
+    );
+  };
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
@@ -106,7 +104,6 @@ const HomeScreen = ({ navigation }) => {
     return height < 800 ? ["45%", "83%"] : ["50%", "85%"];
   }, [height]);
 
-
   return (
     <SafeAreaView backgroundColor={COLORS.primaryThemeColor}>
       {/* rounded border */}
@@ -115,18 +112,39 @@ const HomeScreen = ({ navigation }) => {
         <Header />
         {/* Navigation Header */}
         <NavigationBar
-          onSearchPress={() => navigation.navigate('')}
-          onOptionsPress={() => navigation.navigate('OptionsScreen')}
-          onScannerPress={() => navigation.navigate('')}
+          onSearchPress={() => navigation.navigate("")}
+          onOptionsPress={() => navigation.navigate("OptionsScreen")}
+          onScannerPress={() => navigation.navigate("")}
         />
         {/* Carousel */}
         <CarouselPagination />
 
         {/* Section */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 8 }}>
-          <ImageContainer source={require('@assets/images/Home/section/inventory_management.png')} onPress={() => navigateToScreen('InventoryScreen')} backgroundColor="#f37021" title="INVMGT" />
-          <ImageContainer source={require('@assets/images/Home/section/services.png')} onPress={() => navigateToScreen('Services')} backgroundColor="#f37021" title="Services" />
-          <ImageContainer source={require('@assets/images/Home/section/customer.png')} onPress={() => navigateToScreen('Customer')} backgroundColor="#f37021" title="Customer" />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 8,
+          }}
+        >
+          <ImageContainer
+            source={require("@assets/images/Home/section/inventory_management.png")}
+            onPress={() => navigateToScreen("InventoryScreen")}
+            backgroundColor="#f37021"
+            title="INVMGT"
+          />
+          <ImageContainer
+            source={require("@assets/images/Home/section/services.png")}
+            onPress={() => navigateToScreen("Services")}
+            backgroundColor="#f37021"
+            title="Services"
+          />
+          <ImageContainer
+            source={require("@assets/images/Home/section/customer.png")}
+            onPress={() => navigateToScreen("Customer")}
+            backgroundColor="#f37021"
+            title="Customer"
+          />
         </View>
 
         {/* Bottom sheet */}
@@ -135,29 +153,31 @@ const HomeScreen = ({ navigation }) => {
           <ListHeader title="Categories" />
           {/* flatlist */}
           <BottomSheetFlatList
-            data={formatData(products, 3)}
+            data={formatData(data, 3)}
             numColumns={3}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={{ paddingBottom: '25%' }}
-            onEndReached={fetchMoreProducts}
+            contentContainerStyle={{ paddingBottom: "25%" }}
+            onEndReached={handleLoadMore}
             showsVerticalScrollIndicator={false}
             onEndReachedThreshold={0.1}
-            ListFooterComponent={loading && <ActivityIndicator size="large" color="#0000ff" />}
+            ListFooterComponent={
+              loading && <ActivityIndicator size="large" color="#0000ff" />
+            }
           />
         </BottomSheet>
       </RoundedContainer>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   itemInvisible: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   itemStyle: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 6,
     borderRadius: 8,
     marginTop: 5,
