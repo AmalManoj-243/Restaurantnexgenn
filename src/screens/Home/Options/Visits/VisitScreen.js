@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 import { formatData } from '@utils/formatters';
@@ -15,11 +15,32 @@ import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { fetchBrandsDropdown, fetchCustomersDropdown, fetchDepartmentsDropdown, fetchEmployeesDropdown } from '@api/dropdowns/dropdownApi';
 import { DropdownSheet, MultiSelectDropdownSheet } from '@components/common/BottomSheets';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
+import { filterCalendar } from '@constants/dropdownConst';
 
 const VisitScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [selectedType, setSelectedType] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [datePickerMode, setDatePickerMode] = useState('from'); // 'from' or 'to'
+
+  const [formData, setFormData] = useState({
+    fromDate: '',
+    toDate: '',
+    customer: '',
+    employees: [],
+    departments: [],
+    brands: []
+  });
+  console.log("🚀 ~ VisitScreen ~ formData:", formData)
+  const [dropdown, setDropdown] = useState({
+    employees: [],
+    departments: [],
+    brands: [],
+    customer: [],
+  });
 
   const { data, loading, fetchData, fetchMoreData } = useDataFetching(fetchCustomerVisitList);
 
@@ -34,22 +55,6 @@ const VisitScreen = ({ navigation }) => {
       fetchData();
     }
   }, [isFocused]);
-
-  const [formData, setFormData] = useState({
-    customer: '',
-    employees: [],
-    departments: [],
-    brands: []
-  });
-
-  console.log("🚀 ~ VisitScreen ~ formData:", formData)
-  const [dropdown, setDropdown] = useState({
-    employees: [],
-    departments: [],
-    brands: [],
-    customer: [],
-  });
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,10 +139,62 @@ const VisitScreen = ({ navigation }) => {
   };
 
   const handleFieldChange = (fieldName, value) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [fieldName]: value,
-    }));
+    // setFormData((prevState) => ({
+    //   ...prevState,
+    //   [fieldName]: value,
+    // }));
+
+    setFormData({
+      ...formData,
+      [fieldName]: value
+    })
+  };
+
+  const handleDateConfirm = (date) => {
+    const formattedDate = moment(date).format('DD-MM-YYYY');
+    if (datePickerMode === 'from') {
+      handleFieldChange('fromDate', formattedDate);
+    } else {
+      handleFieldChange('toDate', formattedDate);
+    }
+    setDatePickerVisibility(false);
+  };
+
+  const handleDateRangeSelection = (rangeType) => {
+
+    let fromDate = moment();
+    let toDate = moment();
+
+    switch (rangeType.value) {
+      case 'Yesterday':
+        fromDate = fromDate.subtract(1, 'days');
+        toDate = toDate.subtract(1, 'days');
+        break;
+      case 'Today':
+        break;
+      case 'Tomorrow':
+        fromDate = fromDate.add(1, 'days');
+        toDate = toDate.add(1, 'days');
+        break;
+      case 'This Month':
+        fromDate = fromDate.startOf('month');
+        toDate = toDate.endOf('month');
+        break;
+      case 'Last Month':
+        fromDate = fromDate.subtract(1, 'months').startOf('month');
+        toDate = toDate.subtract(1, 'months').endOf('month');
+        break;
+      case 'This Year':
+        fromDate = fromDate.startOf('year');
+        toDate = toDate.endOf('year');
+        break;
+      default:
+        return;
+    }
+
+    handleFieldChange('fromDate', fromDate.format('DD-MM-YYYY'));
+    handleFieldChange('toDate', toDate.format('DD-MM-YYYY'));
+    setIsVisible(false);
   };
 
   const renderBottomSheet = () => {
@@ -158,6 +215,10 @@ const VisitScreen = ({ navigation }) => {
         items = dropdown.customer;
         isMultiSelect = false;
         break;
+      case 'filterCalendar':
+        items = filterCalendar
+        isMultiSelect = false;
+        break;
       default:
         return null;
     }
@@ -176,9 +237,39 @@ const VisitScreen = ({ navigation }) => {
         items={items}
         title={selectedType}
         onClose={() => setIsVisible(false)}
-        onValueChange={(value) => handleFieldChange("customer", value)}
+        onValueChange={(value) => {
+          if (selectedType === 'filterCalendar') {
+            handleDateRangeSelection(value);
+          } else {
+            handleFieldChange("customer", value);
+          }
+        }}
       />
     );
+  };
+
+  const applyFilters = () => {
+    fetchData({
+      fromDate: formData.fromDate,
+      toDate: formData.toDate,
+      customerId: formData.customer ? formData.customer.id : ''
+    })
+    fetchMoreData({
+      fromDate: formData.fromDate,
+      toDate: formData.toDate,
+      customerId: formData.customer ? formData.customer.id : ''
+    })
+  }
+
+  const clearFilters = () => {
+    setFormData({
+      fromDate: '',
+      toDate: '',
+      customer: '',
+      employees: [],
+      departments: [],
+      brands: [],
+    });
   };
 
   return (
@@ -186,7 +277,7 @@ const VisitScreen = ({ navigation }) => {
       <NavigationHeader
         title="Customer Visits"
         logo={false}
-        refreshPress={''}
+        refreshPress={clearFilters}
         refreshIcon
         onBackPress={() => navigation.goBack()}
       />
@@ -195,11 +286,23 @@ const VisitScreen = ({ navigation }) => {
           <Text style={styles.label} >From</Text>
           <PressableInput
             placeholder='From Date'
+            value={formData.fromDate}
+            editable={false}
+            handlePress={() => {
+              setDatePickerMode('from');
+              setDatePickerVisibility(true);
+            }}
           />
           <View style={{ width: 10 }} />
           <Text style={styles.label}>To</Text>
           <PressableInput
             placeholder='To Date'
+            value={formData.toDate}
+            handlePress={() => {
+              setDatePickerMode('to');
+              setDatePickerVisibility(true);
+            }}
+            editable={false}
           />
           <View style={{ width: 10 }} />
           <TouchableOpacity onPress={() => toggleBottomSheet('filterCalendar')}>
@@ -210,8 +313,9 @@ const VisitScreen = ({ navigation }) => {
           <PressableInput
             placeholder='Employee'
             dropIcon={"menu-down"}
-            value={''}
+            value={formData.employees[0]?.label}
             editable={false}
+            // multiline={true}
             handlePress={() => toggleBottomSheet('Employees')}
           />
           <View style={{ width: 3 }} />
@@ -219,6 +323,7 @@ const VisitScreen = ({ navigation }) => {
             placeholder='Departments'
             dropIcon={"menu-down"}
             editable={false}
+            value={formData.departments[0]?.label}
             handlePress={() => toggleBottomSheet('Departments')}
           />
           <View style={{ width: 3 }} />
@@ -226,8 +331,9 @@ const VisitScreen = ({ navigation }) => {
             placeholder='Brands'
             dropIcon={"menu-down"}
             editable={false}
+            value={formData.brands[0]?.label}
             handlePress={() => toggleBottomSheet('Brands')}
-          />i
+          />
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
           <Text style={styles.label} >Customers</Text>
@@ -236,11 +342,13 @@ const VisitScreen = ({ navigation }) => {
             placeholder='Select Customer'
             dropIcon={"menu-down"}
             editable={false}
+            value={formData.customer?.label}
             handlePress={() => toggleBottomSheet('Customer')}
           />
           <View style={{ width: 3 }} />
           <LoadingButton
             width={100}
+            onPress={applyFilters}
             marginVertical={0}
             height={35}
             borderRadius={6}
@@ -253,6 +361,12 @@ const VisitScreen = ({ navigation }) => {
         {/* {renderListing()} */}
         <FABButton onPress={() => navigation.navigate('AuditForm')} />
       </RoundedContainer>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleDateConfirm}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
     </SafeAreaView>
   );
 };
