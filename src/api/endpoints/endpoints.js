@@ -21,6 +21,7 @@ export const DROP_DOWN_API_ENDPOINTS = {
     VENDOR_BILL: '/viewVendorBill/vendor_bill/vendor_bill_drop_down',
     EMPLOYEE_DROPDOWN: '/viewEmployees/employee_list/employee_dropdown',
     VIEW_COUNTRY: "/viewCountry/country_list/country_dropdown",
+    VIEW_STATE: "viewState?country_id=6540b68405fb79149c3eb5c2",
 };
 
 export const DETAIL_API_ENDPOINTS = {
