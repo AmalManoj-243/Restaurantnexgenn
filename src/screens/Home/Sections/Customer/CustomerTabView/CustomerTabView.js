@@ -25,7 +25,7 @@ const CustomTabBar = (props) => {
         backgroundColor: COLORS.orange,
         justifyContent: 'center'
       }}
-      indicatorStyle={{ backgroundColor: COLORS.primaryThemeColor, height: 5 }}
+      indicatorStyle={{ backgroundColor: COLORS.primaryThemeColor, height: 3 }}
       labelStyle={{ color: COLORS.white, fontFamily: FONT_FAMILY.urbanistBold, fontSize: 13, textTransform: 'capitalize' }}
       pressColor='#2e294e'
       pressOpacity={0.5}
