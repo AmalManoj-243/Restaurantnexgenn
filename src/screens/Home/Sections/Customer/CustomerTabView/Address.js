@@ -1,68 +1,85 @@
-import React,{useEffect, useState} from 'react'
-import { RoundedScrollContainer } from '@components/containers'
-import { TextInput as FormInput } from '@components/common/TextInput'
-import { fetchCountryDropDown } from '@api/dropdowns/dropdownApi';
+import React, { useEffect, useState } from 'react';
+import { RoundedScrollContainer } from '@components/containers';
+import { TextInput as FormInput } from '@components/common/TextInput';
+import { fetchCountryDropdown, fetchStateDropdown } from '@api/dropdowns/dropdownApi';
 import { DropdownSheet } from '@components/common/BottomSheets';
 
 const Address = () => {
   const [errors, setErrors] = useState({});
-  const [isVisible,setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  
-  const [formData, setFormData] = useState({
-  address: "",
-  country: "",
-  state: "",
-  area: "",
-  poBox: "",
-});
 
-console.log("🚀 ~ VisitPlanForm ~ formData:", formData)
+  const [formData, setFormData] = useState({
+    address: "",
+    country: "",
+    state: "",
+    area: "",
+    poBox: "",
+  });
 
   const [dropdown, setDropdown] = useState({
-    country : [],
+    country: [],
     state: [],
     area: [],
   });
-  console.log("country:",dropdown.country);
 
-  const handleFieldChange = (field, value) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [field]: value,
-    }));
-    if (errors[field]) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [field]: null,
-      }));
-    }
-  };
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDropdownData = async () => {
       try {
-        const countryDropdown = await fetchCountryDropDown();
-        setDropdown((prevDropdown) => ({
+        const countryData = await fetchCountryDropdown();
+        setDropdown(prevDropdown => ({
           ...prevDropdown,
-          customer: countryDropdown.map((data) => ({
+          country: countryData.map(data => ({
             id: data._id,
             label: data.country_name,
           })),
         }));
       } catch (error) {
-        console.error('Error fetching dropdown data:', error);
+        console.error('Error fetching country dropdown data:', error);
       }
     };
-    fetchData();
+
+    fetchDropdownData();
   }, []);
 
+  useEffect(() => {
+    if (formData.country) {
+      const fetchStateData = async () => {
+        try {
+          const stateData = await fetchStateDropdown(formData.country.id);
+          setDropdown(prevDropdown => ({
+            ...prevDropdown,
+            state: stateData.map(data => ({
+              id: data._id,
+              label: data.state_name,
+            })),
+          }));
+        } catch (error) {
+          console.error('Error fetching state dropdown data:', error);
+        }
+      };
+
+      fetchStateData();
+    }
+  }, [formData.country]);
+
+  const handleFieldChange = (field, value) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [field]: value,
+    }));
+    if (errors[field]) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [field]: null,
+      }));
+    }
+  };
+
   const toggleBottomSheet = (type) => {
-    console.log("country:",dropdown.country);
     setSelectedType(type);
     setIsVisible(!isVisible);
   };
-
-  /* rufhebfbhbdfhbrbfrbvyrfbvybfyvbybryvbyhvybfy*/
 
   const renderBottomSheet = () => {
     let items = [];
@@ -96,68 +113,68 @@ console.log("🚀 ~ VisitPlanForm ~ formData:", formData)
   };
 
   const validate = () => {
-    Keyboard.dismiss();
-    let isValid = true;
-    let errors = {};
-
     const requiredFields = {
-      Address: 'Please enter the Address',
-      Country: 'Please select a country',
-      State: 'Please select a state',
-      Area: 'Please select a area',
-      POBox: 'Please enter PO Box'
+      address: 'Please enter the Address',
+      country: 'Please select a country',
+      state: 'Please select a state',
+      area: 'Please select an area',
+      poBox: 'Please enter PO Box',
     };
 
-    Object.keys(requiredFields).forEach(field => {
+    const newErrors = Object.keys(requiredFields).reduce((acc, field) => {
       if (!formData[field]) {
-        errors[field] = requiredFields[field];
-        isValid = false;
+        acc[field] = requiredFields[field];
       }
-    });
+      return acc;
+    }, {});
 
-    setErrors(errors);
-    return isValid;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
     <RoundedScrollContainer>
       <FormInput
-        label={"Address :"}
-        placeholder={"Enter Address"}
+        label="Address:"
+        placeholder="Enter Address"
         editable={true}
         validate={errors.address}
+        onChangeText={(value) => handleFieldChange('address', value)}
       />
       <FormInput
-        label={"Country :"}
-        placeholder={"Select Country"}
-        dropIcon={"menu-down"}
+        label="Country:"
+        placeholder="Select Country"
+        dropIcon="menu-down"
         editable={false}
         validate={errors.country}
         onPress={() => toggleBottomSheet("Country")}
       />
       <FormInput
-        label={"State :"}
-        placeholder={"Select State"}
-        dropIcon={"menu-down"}
-        editable={true}
+        label="State:"
+        placeholder="Select State"
+        dropIcon="menu-down"
+        editable={false}
         validate={errors.state}
+        onPress={() => toggleBottomSheet("State")}
       />
       <FormInput
-        label={"Area :"}
-        placeholder={"Select Area"}
-        dropIcon={"menu-down"}
-        editable={true}
+        label="Area:"
+        placeholder="Select Area"
+        dropIcon="menu-down"
+        editable={false}
         validate={errors.area}
+        onPress={() => toggleBottomSheet("Area")}
       />
       <FormInput
-        label={"PO Box :"}
-        placeholder={"Enter PO Box"}
+        label="PO Box:"
+        placeholder="Enter PO Box"
         editable={true}
-        validate={errors.pobox}
-      /> 
+        validate={errors.poBox}
+        onChangeText={(value) => handleFieldChange('poBox', value)}
+      />
       {renderBottomSheet()}
-    </RoundedScrollContainer >
-  )
-}
+    </RoundedScrollContainer>
+  );
+};
 
-export default Address
+export default Address;
