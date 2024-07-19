@@ -246,7 +246,7 @@ const VisitScreen = ({ navigation }) => {
         title={selectedType}
         onClose={() => setIsVisible(false)}
         onValueChange={(value) => {
-          if (selectedType === 'filterCalendar') {
+          if (selectedType === 'Select Durations') {
             handleDateRangeSelection(value);
           } else {
             handleFieldChange('customer', value);
