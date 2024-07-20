@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Keyboard } from 'react-native';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
+import { DropdownSheet } from '@components/common/BottomSheets';
 import { CheckBox } from '@components/common/CheckBox';
 import { fetchCustomerBehaviourDropdown, fetchLanguageDropdown, fetchCurrencyDropdown } from '@api/dropdowns/dropdownApi';
-import { DropdownSheet } from '@components/common/BottomSheets';
 import { LoadingButton } from '@components/common/Button';
 
-const OtherDetails = ({ formData, setFormData }) => {
+const OtherDetails = ({ formData, onFieldChange }) => {
   const [errors, setErrors] = useState({});
   const [isVisible, setIsVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
@@ -78,19 +78,6 @@ const OtherDetails = ({ formData, setFormData }) => {
 
     fetchDropdownData();
   }, []);
-
-  const handleFieldChange = (field, value) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [field]: value,
-    }));
-    if (errors[field]) {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [field]: null,
-      }));
-    }
-  };
 
   const toggleBottomSheet = (type) => {
     setSelectedType(type);
@@ -172,7 +159,7 @@ const OtherDetails = ({ formData, setFormData }) => {
         placeholder={"Enter TRN"}
         editable={true}
         validate={errors.trn}
-        onValueChange={(value) => handleFieldChange('TRN', value)}
+        onChangeText={(value) => onFieldChange('trn', value)}
       />
       <FormInput
         label={"Customer Behaviour"}

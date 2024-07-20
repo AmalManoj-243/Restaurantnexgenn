@@ -167,7 +167,6 @@ const Details = ({ formData, onFieldChange }) => {
         value={formData.customerTitles?.label}
         onPress={() => toggleBottomSheet('Customer Title')}
       />
-
       <FormInput
         label={"Email Address :"}
         placeholder={"Enter Email Address"}

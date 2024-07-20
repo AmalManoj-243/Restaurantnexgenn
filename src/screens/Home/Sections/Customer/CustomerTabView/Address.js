@@ -4,10 +4,11 @@ import { TextInput as FormInput } from '@components/common/TextInput';
 import { fetchCountryDropdown, fetchStateDropdown, fetchAreaDropdown } from '@api/dropdowns/dropdownApi';
 import { DropdownSheet } from '@components/common/BottomSheets';
 import { LoadingButton } from '@components/common/Button';
+import { Keyboard } from 'react-native';
 
-const Address = ({ formData, onFieldChange, setFormData }) => {
+const Address = ({ formData, onFieldChange }) => {
   console.log("🚀 ~ Address ~ formData:", formData)
-  // console.log("🚀 ~ Address ~ onFieldChange:")
+
   const [errors, setErrors] = useState({});
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,11 +123,11 @@ const Address = ({ formData, onFieldChange, setFormData }) => {
     let errors = {};
 
     const requiredFields = {
-      Address: 'Please enter the Address',
-      Country: 'Please select a country',
-      State: 'Please select a state',
-      Area: 'Please select a area',
-      POBox: 'Please enter PO Box',
+      address: 'Please enter the Address',
+      country: 'Please select a country',
+      state: 'Please select a state',
+      area: 'Please select a area',
+      poBox: 'Please enter PO Box',
     };
 
     Object.keys(requiredFields).forEach(field => {
@@ -155,8 +156,8 @@ const Address = ({ formData, onFieldChange, setFormData }) => {
         label= {"Address :"}
         placeholder={"Enter Address"}
         editable={true}
-        validate={errors.address}
-        onValueChange={(value)=> setFormData({...formData, address: value})}
+        validate={errors.address}        
+        onChangeText={(value) => onFieldChange('address', value)}
         // onValueChange={(value) => onFieldChange('address', value)}
       />
       <FormInput
@@ -192,7 +193,7 @@ const Address = ({ formData, onFieldChange, setFormData }) => {
         placeholder="Enter PO Box"
         editable={true}
         validate={errors.poBox}
-        onValueChange={(value) => onFieldChange('poBox', value)}
+        onChangeText={(value) => onFieldChange('poBox', value)}
       />
       {renderBottomSheet()}
       <LoadingButton
