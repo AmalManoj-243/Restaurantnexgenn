@@ -31,3 +31,8 @@ export const customerTitles = [
   { label: 'Ms.', value: 'Ms' },
   { label: 'Miss.', value: 'Miss' }
 ]
+
+export const modeOfPayment = [
+    { label: 'Cash', value: 'Cash' },
+    { label: 'Cash and Credit', value: 'Cash and Credit' },
+  ];
