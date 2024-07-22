@@ -21,7 +21,7 @@ const NavigationHeader = ({ title, onBackPress, color = COLORS.white, background
             }
             {icon &&
                 <TouchableOpacity activeOpacity={0.8} onPress={iconPress}>
-                    <AntDesign name={iconName} size={20} color={color} />
+                    <AntDesign name={iconName} size={25} color={color} />
                 </TouchableOpacity>
             }
             {checkIcon &&

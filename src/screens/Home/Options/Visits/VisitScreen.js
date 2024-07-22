@@ -108,7 +108,7 @@ const VisitScreen = ({ navigation }) => {
   };
 
   const renderEmptyState = () => (
-    <EmptyState imageSource={require('@assets/images/EmptyData/empty_visits.png')} message={'no visits found'} />
+    <EmptyState imageSource={require('@assets/images/EmptyData/empty_data.png')} message={'no visits found'} />
   );
 
   const renderContent = () => (
