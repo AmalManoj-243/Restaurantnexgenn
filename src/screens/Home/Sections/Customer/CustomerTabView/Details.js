@@ -5,6 +5,7 @@ import { DropdownSheet } from '@components/common/BottomSheets';
 import { fetchsalesPersonDropdown, fetchmopDropdown } from '@api/dropdowns/dropdownApi';
 import { customerTypes } from '@constants/dropdownConst';
 import { customerTitles } from '@constants/dropdownConst';
+import { modeOfPayment } from '@constants/dropdownConst';
 
 const Details = ({ formData, onFieldChange, errors }) => {
 
@@ -36,25 +37,6 @@ const Details = ({ formData, onFieldChange, errors }) => {
     fetchDropdownData();
   }, []);
 
-  useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const mopData = await fetchmopDropdown();
-        setDropdown(prevDropdown => ({
-          ...prevDropdown,
-          mop: mopData.map(data => ({
-            id: data._id,
-            label: data.xxx,
-          })),
-        }));
-      } catch (error) {
-        console.error('Error fetching mop dropdown data:', error);
-      }
-    };
-
-    fetchDropdownData();
-  }, []);
-
   const toggleBottomSheet = (type) => {
     setSelectedType(type);
     setIsVisible(!isVisible);
@@ -78,8 +60,8 @@ const Details = ({ formData, onFieldChange, errors }) => {
         fieldName = 'salesPerson';
         break;
       case 'MOP (Mode Of Payment)':
-        items = dropdown.mop;
-        fieldName = 'mop';
+        items = modeOfPayment;
+        fieldName = 'modeOfPayment';
         break;
       default:
         return null;
@@ -153,8 +135,8 @@ const Details = ({ formData, onFieldChange, errors }) => {
         placeholder={"Select MOP"}
         dropIcon={"menu-down"}
         editable={false}
-        validate={errors.mop}
-        value={formData.mop?.label}
+        validate={errors.modeOfPayment}
+        value={formData.modeOfPayment?.label}
         onPress={() => toggleBottomSheet('MOP (Mode Of Payment)')}
       />
       <FormInput

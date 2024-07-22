@@ -43,7 +43,7 @@ const CustomerTabView = ({ navigation }) => {
     emailAddress: "",
     salesPerson: "",
     collectionAgent: "",
-    mop: "",
+    modeOfPayment: "",
     mobileNumber: "",
     whatsappNumber: "",
     landlineNumber: "",
@@ -87,8 +87,8 @@ const CustomerTabView = ({ navigation }) => {
         return <OtherDetails formData={formData} onFieldChange={handleFieldChange} errors={errors} />;
       case 'third':
         return <Address formData={formData} onFieldChange={handleFieldChange} errors={errors} />;
-      case 'fourth':
-        return <ContactPerson formData={formData} onFieldChange={handleFieldChange} errors={errors} />;
+      // case 'fourth':
+      //   return <ContactPerson formData={formData} onFieldChange={handleFieldChange} errors={errors} />;
       default:
         return null;
     }
@@ -99,7 +99,7 @@ const CustomerTabView = ({ navigation }) => {
     { key: 'first', title: 'Details' },
     { key: 'second', title: 'Other Details' },
     { key: 'third', title: 'Address' },
-    { key: 'fourth', title: 'Contact Person' },
+    // { key: 'fourth', title: 'Contact Person' },
   ]);
 
   const validate = () => {
@@ -114,7 +114,7 @@ const CustomerTabView = ({ navigation }) => {
       emailAddress: 'Please enter Email Address',
       salesPerson: 'Please select Sales Person',
       collectionAgent: 'Please enter Collection Agent',
-      // mop: 'Please select Mode Of Payment',
+      modeOfPayment: 'Please select Mode Of Payment',
       mobileNumber: "Please enter Mobile Number",
       whatsappNumber: 'Please enter Whatsapp Number',
       landlineNumber: 'Please enter Landline Number',
@@ -126,8 +126,8 @@ const CustomerTabView = ({ navigation }) => {
       currency: 'Please select Currency',
       address: 'Please enter the Address',
       country: 'Please select a country',
-      // state: 'Please select a state',
-      // area: 'Please select a area',
+      state: 'Please select a state',
+      area: 'Please select a area',
       poBox: 'Please enter PO Box',
     };
 
@@ -154,7 +154,7 @@ const CustomerTabView = ({ navigation }) => {
         customer_email: formData.emailAddress,
         sales_person_id: formData.salesPerson.id,
         collection_agent_id: formData.collectionAgent,
-        mode_of_payment: formData.mop,
+        mode_of_payment: formData.modeOfPayment,
         customer_mobile: formData.mobileNumber,
         whatsapp_no: formData.whatsappNumber,
         land_phone_no: formData.landlineNumber,
