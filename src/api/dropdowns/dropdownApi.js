@@ -97,3 +97,7 @@ export const fetchCurrencyDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_CURRENCY);
 }
 
+export const fetchSourceDropdown = async () => {
+  return fetchData(DROP_DOWN_API_ENDPOINTS.SOURCE);
+}
+

@@ -6,17 +6,18 @@ import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { LoadingButton } from '@components/common/Button';
 import { showToast } from '@utils/common';
 import { post } from '@api/services/utils';
+import { formatDate } from '@utils/common/date';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
 import { DropdownSheet } from '@components/common/BottomSheets';
 import { fetchSourceDropdown } from '@api/dropdowns/dropdownApi';
 
-const EnquiryRegisterView = ({ navigation }) => {
+const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
 
   const [formData, setFormData] = useState({
-    datetime: "",
+    dateTime: new Date(),
     source: "",
     name: "",
     companyName: "",
@@ -94,37 +95,52 @@ const EnquiryRegisterView = ({ navigation }) => {
         items={items}
         title={selectedType}
         onClose={() => setIsVisible(false)}
-        onValueChange={(value) => setFormData(prevFormData => ({
-          ...prevFormData,
-          [fieldName]: value,
-        }))}
+        onValueChange={(value) => onFieldChange(fieldName, value)}
       />
     );
   };
 
-  const onFieldChange = (fieldName, value) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [fieldName]: value,
-    }));
-  };
-
   const submit = async () => {
-    if (!validate()) {
-      return;
-    }
+    if (validate()) {
+      setIsSubmitting(true);
+      const enquiryData = {
+        date_time: formData?.dateTime || null,
+        source: formData?.source?.id,
+        contact_no: formData?.phoneNumber || null,
+        name: formData?.name || null,
+        company_name: formData?.companyName || null,
+        email: formData?.emailAddress || null,
+        enquiry_details: formData?.enquiryDetails || null,
+      };
 
-    try {
-      const response = await post('/viewEnquiryRegister', formData);
-      if (response.success) {
-        showToast('Enquiry registered successfully!');
-        navigation.goBack();
-      } else {
-        showToast('Failed to register enquiry.');
+      console.log("🚀 ~ submit ~ enquiryData:", JSON.stringify(enquiryData, null, 2))
+      try {
+        const response = await post("/your-endpoint", enquiryData);
+        if (response.success) {
+          showToast({
+            type: "success",
+            title: "Success",
+            message: response.message || "Enquiry Register created successfully",
+          });
+          navigation.navigate("VisitScreen");
+        } else {
+          console.error("Enquiry Register Failed:", response.message);
+          showToast({
+            type: "error",
+            title: "ERROR",
+            message: response.message || "Enquiry Registration failed",
+          });
+        }
+      } catch (error) {
+        console.error("Error creating Enquiry Register Failed:", error);
+        showToast({
+          type: "error",
+          title: "ERROR",
+          message: "An unexpected error occurred. Please try again later.",
+        });
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      showToast('An error occurred. Please try again.');
     }
   };
 
@@ -137,14 +153,13 @@ const EnquiryRegisterView = ({ navigation }) => {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{ flex: 1 }}>
         <RoundedScrollContainer>
         <FormInput
-            label={"Date Time :"}
-            placeholder={""}
-            editable={true}
-            validate={errors.datetime}
-            onChangeText={(value) => onFieldChange('name', value)}
+            label={"Date & Time"}
+            dropIcon={"calendar"}
+            editable={false}
+            value={formatDate(formData.dateTime, 'dd-MM-yyyy hh:mm:ss')}
           />
           <FormInput
-            label={"Source :"}
+            label={"Source "}
             placeholder={"Select Source"}
             dropIcon={"menu-down"}
             editable={false}
@@ -153,21 +168,21 @@ const EnquiryRegisterView = ({ navigation }) => {
             onPress={() => toggleBottomSheet('Source')}
           />
           <FormInput
-            label={"Name :"}
-            placeholder={"Enter Your Name"}
+            label={"Name "}
+            placeholder={"Enter Name"}
             editable={true}
             validate={errors.name}
             onChangeText={(value) => onFieldChange('name', value)}
           />
           <FormInput
-            label={"Company Name :"}
+            label={"Company Name "}
             placeholder={"Enter Company Name"}
             editable={true}
             validate={errors.companyName}
             onChangeText={(value) => onFieldChange('companyName', value)}
           />
           <FormInput
-            label={"Phone :"}
+            label={"Phone "}
             placeholder={"Enter Phone Number"}
             editable={true}
             keyboardType="numeric"
@@ -175,33 +190,33 @@ const EnquiryRegisterView = ({ navigation }) => {
             onChangeText={(value) => onFieldChange('phoneNumber', value)}
           />
           <FormInput
-            label={"Email :"}
+            label={"Email "}
             placeholder={"Enter Email"}
             editable={true}
             validate={errors.emailAddress}
             onChangeText={(value) => onFieldChange('emailAddress', value)}
           />
           <FormInput
-            label={"Address :"}
+            label={"Address "}
             placeholder={"Enter Address"}
             editable={true}
             validate={errors.emailAddress}
             onChangeText={(value) => onFieldChange('emailAddress', value)}
           />
           <FormInput
-            label={"Enquiry Details :"}
+            label={"Enquiry Details "}
             placeholder={"Enter Enquiry Details"}
             editable={true}
             validate={errors.enquiryRegister}
             multiline={true}
             numberOfLines={5}
-            onChangeText={(value) => onFieldChange('emailAddress', value)}
+            onChangeText={(value) => onFieldChange('enquiryDetails', value)}
           />
           {renderBottomSheet()}
         </RoundedScrollContainer>
       </KeyboardAvoidingView>
 
-      <View style={{ backgroundColor: 'white', paddingHorizontal: 50, paddingBottom: 20 }}>
+      <View style={{ backgroundColor: 'white', paddingHorizontal: 50 }}>
         <LoadingButton onPress={submit} title={'Save'} />
       </View>
     </SafeAreaView>
