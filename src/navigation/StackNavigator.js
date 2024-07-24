@@ -19,7 +19,7 @@ import { CustomerTabView } from "@screens/Home/Sections/Customer/CustomerTabView
 import { MapViewScreen } from "@components/MapViewScreen";
 import { CRMScreen } from "@screens/Home/Options/CRM";
 import { EnquiryRegisterScreen } from "@screens/Home/Options/CRM/EnquiryRegister";
-import EnquiryRegisterView from '@screens/Home/Options/CRM/EnquiryRegister/EnquiryRegisterView';
+import EnquiryRegisterView from '@screens/Home/Options/CRM/EnquiryRegister/EnquiryRegisterForm';
 
 const Stack = createNativeStackNavigator();
 

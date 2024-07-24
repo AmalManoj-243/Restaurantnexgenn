@@ -33,6 +33,7 @@ export const DROP_DOWN_API_ENDPOINTS = {
     VIEW_COLLECTIONAGENT: "/viewEmployees/employee_list/employee_dropdown",
     VIEW_LANGUAGE: "/viewLanguage/language_list/language_dropdown",
     VIEW_CURRENCY: "/viewCurrency/currency_list/currency_dropdown",
+    SOURCE: "/viewEnquiryRegister",
 };
 
 export const DETAIL_API_ENDPOINTS = {
