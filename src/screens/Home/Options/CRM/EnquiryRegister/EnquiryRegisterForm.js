@@ -12,7 +12,7 @@ import { TextInput as FormInput } from '@components/common/TextInput';
 import { DropdownSheet } from '@components/common/BottomSheets';
 import { fetchSourceDropdown } from '@api/dropdowns/dropdownApi';
 
-const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
+const EnquiryRegisterView = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
 
@@ -23,7 +23,7 @@ const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
     companyName: "",
     phoneNumber: "",
     emailAddress: "",
-    enquiryRegister: "",
+    enquiryDetails: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -31,27 +31,6 @@ const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
   const [dropdown, setDropdown] = useState({
     source: [],
   });
-
-  const validate = () => {
-    Keyboard.dismiss();
-    let isValid = true;
-    let errors = {};
-
-    const requiredFields = {
-      name: 'Please enter the Name',
-      phoneNumber: 'Please enter Phone Number'
-    };
-
-    Object.keys(requiredFields).forEach(field => {
-      if (!formData[field]) {
-        errors[field] = requiredFields[field];
-        isValid = false;
-      }
-    });
-
-    setErrors(errors);
-    return isValid;
-  };
 
   useEffect(() => {
     const fetchDropdownData = async () => {
@@ -95,14 +74,57 @@ const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
         items={items}
         title={selectedType}
         onClose={() => setIsVisible(false)}
-        onValueChange={(value) => onFieldChange(fieldName, value)}
+        onValueChange={(value) => handleFieldChange(fieldName, value)}
       />
     );
   };
 
+  const handleFieldChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value,
+    }));
+    if (errors[field]) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [field]: null,
+      }));
+    }
+  };
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let isValid = true;
+    let errors = {};
+
+    const requiredFields = {
+      name: 'Please enter the Name',
+      phoneNumber: 'Please enter Phone Number'
+    };
+
+    Object.keys(requiredFields).forEach(field => {
+      if (!formData[field]) {
+        errors[field] = requiredFields[field];
+        isValid = false;
+      }
+    });
+
+    if (formData.emailAddress && !/\S+@\S+\.\S+/.test(formData.emailAddress)) {
+      errors.emailAddress = 'Please enter a valid email address';
+      isValid = false;
+    }
+
+    if (formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber)) {
+      errors.phoneNumber = 'Please enter a valid phone number';
+      isValid = false;
+    }
+
+    setErrors(errors);
+    return isValid;
+  };
+
   const submit = async () => {
     if (validate()) {
-      setIsSubmitting(true);
       const enquiryData = {
         date_time: formData?.dateTime || null,
         source: formData?.source?.id,
@@ -138,8 +160,6 @@ const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
           title: "ERROR",
           message: "An unexpected error occurred. Please try again later.",
         });
-      } finally {
-        setIsSubmitting(false);
       }
     }
   };
@@ -152,14 +172,14 @@ const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
       />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{ flex: 1 }}>
         <RoundedScrollContainer>
-        <FormInput
+          <FormInput
             label={"Date & Time"}
             dropIcon={"calendar"}
             editable={false}
             value={formatDate(formData.dateTime, 'dd-MM-yyyy hh:mm:ss')}
           />
           <FormInput
-            label={"Source "}
+            label={"Source"}
             placeholder={"Select Source"}
             dropIcon={"menu-down"}
             editable={false}
@@ -168,49 +188,46 @@ const EnquiryRegisterView = ({ navigation, onFieldChange }) => {
             onPress={() => toggleBottomSheet('Source')}
           />
           <FormInput
-            label={"Name "}
+            label={"Name"}
             placeholder={"Enter Name"}
             editable={true}
             validate={errors.name}
-            onChangeText={(value) => onFieldChange('name', value)}
+            onChangeText={(value) => handleFieldChange('name', value)}
           />
           <FormInput
-            label={"Company Name "}
+            label={"Company Name"}
             placeholder={"Enter Company Name"}
             editable={true}
-            validate={errors.companyName}
-            onChangeText={(value) => onFieldChange('companyName', value)}
+            onChangeText={(value) => handleFieldChange('companyName', value)}
           />
           <FormInput
-            label={"Phone "}
+            label={"Phone"}
             placeholder={"Enter Phone Number"}
             editable={true}
             keyboardType="numeric"
             validate={errors.phoneNumber}
-            onChangeText={(value) => onFieldChange('phoneNumber', value)}
+            onChangeText={(value) => handleFieldChange('phoneNumber', value)}
           />
           <FormInput
-            label={"Email "}
+            label={"Email"}
             placeholder={"Enter Email"}
             editable={true}
             validate={errors.emailAddress}
-            onChangeText={(value) => onFieldChange('emailAddress', value)}
+            onChangeText={(value) => handleFieldChange('emailAddress', value)}
           />
           <FormInput
-            label={"Address "}
+            label={"Address"}
             placeholder={"Enter Address"}
             editable={true}
-            validate={errors.emailAddress}
-            onChangeText={(value) => onFieldChange('emailAddress', value)}
+            onChangeText={(value) => handleFieldChange('address', value)}
           />
           <FormInput
-            label={"Enquiry Details "}
+            label={"Enquiry Details"}
             placeholder={"Enter Enquiry Details"}
             editable={true}
-            validate={errors.enquiryRegister}
             multiline={true}
             numberOfLines={5}
-            onChangeText={(value) => onFieldChange('enquiryDetails', value)}
+            onChangeText={(value) => handleFieldChange('enquiryDetails', value)}
           />
           {renderBottomSheet()}
         </RoundedScrollContainer>
