@@ -39,7 +39,7 @@ const EnquiryRegisterScreen = ({ navigation }) => {
     if (item.empty) {
       return <EmptyItem />;
     }
-    return <EnquiryRegisterList item={item} />;
+    return <EnquiryRegisterList item={item} onPress={()=> navigation.navigate('EnquiryDetailTabs', {id: item._id})} />;
   };
 
   const renderEmptyState = () => (

@@ -10,7 +10,8 @@ export const API_ENDPOINTS = {
     VIEW_CUSTOMER_VISIT_LIST: '/viewCustomerVisitList',
     VIEW_MARKET_STUDY: '/viewMarketStudy',
     VIEW_INVENTORY_BOX_REQUEST: '/viewInventoryboxrequest',
-    VIEW_ENQUIRY_REGISTER: '/viewEnquiryRegister'
+    VIEW_ENQUIRY_REGISTER: '/viewEnquiryRegister',
+    VIEW_LEAD: '/viewLead'
 };
 
 export const DROP_DOWN_API_ENDPOINTS = {

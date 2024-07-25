@@ -1,88 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { RoundedScrollContainer } from '@components/containers';
-import { TextInput as FormInput } from '@components/common/TextInput';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { formatDateTime } from '@utils/common/date';
+import { DetailField } from '@components/common/Detail';
+import { useFocusEffect } from '@react-navigation/native';
+import { showToastMessage } from '@components/Toast';
 
-const Details = ({ formData, onFieldChange, errors }) => {
+const Details = ({ enquiryId }) => {
 
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  const handleFieldChange = (field, value) => {
-    onFieldChange(field, value);
+
+  const [details, setDetails] = useState(initialDetails);
+
+  const fetchDetails = async () => {
+    try {
+      const updatedDetails = await f(enquiryId);
+      setDetails(updatedDetails[0]);
+    } catch (error) {
+      console.error('Error fetching visit details:', error);
+      showToastMessage('Failed to fetch visit details');
+    }
   };
 
-  const handleDateConfirm = (date) => {
-    handleFieldChange('dateTime', date);
-    setIsDatePickerVisible(false);
-  };
+  useFocusEffect(
+    useCallback(() => {
+      fetchDetails();
+    }, [id])
+  );
 
   return (
     <RoundedScrollContainer>
-      <FormInput
+      <DetailField
         label="Date Time"
-        dropIcon="calendar"
-        editable={false}
-        value={formatDateTime(formData.dateTime)}
-        onPress={() => setIsDatePickerVisible(true)}
+      
+        
       />
-      <FormInput
+      <DetailField
         label="Source"
-        placeholder="Enter Source"
-        editable={true}
-        validate={errors.source}
-        onChangeText={(value) => handleFieldChange('name', value)}
+      
       />
-      <FormInput
+      <DetailField
         label="Name"
         placeholder="Enter Name"
-        editable={true}
-        validate={errors.name}
-        onChangeText={(value) => handleFieldChange('name', value)}
+       
       />
-      <FormInput
+      <DetailField
         label="Company Name"
         placeholder="Enter Company Name"
-        editable={true}
-        validate={errors.companyName}
-        onChangeText={(value) => handleFieldChange('companyName', value)}
+       
       />
-      <FormInput
+      <DetailField
         label="Phone"
         placeholder="Enter Phone Number"
-        editable={true}
-        keyboardType="numeric"
-        validate={errors.phoneNumber}
-        onChangeText={(value) => handleFieldChange('phoneNumber', value)}
+       
       />
-      <FormInput
+      <DetailField
         label="Email"
         placeholder="Enter Email"
-        editable={true}
-        validate={errors.emailAddress}
-        onChangeText={(value) => handleFieldChange('emailAddress', value)}
+       
       />
-      <FormInput
+      <DetailField
         label="Address"
         placeholder="Enter Address"
-        editable={true}
-        validate={errors.address}
-        onChangeText={(value) => handleFieldChange('address', value)}
+      
       />
-      <FormInput
+      <DetailField
         label="Enquiry Details"
-        placeholder="Enter Enquiry Details"
-        editable={true}
         multiline={true}
-        numberOfLines={5}
-        textAlignVertical="top"
-        marginTop={10}
-        onChangeText={(value) => handleFieldChange('enquiryDetails', value)}
-      />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleDateConfirm}
-        onCancel={() => setIsDatePickerVisible(false)}
+        placeholder="Enter Enquiry Details"
       />
     </RoundedScrollContainer>
   );

@@ -115,15 +115,7 @@ const LeadForm = ({ navigation }) => {
       }
     });
 
-    if (formData.emailAddress && !/\S+@\S+\.\S+/.test(formData.emailAddress)) {
-      newErrors.emailAddress = 'Please enter a valid email address';
-      isValid = false;
-    }
-
-    if (formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = 'Please enter a valid phone number';
-      isValid = false;
-    }
+   
 
     setErrors(newErrors);
     return isValid;
@@ -182,7 +174,7 @@ const LeadForm = ({ navigation }) => {
       />
       <RoundedScrollContainer>
         <FormInput
-          label="Date Time"
+          label="Date"
           dropIcon="calendar"
           editable={false}
           value={formatDateTime(formData.dateTime)}
@@ -190,6 +182,15 @@ const LeadForm = ({ navigation }) => {
         />
         <FormInput
           label="Source"
+          placeholder="Select Source"
+          dropIcon="menu-down"
+          editable={false}
+          validate={errors.source}
+          value={formData.source?.label}
+          onPress={() => toggleDropdownSheet('Source')}
+        />
+          <FormInput
+          label="Sales Person"
           placeholder="Select Source"
           dropIcon="menu-down"
           editable={false}

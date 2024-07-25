@@ -6,7 +6,7 @@ import { RoundedContainer, SafeAreaView, SearchContainer } from '@components/con
 import { EmptyItem, EmptyState } from '@components/common/empty';
 import { NavigationHeader } from '@components/Header';
 import { FABButton } from '@components/common/Button';
-import { fetchEnquiryRegister } from '@api/services/generalApi';
+import { fetchLead } from '@api/services/generalApi';
 import { useDataFetching, useDebouncedSearch } from '@hooks';
 import LeadList from './LeadList';
 import AnimatedLoader from '@components/Loader/AnimatedLoader';
@@ -17,7 +17,7 @@ const LeadScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const currentUser = useAuthStore((state) => state.user);
   const currentUserId = currentUser?.related_profile?._id || '';
-  const { data, loading, fetchData, fetchMoreData } = useDataFetching(fetchEnquiryRegister);
+  const { data, loading, fetchData, fetchMoreData } = useDataFetching(fetchLead);
   const { searchText, handleSearchTextChange } = useDebouncedSearch((text) => fetchData({ searchText: text }));
 
   useFocusEffect(

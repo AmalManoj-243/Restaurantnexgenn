@@ -135,3 +135,19 @@ export const fetchEnquiryRegister = async ({ offset, limit, loginEmployeeId }) =
     throw error;
   }
 };
+
+export const fetchLead = async ({ offset, limit, loginEmployeeId, sequenceNo }) => {
+  try {
+    const queryParams = {
+      offset,
+      limit,
+      ...(loginEmployeeId !== undefined && { login_employee_id: loginEmployeeId }),
+      ...(sequenceNo !== undefined && { sequence_no: sequenceNo }),
+    };
+    const response = await get(API_ENDPOINTS.VIEW_LEAD, queryParams);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};

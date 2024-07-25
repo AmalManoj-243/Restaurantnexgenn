@@ -25,40 +25,17 @@ const CustomTabBar = (props) => {
   );
 };
 
-const EnquiryDetailTabs = ({ navigation }) => {
+const EnquiryDetailTabs = ({ navigation, route }) => {
+
+  const  { id } = route?.params || {};
   const layout = useWindowDimensions();
-  const [formData, setFormData] = useState({
-    dateTime: new Date(),
-    source: '',
-    name: '',
-    companyName: '',
-    phoneNumber: '',
-    emailAddress: '',
-    address: '',
-    enquiryDetails: '',
-  });
-
-  const [errors, setErrors] = useState({});
-
-  const handleFieldChange = (field, value) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [field]: value,
-    }));
-    if (errors[field]) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [field]: null,
-      }));
-    }
-  };
 
   const renderScene = ({ route }) => {
     switch (route.key) {
       case 'first':
-        return <Details formData={formData} onFieldChange={handleFieldChange} errors={errors} />;
+        return <Details enquiryId={id} />;
       case 'second':
-        return <FollowUp formData={formData} onFieldChange={handleFieldChange} errors={errors} />;
+        return <FollowUp enquiryId={id} />;
       default:
         return null;
     }
