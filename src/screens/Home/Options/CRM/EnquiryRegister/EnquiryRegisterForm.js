@@ -102,7 +102,7 @@ const EnquiryRegisterForm = ({ navigation }) => {
   };
 
   const handleSubmit = async () => {
-    const fieldsToValidate = ['name', 'emailAddress', 'source']; 
+    const fieldsToValidate = ['name', 'phoneNumber', 'source']; 
     if (validateForm(fieldsToValidate)) {
       setIsSubmitting(true);
       const enquiryData = {

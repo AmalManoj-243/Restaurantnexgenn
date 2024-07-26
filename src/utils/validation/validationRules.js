@@ -13,11 +13,11 @@ export const allValidationRules = {
     },
     phoneNumber: {
         message: 'Please enter a valid phone number',
-        validate: value => !value || validatePhoneNumber(value),
+        validate: value => validateRequired(value) && validatePhoneNumber(value),
     },
     emailAddress: {
         message: 'Please enter a valid email address',
-        validate: value => !value || validateEmail(value),
+        validate: value => validateRequired(value) && validateEmail(value),
     },
     source: {
         message: 'Please select the Source',
