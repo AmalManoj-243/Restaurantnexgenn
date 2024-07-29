@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
-import { TabView, TabBar } from 'react-native-tab-view';
+import { TabView } from 'react-native-tab-view';
 import { useState } from 'react';
 import { SafeAreaView } from '@components/containers';
 import { NavigationHeader } from '@components/Header';
 import { CustomTabBar } from '@components/TabBar';
-
+import FollowUp from './FollowUp';
+import CustomerVisit from './CustomerVisit';
+import EmailHistory from './EmailHistory';
+import CallHistory from './CallHistory';
+import WhatsAppHistory from './WhatsAppHistory';
+import MeetingsTab from './MeetingsTab';
 const PipelineDetailTabs = ({ navigation, route }) => {
 
   const { id } = route?.params || {};
