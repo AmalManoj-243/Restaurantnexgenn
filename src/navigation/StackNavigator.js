@@ -17,7 +17,7 @@ import { VisitPlanForm, VisitsPlanScreen } from "@screens/Home/Options/VisitsPla
 import { EditVisit, VisitDetails, VisitForm, VisitScreen } from "@screens/Home/Options/Visits"; //customer visit
 import { MapViewScreen } from "@components/MapViewScreen";
 import { CRMScreen } from "@screens/Home/Options/CRM";
-import { EditEnquiryRegister, EnquiryRegisterForm, EnquiryRegisterScreen } from "@screens/Home/Options/CRM/EnquiryRegister";
+import {  EnquiryRegisterForm, EnquiryRegisterScreen } from "@screens/Home/Options/CRM/EnquiryRegister";
 import { CustomerFormTabs } from "@screens/Home/Sections/Customer/CustomerFormTabs";
 import { EditLead, LeadForm, LeadScreen } from "@screens/Home/Options/CRM/Leads";
 import { EnquiryDetailTabs } from "@screens/Home/Options/CRM/EnquiryRegister/EnquiryDetailTabs";
@@ -200,12 +200,6 @@ const StackNavigator = () => {
       <Stack.Screen
         name="EnquiryDetailTabs"
         component={EnquiryDetailTabs}
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="EditEnquiryRegister"
-        component={EditEnquiryRegister}
         options={{ headerShown: false }}
       />
 
