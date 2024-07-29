@@ -64,6 +64,7 @@ const Details = ({ leadId }) => {
                 message: 'An error occurred. Please try again.'
             });
         } finally {
+            fetchDetails();
             setIsSubmitting(false);
         }
     };
