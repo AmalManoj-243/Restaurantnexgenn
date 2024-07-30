@@ -72,12 +72,12 @@ const PipelineScreen = ({ navigation }) => {
         title="Pipeline"
         onBackPress={() => navigation.goBack()}
       />
-            <SearchContainer placeholder="Search Pipelines..." onChangeText={''} />
+      <SearchContainer placeholder="Search Pipelines..." onChangeText={''} />
       <RoundedContainer>
         {renderPipeline()}
         <FABButton onPress={() => navigation.navigate('PipelineForm')} />
       </RoundedContainer>
-      <OverlayLoader visible={loading}/>
+      <OverlayLoader visible={loading} />
     </SafeAreaView>
   );
 };
