@@ -15,12 +15,10 @@ import { showToast } from '@utils/common'
 import { post } from '@api/services/utils'
 import { OverlayLoader } from '@components/Loader'
 import { validateFields } from '@utils/validation'
-import { useFocusEffect } from '@react-navigation/native'
 
 const VisitForm = ({ navigation, route }) => {
 
-  const { visitPlanId = '', pipelineId = '' } = route?.params || {};
-  console.log("🚀 ~ file: VisitForm.js:22 ~ VisitForm ~ pipelineId:", pipelineId)
+  const { visitPlanId = "", pipelineId = "" } = route?.params || {};
   const currentUser = useAuthStore((state) => state.user);
   const [selectedType, setSelectedType] = useState(null);
   const [errors, setErrors] = useState({});
@@ -39,7 +37,7 @@ const VisitForm = ({ navigation, route }) => {
   })
 
   const [isCustomerSelected, setIsCustomerSelected] = useState(false);
-
+  
   useEffect(() => {
     setIsCustomerSelected(!!formData.customer);
   }, [formData.customer]);
@@ -50,11 +48,17 @@ const VisitForm = ({ navigation, route }) => {
     setIsLoading(true);
     try {
       const [detail] = await fetchVisitPlanDetails(visitPlanId);
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        customer: { id: detail?.customer_id || '', label: detail?.customer_name?.trim() || '' },
+        customer: {
+          id: detail?.customer_id || '',
+          label: detail?.customer_name?.trim() || ''
+        },
         dateAndTime: detail?.visit_date || '',
-        visitPurpose: { id: detail?.purpose_of_visit_id || '', label: detail?.purpose_of_visit_name },
+        visitPurpose: {
+          id: detail?.purpose_of_visit_id || '',
+          label: detail?.purpose_of_visit_name
+        },
         remarks: detail?.remarks || '',
       }));
     } catch (error) {
@@ -65,14 +69,17 @@ const VisitForm = ({ navigation, route }) => {
     }
   };
 
+
   const fetchPipeline = async () => {
     setIsLoading(true);
     try {
       const [detail] = await fetchPipelineDetails(pipelineId);
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        customer: { id: detail?.customer?.customer_id || '', label: detail?.customer?.name?.trim() || '' },
-        dateAndTime: detail?.date || new Date(),
+        customer: {
+          id: detail?.customer?.customer_id || '',
+          label: detail?.customer?.name?.trim() || ''
+        },
         remarks: detail?.remarks || '',
       }));
     } catch (error) {
@@ -83,15 +90,13 @@ const VisitForm = ({ navigation, route }) => {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (visitPlanId) {
-        fetchVisitPlan(visitPlanId);
-      } else if (pipelineId) {
-        fetchPipeline(pipelineId)
-      } else return null;
-    }, [visitPlanId, pipelineId])
-  );
+  useEffect(() => {
+    if (visitPlanId) {
+      fetchVisitPlan(visitPlanId);
+    } else if (pipelineId) {
+      fetchPipeline(pipelineId)
+    }
+  }, [visitPlanId, pipelineId])
 
   useEffect(() => {
     (async () => {
@@ -104,11 +109,11 @@ const VisitForm = ({ navigation, route }) => {
 
       // Get current location
       let location = await Location.getCurrentPositionAsync({});
-      setFormData({
-        ...formData,
+      setFormData(prev => ({
+        ...prev,
         longitude: location.coords.longitude,
         latitude: location.coords.latitude,
-      });
+      }));
     })();
   }, []);
 
@@ -180,8 +185,8 @@ const VisitForm = ({ navigation, route }) => {
   }, [formData.customer]);
 
   const handleFieldChange = (field, value) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setFormData((prev) => ({
+      ...prev,
       [field]: value,
     }));
     if (errors[field]) {

@@ -164,7 +164,6 @@ const VisitPlanForm = ({ navigation }) => {
         purpose_of_visit_id: formData.visitPurpose?.id,
         sales_person_id: currentUser?.related_profile?._id || '',
         remarks: formData.remarks,
-        approval_status: 'Approved',
         visit_employee_id: formData?.assignedTo?.id
       };
       try {
