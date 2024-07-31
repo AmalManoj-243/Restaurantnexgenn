@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { RoundedContainer, SafeAreaView } from '@components/containers'
 import { VerticalScrollableCalendar } from '@components/Calendar';
@@ -9,32 +9,34 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDataFetching } from '@hooks';
 import { fetchVisitPlan } from '@api/services/generalApi';
 import { FlashList } from '@shopify/flash-list';
-import VisitPlanList from './VisitPlanLIst';
+import VisitPlanList from './VisitPlanList';
 import { formatData } from '@utils/formatters';
 import { EmptyState } from '@components/common/empty';
 import AnimatedLoader from '@components/Loader/AnimatedLoader';
+import { formatDate } from 'date-fns';
 
 const VisitsPlanScreen = ({ navigation }) => {
     const isFocused = useNavigation()
     const [isVisible, setIsVisible] = useState(false)
     const [date, setDate] = useState(new Date());
+    const formattedDate = formatDate(date, 'yyyy-MM-dd')    
 
     const { data, loading, fetchData, fetchMoreData } = useDataFetching(fetchVisitPlan);
 
     useFocusEffect(
         useCallback(() => {
-            fetchData();
-        }, [])
+            fetchData({date: formattedDate});
+        }, [date])
     );
 
     useEffect(() => {
         if (isFocused) {
-            fetchData();
+            fetchData({date: formattedDate});
         }
-    }, [isFocused]);
+    }, [isFocused, date]);
 
     const handleLoadMore = () => {
-        fetchMoreData();
+        fetchMoreData({date: formattedDate});
     };
 
     const renderItem = ({ item }) => {
@@ -81,10 +83,14 @@ const VisitsPlanScreen = ({ navigation }) => {
         <SafeAreaView>
             <NavigationHeader
                 title="Visits Plan "
+                logo={false}
                 onBackPress={() => navigation.goBack()}
             // iconOneName='questioncircleo'
             // iconOnePress={() => setIsVisible(!isVisible)}
             />
+            {/* <TouchableOpacity style={{padding:110}}>
+
+            </TouchableOpacity> */}
             <RoundedContainer borderTopLeftRadius={20} borderTopRightRadius={20}>
                 <View style={{ marginVertical: 15 }}>
                     <VerticalScrollableCalendar date={date} onChange={(newDate) => setDate(newDate)} />
