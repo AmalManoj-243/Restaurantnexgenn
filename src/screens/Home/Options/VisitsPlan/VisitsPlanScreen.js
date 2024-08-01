@@ -18,8 +18,7 @@ import { useAuthStore } from '@stores/auth';
 
 const VisitsPlanScreen = ({ navigation }) => {
     const isFocused = useNavigation()
-    const currentUserId = useAuthStore(state => state.user?.related_profile?._id)
-    console.log("🚀 ~ file: VisitsPlanScreen.js:22 ~ VisitsPlanScreen ~ currentUserId:", currentUserId)
+    const currentUserId = useAuthStore(state => state.user?._id)
     const [isVisible, setIsVisible] = useState(false)
     const [date, setDate] = useState(new Date());
     const formattedDate = formatDate(date, 'yyyy-MM-dd')
@@ -28,18 +27,18 @@ const VisitsPlanScreen = ({ navigation }) => {
 
     useFocusEffect(
         useCallback(() => {
-            fetchData({ date: formattedDate });
+            fetchData({ date: formattedDate, managerId: currentUserId });
         }, [date])
     );
 
     useEffect(() => {
         if (isFocused) {
-            fetchData({ date: formattedDate });
+            fetchData({ date: formattedDate, managerId: currentUserId });
         }
     }, [isFocused, date]);
 
     const handleLoadMore = () => {
-        fetchMoreData({ date: formattedDate });
+        fetchMoreData({ date: formattedDate, managerId: currentUserId });
     };
 
     const renderItem = ({ item }) => {

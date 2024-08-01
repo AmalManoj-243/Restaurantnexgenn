@@ -177,7 +177,7 @@ export const fetchVisitPlan = async ({ offset, limit, date, managerId }) => {
       offset,
       limit,
       date: date,
-      ...(managerId !== undefined && { manager_id: managerId }),
+      // ...(managerId !== undefined && { manager_id: managerId }),
     };
     const response = await get(API_ENDPOINTS.VIEW_VISIT_PLAN, queryParams);
     return response.data;

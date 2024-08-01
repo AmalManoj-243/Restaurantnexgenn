@@ -45,8 +45,9 @@ const Details = ({ visitPlanId }) => {
     setIsConfirmationModalVisible(false);
     const visitPlanUpdateData = {
       visit_plan_id: visitPlanId,
-      approval_status: details?.approval_status === 'Pending'? 'Approved': 'Pending'
+      approval_status: details?.approval_status === 'Pending' ? 'Approved' : 'Pending'
     };
+    console.log("🚀 ~ file: Details.js:50 ~ updateApprovalStatus ~ visitPlanUpdateData:", visitPlanUpdateData)
     try {
       const response = await put('/updateVisitPlan', visitPlanUpdateData);
       if (response.success) {
@@ -56,19 +57,21 @@ const Details = ({ visitPlanId }) => {
       }
     } catch (error) {
       console.error('Error updating approval status:', error);
-    }finally{
+    } finally {
       setIsConfirmationModalVisible(false);
-      fetchDetails()
+      fetchDetails(visitPlanId)
     }
   };
 
-  const shouldShowApproveButton = () => {
-    return (
-      details?.approval_status !== 'Approved' &&
-      // currentUser?.related_profile?._id === details?.manager_id &&
-      details?.approval_status !== 'Pending' &&
-      details?.approval_status ==='New'
-    );
+  const shouldShowButton = () => {
+    if (details?.approval_status === 'Approved') return false;
+    if (details?.approval_status === 'Pending') {
+      return true;
+    }
+    if (details?.approval_status !== 'Pending' && details?.approval_status !== 'Approved') {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -87,11 +90,11 @@ const Details = ({ visitPlanId }) => {
         textAlignVertical="top"
       />
 
-      {shouldShowApproveButton() && <LoadingButton
+      {shouldShowButton() && <LoadingButton
         width="50%"
         alignSelf="center"
         marginVertical={50}
-        title={details?.approval_status === 'New' ? 'SEND APPROVAL': details?.approval_status === 'Pending'? 'APPROVE': null}
+        title={details?.approval_status === 'New' ? 'SEND APPROVAL' : details?.approval_status === 'Pending' ? 'APPROVE' : null}
         onPress={() => setIsConfirmationModalVisible(true)}
       />}
       <OverlayLoader visible={isLoading} />
