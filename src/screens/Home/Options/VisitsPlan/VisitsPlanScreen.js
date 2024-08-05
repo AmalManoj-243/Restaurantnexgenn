@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { RoundedContainer, SafeAreaView } from '@components/containers'
 import { VerticalScrollableCalendar } from '@components/Calendar';
 import { NavigationHeader } from '@components/Header';
-import { RulesModal } from '@components/Modal';
+import { ConfirmationModal, RulesModal } from '@components/Modal';
 import { FABButton, LoadingButton } from '@components/common/Button';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDataFetching } from '@hooks';
@@ -22,6 +22,8 @@ const VisitsPlanScreen = ({ navigation }) => {
     const [isVisible, setIsVisible] = useState(false)
     const [date, setDate] = useState(new Date());
     const formattedDate = formatDate(date, 'yyyy-MM-dd')
+    const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+
 
     const { data, loading, fetchData, fetchMoreData } = useDataFetching(fetchVisitPlan);
 
@@ -86,10 +88,11 @@ const VisitsPlanScreen = ({ navigation }) => {
             <NavigationHeader
                 title="Visits Plan "
                 onBackPress={() => navigation.goBack()}
-            // iconOneName='questioncircleo'
+                // iconOneName='questioncircleo'
+                logo={false}
             // iconOnePress={() => setIsVisible(!isVisible)}
             />
-            {/* <LoadingButton width={'30%'} height={40} alignSelf={'flex-end'} marginVertical={0} marginBottom={10} marginHorizontal={20} title={'Send Approval'}/> */}
+            <LoadingButton width={'40%'} height={40} alignSelf={'flex-end'} marginVertical={0} marginBottom={10} marginHorizontal={20} title={'Send for Approval'} onPress={() => setIsConfirmationModalVisible(true) } />
             <RoundedContainer borderTopLeftRadius={20} borderTopRightRadius={20}>
                 <View style={{ marginVertical: 15 }}>
                     <VerticalScrollableCalendar date={date} onChange={(newDate) => setDate(newDate)} />
@@ -98,7 +101,11 @@ const VisitsPlanScreen = ({ navigation }) => {
             </RoundedContainer>
             <FABButton onPress={() => navigation.navigate('VisitPlanForm')} />
             <RulesModal isVisible={isVisible} onClose={() => setIsVisible(!isVisible)} />
-
+            <ConfirmationModal
+                isVisible={isConfirmationModalVisible}
+                onCancel={() => setIsConfirmationModalVisible(false)}
+                onConfirm={''}
+            />
         </SafeAreaView>
     )
 }

@@ -5,11 +5,12 @@ import Text from '@components/Text';
 import { NavigationHeader } from '@components/Header';
 import { FONT_FAMILY } from '@constants/theme';
 
-const ConfirmationModal = ({ isVisible, onConfirm, onCancel, title }) => {
+const ConfirmationModal = ({ isVisible, onConfirm, onCancel, header = 'Are you sure want to Confirm Sent for Approval ?' }) => {
     return (
         <Modal
             isVisible={isVisible}
-            animationIn="bounceIn"
+            animationIn="slideInDown"
+            animationOut="slideOutDown"
             backdropOpacity={0.7}
             animationInTiming={400}
             animationOutTiming={300}
@@ -17,17 +18,17 @@ const ConfirmationModal = ({ isVisible, onConfirm, onCancel, title }) => {
             backdropTransitionOutTiming={300}
         >
             <View style={styles.modalContainer}>
-            <NavigationHeader onBackPress={() => onCancel()} title={'Confirmation'}/>
+                <NavigationHeader onBackPress={() => onCancel()} title={'Confirmation'} />
                 <View style={styles.modalContent}>
-                <Text style={styles.modalHeader}>Are you sure want to Confirm sent approval ?</Text>
-                <View style={styles.modalButtons}>
-                    <TouchableOpacity style={styles.modalButton} onPress={onConfirm}>
-                        <Text style={styles.modalButtonText}>Yes</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.modalButton} onPress={onCancel}>
-                        <Text style={styles.modalButtonText}>No</Text>
-                    </TouchableOpacity>
-                </View>
+                    <Text style={styles.modalHeader}>{header}</Text>
+                    <View style={styles.modalButtons}>
+                        <TouchableOpacity style={styles.modalButton} onPress={onConfirm}>
+                            <Text style={styles.modalButtonText}>Yes</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalButton} onPress={onCancel}>
+                            <Text style={styles.modalButtonText}>No</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -43,14 +44,14 @@ const styles = {
     modalContent: {
         backgroundColor: 'white',
         padding: 18,
-        borderBottomRightRadius: 10, 
+        borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         width: '100%',
     },
     modalHeader: {
         fontSize: 18,
         fontFamily: FONT_FAMILY.urbanistMedium,
-        marginBottom:15,
+        marginBottom: 15,
         alignSelf: 'center'
     },
     modalButtons: {
