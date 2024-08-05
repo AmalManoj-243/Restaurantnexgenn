@@ -10,6 +10,7 @@ const MeetingsList = ({ item  }) => {
                 <Text style={styles.titles}>{item?.title || '-'}</Text>
                 <View style={styles.detailsContainer}>
                     <Text style={styles.detailText}>
+                        {item?.start || '-'}
                         {/* {item?.start? format(new Date(item.start), "dd-MM-yyyy") : '-'} {item?.time ? `at ${format(new Date(item.time), "HH:mm:ss")}` : ''} */}
                     </Text>
                     <Text style={styles.reminderText}>

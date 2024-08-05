@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { RoundedScrollContainer } from '@components/containers';
 import { useFocusEffect } from '@react-navigation/native';
 import { showToastMessage } from '@components/Toast';
-import { fetchMeetingsDetails, fetchPipelineDetails } from '@api/details/detailApi';
+import { fetchPipelineDetails } from '@api/details/detailApi';
 import { OverlayLoader } from '@components/Loader';
 import { post } from '@api/services/utils';
 import { MeetingsScheduleModal } from '@components/Modal';
@@ -13,16 +13,12 @@ import { FlatList } from 'react-native';
 import { MeetingsList } from '@components/CRM';
 
 const Meetings = ({ pipelineId }) => {
-// console.log("🚀 ~ file: Meetings.js:16 ~ Meetings ~ pipelineId:", pipelineId)
-
     const currentUser = useAuthStore((state) => state.user);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [meetingsHistory, setMeetingsHistory] = useState([]);
-    // console.log(meetingsHistory, "meets")
-    // console.log(setMeetingsHistory, "meeting")
 
-    const fetchDetails = async () => { 
+    const fetchDetails = async () => {
         setIsLoading(true);
         try {
             const [updatedDetails] = await fetchPipelineDetails(pipelineId);
@@ -44,18 +40,18 @@ const Meetings = ({ pipelineId }) => {
 
 
     const saveUpdates = async (updateText) => {
-        console.log("🚀 ~ file: Meetings.js:47 ~ saveUpdates ~ updateText:", updateText)
         try {
-            const formattedDate = formatDateTime(new Date(), "Pp");
+            const formattedDate = formatDateTime(updateText.start, "Pp");
             const pipelineHistoryData = {
-                date: formattedDate,
+                start: formattedDate,
                 title: updateText.title,
                 pipeline_id: pipelineId,
+                employee_id: currentUser?._id,
+                is_Remainder: updateText.isReminder,
+                minutes: updateText?.isReminder ? updateText?.reminderMinutes : 0,
+                type: 'Pipeline'
             };
-            console.log("🚀 ~ file: Meetings.js:55 ~ saveUpdates ~ pipelineHistoryData:", pipelineHistoryData)
             const response = await post('/createCustomerSchedule', pipelineHistoryData);
-            console.log("🚀 ~ file: Meetings.js:57 ~ saveUpdates ~ response:", response)
-
             if (response.success === 'true') {
                 showToastMessage('Meetings created successfully');
             } else {
@@ -80,7 +76,7 @@ const Meetings = ({ pipelineId }) => {
                 )}
                 showsVerticalScrollIndicator={false}
             />
-                <FABButton onPress={() => setIsModalVisible(!isModalVisible)} />
+            <FABButton onPress={() => setIsModalVisible(!isModalVisible)} />
             <MeetingsScheduleModal
                 isVisible={isModalVisible}
                 title={'Schedule Meeting'}

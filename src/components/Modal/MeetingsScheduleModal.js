@@ -11,12 +11,11 @@ import { CheckBox } from '@components/common/CheckBox';
 import { NavigationHeader } from '@components/Header';
 
 const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '', placeholder }) => {
+
     const [formState, setFormState] = useState({
         meeting: '',
-        meetingDate: new Date(),
-        meetingTime: new Date(),
-        isDatePickerVisible: false,
-        isTimePickerVisible: false,
+        meetingDateAndTime: new Date(),
+        isDateTimePickerVisible: false,
         isReminder: false,
         reminderMinutes: 0,
         errorText: ''
@@ -25,10 +24,9 @@ const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '',
     const handleInputChange = (name, value) => {
         setFormState(prevState => ({ ...prevState, [name]: value }));
     };
-    console.log("🚀 ~ file: MeetingsScheduleModal.js:45 ~ MeetingsScheduleModal ~ formState:", formState)
 
     const handleSave = () => {
-        const { meeting, meetingDate, meetingTime, isReminder, reminderMinutes } = formState;
+        const { meeting, meetingDateAndTime, isReminder, reminderMinutes } = formState;
         let hasError = false;
 
         if (!meeting) {
@@ -36,7 +34,7 @@ const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '',
             hasError = true;
         }
 
-        if (!meetingDate) {
+        if (!meetingDateAndTime) {
             handleInputChange('errorText', 'Start time is required');
             hasError = true;
         }
@@ -44,11 +42,9 @@ const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '',
         if (!hasError) {
             onSave({
                 title: meeting,
-                date: meetingDate,
-                time: meetingTime,
+                start: meetingDateAndTime,
                 is_Remainder: isReminder,
                 minutes: isReminder ? reminderMinutes : 0,
-                type: 'CRM',
             });
             resetForm();
             onClose();
@@ -58,9 +54,9 @@ const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '',
     const resetForm = () => {
         setFormState({
             meeting: '',
-            meetingDate: new Date(),
+            meetingDateAndTime: new Date(),
             meetingTime: new Date(),
-            isDatePickerVisible: false,
+            isDateTimePickerVisible: false,
             isTimePickerVisible: false,
             isReminder: false,
             reminderMinutes: 0,
@@ -68,7 +64,7 @@ const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '',
         });
     };
 
-    const { meeting, meetingDate, meetingTime, isDatePickerVisible, isTimePickerVisible, isReminder, reminderMinutes, errorText } = formState;
+    const { meeting, meetingDateAndTime, meetingTime, isDateTimePickerVisible, isTimePickerVisible, isReminder, reminderMinutes, errorText } = formState;
 
     return (
         <Modal
@@ -101,43 +97,22 @@ const MeetingsScheduleModal = ({ isVisible, onClose, onSave, title, header = '',
                         <Text style={styles.label}>Enter Date:</Text>
                         <View style={[styles.textInput, { flexDirection: "row", justifyContent: 'space-between' }]}>
                             <Text style={{ marginRight: 20 }}>
-                                {meetingDate ? format(meetingDate, "dd-MM-yyyy") : 'Select Date'}
+                                {meetingDateAndTime ? format(meetingDateAndTime, "dd-MM-yyyy HH:mm:ss") : 'Select Date'}
                             </Text>
-                            <TouchableOpacity onPress={() => handleInputChange('isDatePickerVisible', true)}>
+                            <TouchableOpacity onPress={() => handleInputChange('isDateTimePickerVisible', true)}>
                                 <Icon name="calendar" size={25} color='#2e294e' />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <DateTimePickerModal
-                        isVisible={isDatePickerVisible}
-                        mode="date"
-                        date={meetingDate}
+                        isVisible={isDateTimePickerVisible}
+                        mode="datetime"
+                        date={meetingDateAndTime}
                         onConfirm={(date) => {
-                            handleInputChange('meetingDate', date);
-                            handleInputChange('isDatePickerVisible', false);
+                            handleInputChange('meetingDateAndTime', date);
+                            handleInputChange('isDateTimePickerVisible', false);
                         }}
-                        onCancel={() => handleInputChange('isDatePickerVisible', false)}
-                    />
-                    <View style={styles.inputRow}>
-                        <Text style={styles.label}>Enter Time:</Text>
-                        <View style={[styles.textInput, { flexDirection: "row", justifyContent: 'space-between' }]}>
-                            <Text style={{ marginRight: 20 }}>
-                                {meetingTime ? format(meetingTime, "HH:mm:ss") : 'Select Time'}
-                            </Text>
-                            <TouchableOpacity onPress={() => handleInputChange('isTimePickerVisible', true)}>
-                                <Icon name="clock-o" size={25} color='#2e294e' />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <DateTimePickerModal
-                        isVisible={isTimePickerVisible}
-                        mode="time"
-                        date={meetingTime}
-                        onConfirm={(time) => {
-                            handleInputChange('meetingTime', time);
-                            handleInputChange('isTimePickerVisible', false);
-                        }}
-                        onCancel={() => handleInputChange('isTimePickerVisible', false)}
+                        onCancel={() => handleInputChange('isDateTimePickerVisible', false)}
                     />
                     <View style={styles.checkboxContainer}>
                         <Text style={styles.checkboxLabel}>Set Reminder</Text>
