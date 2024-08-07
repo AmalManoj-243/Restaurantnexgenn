@@ -24,6 +24,7 @@ import { EnquiryDetailTabs } from "@screens/Home/Options/CRM/EnquiryRegister/Enq
 import { LeadDetailTabs } from "@screens/Home/Options/CRM/Leads/LeadDetailTabs";
 import { EditPipeline, PipelineForm, PipelineScreen } from "@screens/Home/Options/CRM/Pipeline";
 import { PipelineDetailTabs } from "@screens/Home/Options/CRM/Pipeline/PipelineDetailTabs";
+import { PickupScreen } from "@screens/Home/Options/Pickup";
 
 const Stack = createNativeStackNavigator();
 
@@ -256,6 +257,13 @@ const StackNavigator = () => {
         component={EditPipeline}
         options={{ headerShown: false }}
       />
+      {/* pickup */}
+      <Stack.Screen
+        name="Pickup"
+        component={PickupScreen}
+        options={{ headerShown: false }}
+      />
+
     </Stack.Navigator>
   );
 };

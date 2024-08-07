@@ -12,7 +12,6 @@ import { put } from '@api/services/utils';
 import { showToast } from '@utils/common';
 import { useAuthStore } from '@stores/auth';
 import { NavigationHeader } from '@components/Header';
-import { set } from 'lodash';
 
 const VisitPlanDetails = ({ navigation, route }) => {
 
