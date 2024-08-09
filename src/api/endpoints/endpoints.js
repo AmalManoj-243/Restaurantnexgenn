@@ -43,7 +43,7 @@ export const DROP_DOWN_API_ENDPOINTS = {
     ENQUIRY_TYPE: "/viewEnquiryType/enquiry_list/enquiry_dropdown",
     NON_INSPECTED: "/viewNonInspectedBoxListing",
     PRODUCTS: "/viewProducts/product_list/product_dropdown",
-    UOM: "viewUnitOfMeasure",
+    UOM: "/viewUnitOfMeasure",
 };
 
 export const DETAIL_API_ENDPOINTS = {

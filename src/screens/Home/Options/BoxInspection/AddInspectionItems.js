@@ -15,14 +15,12 @@ import { validateFields } from '@utils/validation';
 const AddInspectionItems = ({ navigation, route }) => {
 
   const { addInspectedItems } = route?.params
-  const currentUser = useAuthStore(state => state.user);
-  console.log("🚀 ~ file: AddInspectionItems.js:17 ~ AddInspectionItems ~ currentUser:", currentUser)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDropdownType, setSelectedDropdownType] = useState(null);
   const [isDropdownSheetVisible, setIsDropdownSheetVisible] = useState(false);
 
   const [formData, setFormData] = useState({
-    productName: { id: currentUser?.related_profile?._id || '', label: currentUser?.related_profile?.product_name || '' },
+    productName: '',
     boxQuantity: '',
     inspectedQuantity: '',
     uomName: '',
@@ -30,23 +28,24 @@ const AddInspectionItems = ({ navigation, route }) => {
 
   const [errors, setErrors] = useState({});
   const [dropdowns, setDropdowns] = useState({
-    productName: [],
-    uomName: [],
+    products: [],
+    uom: [],
   });
 
+  console.log("🚀 ~ file: AddInspectionItems.js:37 ~ AddInspectionItems ~ dropdowns:", dropdowns)
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
         const productsData = await fetchProductsDropdown();
         const uomData = await fetchUomDropdown();
         setDropdowns({
-          productName: productsData.map(data => ({
+          products: productsData.map(data => ({
             id: data._id,
-            label: data.product_name,
+            label: data.product_name?.trim(),
           })),
-            uomName: uomData.map(data => ({
+            uom: uomData.map(data => ({
               id: data._id,
-              label: data.uom_name,
+              label: data.uom_name?.trim(),
             })),  
         });
       } catch (error) {
@@ -85,12 +84,12 @@ const AddInspectionItems = ({ navigation, route }) => {
     let fieldName = '';
 
     switch (selectedDropdownType) {
-      case 'Product Name':
-        items = dropdowns.productName;
+      case 'Products':
+        items = dropdowns.products;
         fieldName = 'productName';
         break;
       case 'Unit Of Measure':
-        items = dropdowns.uomName;
+        items = dropdowns.uom;
         fieldName = 'uomName';
         break;
       default:
@@ -126,6 +125,9 @@ const AddInspectionItems = ({ navigation, route }) => {
         uom_name_id: formData.uomName?.id || null,
       };
       addInspectedItems(boxInspectionData)
+      navigation.goBack();
+      setIsSubmitting(false);
+
     }
   };
 
@@ -140,11 +142,12 @@ const AddInspectionItems = ({ navigation, route }) => {
           label="Product Name"
           placeholder="Select Product Name"
           required
+          multiline
           dropIcon="menu-down"
           editable={false}
           validate={errors.productName}
           value={formData.productName?.label || ''}
-          onPress={() => toggleDropdownSheet('Product Name')}
+          onPress={() => toggleDropdownSheet('Products')}
         />
         <FormInput
           label="Box Quantity"
