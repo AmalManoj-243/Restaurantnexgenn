@@ -13,13 +13,21 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useAuthStore } from '@stores/auth';
 import { formatDateTime } from '@utils/common/date';
 import { validateFields } from '@utils/validation';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 
 const BoxInspectionForm = ({ navigation }) => {
-  const currentUser = useAuthStore(state => state.user?.related_profile?._id || '');
+  const currentUser = useAuthStore(state => state.user);
+  console.log("🚀 ~ file: BoxInspectionForm.js:19 ~ BoxInspectionForm ~ currentUser:", currentUser)
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDropdownType, setSelectedDropdownType] = useState(null);
   const [isDropdownSheetVisible, setIsDropdownSheetVisible] = useState(false);
+  const [inspectedItems, setInspectedItems] = useState([])
+
+
+  const addInspectedItems = (data) => {
+    setInspectedItems([...inspectedItems, data])
+  }
 
   const [formData, setFormData] = useState({
     dateTime: new Date(),
@@ -162,7 +170,7 @@ const BoxInspectionForm = ({ navigation }) => {
   };
 
   const handleAddItemsPress = () => {
-    navigation.navigate("AddInspectionItems");
+    navigation.navigate("AddInspectionItems", {addInspectedItems});
   };
 
   return (
@@ -188,14 +196,6 @@ const BoxInspectionForm = ({ navigation }) => {
           validate={errors.boxName}
           value={formData.boxName?.label || ''}
           onPress={() => toggleDropdownSheet('Box Name')}
-        />
-        <FormInput
-          label="Inspected Items"
-          placeholder="Enter Inspected Items"
-          editable
-          keyboardType="numeric"
-          validate={errors.inspectedItems}
-          onChangeText={(value) => handleFieldChange('inspectedItems', value)}
         />
         <FormInput
           label="Sales Person"
@@ -237,7 +237,8 @@ const styles = StyleSheet.create({
   },
   inspectionItemsLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: COLORS.primaryThemeColor,
+    fontFamily: FONT_FAMILY.urbanistSemiBold,
   },
   addButton: {
     backgroundColor: '#007BFF',

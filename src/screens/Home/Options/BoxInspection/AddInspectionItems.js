@@ -12,8 +12,11 @@ import { fetchproductNameDropdown, fetchuomNameDropdown } from '@api/dropdowns/d
 import { useAuthStore } from '@stores/auth';
 import { validateFields } from '@utils/validation';
 
-const AddInspectionItems = ({ navigation }) => {
+const AddInspectionItems = ({ navigation, route }) => {
+
+  const {addInspectedItems} = route?.params
   const currentUser = useAuthStore(state => state.user);
+  console.log("🚀 ~ file: AddInspectionItems.js:17 ~ AddInspectionItems ~ currentUser:", currentUser)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDropdownType, setSelectedDropdownType] = useState(null);
   const [isDropdownSheetVisible, setIsDropdownSheetVisible] = useState(false);
@@ -34,20 +37,23 @@ const AddInspectionItems = ({ navigation }) => {
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const [productNameData, uomNameData] = await Promise.all([
-          fetchproductNameDropdown(),
-          fetchuomNameDropdown(),
-        ]);
+
+        const productNameData = await fetchproductNameDropdown()
+        // const [productNameData, uomNameData] = await Promise.all([
+        //   fetchproductNameDropdown(),
+        //   fetchuomNameDropdown(),
+        // ]);
+        // console.log("🚀 ~ file: AddInspectionItems.js:41 ~ fetchDropdownData ~ productNameData:", productNameData)
     
         setDropdowns({
           productName: productNameData.map(data => ({
             id: data._id,
             label: data.product_name,
           })),
-          uomName: uomNameData.map(data => ({
-            id: data._id,
-            label: data.uom_name,
-          })),
+          // uomName: uomNameData.map(data => ({
+          //   id: data._id,
+          //   label: data.uom_name,
+          // })),
         });
       } catch (error) {
         console.error('Error fetching dropdown data:', error.message || error);
@@ -119,38 +125,13 @@ const AddInspectionItems = ({ navigation }) => {
     const fieldsToValidate = ['productName', 'uomName'];
     if (validateForm(fieldsToValidate)) {
       setIsSubmitting(true);
-      const InspectionData = {
+      const boxInspectionData = {
         product_name_id: formData.productName?.id || null,
         boxQuantity: formData.boxQuantity || null,
-        inspectedItems: formData.inspectedQuantity || null,
+        inspectedItems: parseInt(formData.inspectedQuantity, 10) || null,
         uom_name_id: formData.uomName?.id || null,
       };
-
-      try {
-        const response = await post("/createBoxInspection", InspectionData);
-        if (response.success) {
-          showToast({
-            type: 'success',
-            title: 'Success',
-            message: response.message || 'Box Inspection created successfully',
-          });
-          navigation.navigate("BoxInspectionScreen");
-        } else {
-          showToast({
-            type: 'error',
-            title: 'Error',
-            message: response.message || 'Box Inspection creation failed',
-          });
-        }
-      } catch (error) {
-        showToast({
-          type: 'error',
-          title: 'Error',
-          message: 'An unexpected error occurred. Please try again later.',
-        });
-      } finally {
-        setIsSubmitting(false);
-      }
+addInspectedItems(boxInspectionData)
     }
   };
 
