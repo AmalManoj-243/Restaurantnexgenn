@@ -15,6 +15,7 @@ import { formatData } from '@utils/formatters'
 import { AntDesign } from '@expo/vector-icons';
 import { post } from '@api/services/utils'
 import Toast from 'react-native-toast-message'
+import { showToast } from '@utils/common'
 
 const AuditForm = ({ navigation }) => {
 
@@ -31,6 +32,8 @@ const AuditForm = ({ navigation }) => {
   const [remarks, setRemarks] = useState('')
   const [splittedBillName, setSplittedBillName] = useState('')
   const loginUser = useAuthStore(state => state.user)
+  const warehouseId = loginUser?.warehouse?.warehouse_id
+  console.log("🚀 ~ file: AuditForm.js:36 ~ AuditForm ~ warehouseId:", warehouseId)
 
   useEffect(() => {
     resetFormState();
@@ -271,6 +274,14 @@ const AuditForm = ({ navigation }) => {
         updateErrorState(errorMessages[field], field);
         isValid = false;
       }
+
+      if (scannedBillDetails) {
+        if (warehouseId !== scannedBillDetails?.warehouse?.warehouses_id) {
+          showToast({ type: 'error', title: 'Error', message: "Warehouse doesn't match the logged-in user's warehouse." });
+          isValid = false;
+        }
+      }
+
     }
     if (isValid) {
       handleSubmitAudit();
