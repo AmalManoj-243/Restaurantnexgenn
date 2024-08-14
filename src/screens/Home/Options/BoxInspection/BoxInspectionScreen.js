@@ -117,7 +117,7 @@ const BoxInspectionScreen = ({ navigation }) => {
     <SafeAreaView>
       <NavigationHeader
         title="Box Inspection"
-        onBackPress={handleBackPress}  // Fixed syntax here
+        onBackPress={handleBackPress}
       />
       <SearchContainer placeholder="Search Boxes..." onChangeText={() => { }} />
       <RoundedContainer>
