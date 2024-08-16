@@ -8,7 +8,7 @@ import { FABButton } from '@components/common/Button';
 import { useAuthStore } from '@stores/auth';
 import { OverlayLoader } from '@components/Loader';
 import BoxInspectionList from './BoxInspectionList';
-import { post } from '@api/services/utils';
+import { post, put } from '@api/services/utils';
 import { showToast } from '@utils/common';
 import { fetchNonInspectedBoxDropdown } from '@api/dropdowns/dropdownApi';
 import { fetchInventoryDetails } from '@api/details/detailApi';
@@ -23,7 +23,8 @@ const BoxInspectionScreen = ({ navigation, route }) => {
   const warehouseId = currentUser?.warehouse?.warehouse_id || '';
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
 
-  const { groupId } = route.params;
+  const { groupId } = route?.params || {};
+  console.log("🚀 ~ file: BoxInspectionScreen.js:27 ~ BoxInspectionScreen ~ groupId:", groupId)
 
   useEffect(() => {
     const onBackPress = () => {
@@ -86,7 +87,7 @@ const BoxInspectionScreen = ({ navigation, route }) => {
           warehouse_id: currentUser.warehouse?.warehouse_id,
         };
         const response = await post('/createInventoryBoxRequest', requestPayload);
-        if (response.success) {
+        if (response.success===false) {
           navigation.navigate('BoxInspectionForm', { item, groupId });
         } else {
           showToast({ type: 'error', title: 'Error', message: "You don't have permission to open this box." });
@@ -106,18 +107,13 @@ const BoxInspectionScreen = ({ navigation, route }) => {
         box_inspection_grouping_id: groupId,
         end_date_time: new Date(),
       };
-
-      console.log('payload:', requestPayload);
-
-      const response = await post('/updateBoxInspectionGrouping', requestPayload);
-      console.log(response, "Response")
-
-      // if (response.success) {
-      //   showToast({ type: 'success', title: 'Success', message: 'Box inspection grouping updated successfully.' });
-      //   navigation.goBack(); 
-      // } else {
-      //   showToast({ type: 'error', title: 'Error', message: 'Failed to update box inspection grouping.' });
-      // }
+      const response = await put('/updateBoxInspectionGrouping', requestPayload);
+      if (response.success) {
+        showToast({ type: 'success', title: 'Success', message: 'Box inspection grouping updated successfully.' });
+        navigation.goBack(); 
+      } else {
+        showToast({ type: 'error', title: 'Error', message: 'Failed to update box inspection grouping.' });
+      }
     } catch (error) {
       console.error('Failed to update box inspection grouping:', error);
       showToast({ type: 'error', title: 'Error', message: 'An error occurred while updating box inspection grouping.' });
