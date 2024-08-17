@@ -26,6 +26,7 @@ import { EditPipeline, PipelineForm, PipelineScreen } from "@screens/Home/Option
 import { PipelineDetailTabs } from "@screens/Home/Options/CRM/Pipeline/PipelineDetailTabs";
 import { PickupScreen } from "@screens/Home/Options/Pickup";
 import { BoxInspectionForm, BoxInspectionScreen } from "@screens/Home/Options/BoxInspection";
+import { AttendanceScreen } from "@screens/Home/Options/Attendance";
 
 const Stack = createNativeStackNavigator();
 
@@ -275,6 +276,13 @@ const StackNavigator = () => {
       <Stack.Screen
         name="BoxInspectionForm"
         component={BoxInspectionForm}
+        options={{ headerShown: false }}
+      />
+
+      {/* Attendance */}
+      <Stack.Screen
+        name="AttendanceScreen"
+        component={AttendanceScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
