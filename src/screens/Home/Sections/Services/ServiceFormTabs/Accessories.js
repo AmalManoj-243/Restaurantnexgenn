@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
-import { DropdownSheet } from '@components/common/BottomSheets';
+import { MultiSelectDropdownSheet } from '@components/common/BottomSheets';
 import { fetchAccessoriesDropdown } from '@api/dropdowns/dropdownApi';
 
 const Accessories = ({ formData, onFieldChange, errors }) => {
@@ -50,10 +50,12 @@ const Accessories = ({ formData, onFieldChange, errors }) => {
         return null;
     }
     return (
-      <DropdownSheet
+      <MultiSelectDropdownSheet
         isVisible={isVisible}
         items={items}
+        refreshIcon={false}
         title={selectedType}
+        previousSelections={formData.accessories}
         onClose={() => setIsVisible(false)}
         onValueChange={(value) => onFieldChange(fieldName, value)}
       />
@@ -69,7 +71,7 @@ const Accessories = ({ formData, onFieldChange, errors }) => {
         items={dropdown.accessories}
         editable={false}
         validate={errors.accessories}
-        value={formData.accessories?.label}
+        value={formData.accessories?.map(accessories => accessories.label).join(', ')}
         onPress={() => toggleBottomSheet('Accessories')}
       />
       {renderBottomSheet()}

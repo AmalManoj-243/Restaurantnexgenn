@@ -11,6 +11,7 @@ const MultiSelectDropdownSheet = ({
     items,
     onValueChange,
     title,
+    refreshIcon = true,
     onClose = () => { },
     previousSelections = []  // Prop to pass previous selections
 }) => {
@@ -68,7 +69,7 @@ const MultiSelectDropdownSheet = ({
             <NavigationHeader
                 title={title}
                 logo={false}
-                refreshIcon={true}
+                refreshIcon={refreshIcon}
                 refreshPress={() => setSelectedItems([])}
                 checkIcon={true}
                 checkPress={onClose}

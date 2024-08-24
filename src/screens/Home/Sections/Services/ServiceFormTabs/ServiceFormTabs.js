@@ -44,7 +44,7 @@ const ServiceFormTabs = ({ navigation }) => {
         preCondition: "",
         estimation: "",
         remarks: "",
-        accessories: "",
+        accessories: [],
         complaints: "",
         subComplaints: "",
     });
@@ -113,7 +113,10 @@ const handleSubmit = async () => {
         pre_condition: formData.preCondition || null,
         estimation: formData.estimation || null,
         remarks: formData.remarks || null,
-        accessory_name: formData.accessories?.label ?? null,
+        accessories:formData.accessories?.map(accessories=>({
+          accessory_id: accessories.id,
+          accessory_name: accessories.label
+        })),
         complaints: formData.complaints?.label ?? null,
         sub_complaints: formData.subComplaints?.label ?? null,
       };

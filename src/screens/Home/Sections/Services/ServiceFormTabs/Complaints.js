@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
 import { DropdownSheet } from '@components/common/BottomSheets';
-import { fetchComplaintsDropdown, fetchsubComplaintsDropdown } from '@api/dropdowns/dropdownApi';
+import { fetchComplaintsDropdown, fetchSubComplaintsDropdown } from '@api/dropdowns/dropdownApi';
 
 const Complaints = ({ formData, onFieldChange, errors }) => {
 
@@ -22,6 +22,7 @@ const Complaints = ({ formData, onFieldChange, errors }) => {
           ...prevDropdown,
           complaints: complaintsData.map(data => ({
             id: data._id,
+            masterProblemId: data.master_problem_id,
             label: data.name,
           })),
         }));
@@ -34,11 +35,11 @@ const Complaints = ({ formData, onFieldChange, errors }) => {
   }, []);
 
   useEffect(() => {
-    if (formData.complaints?.id) { 
+    if (formData.complaints) {
       const fetchSubComplaintsData = async () => {
         try {
-          const subComplaintsData = await fetchsubComplaintsDropdown(formData.complaints.id);
-          console.log(subComplaintsData)
+          const subComplaintsData = await fetchSubComplaintsDropdown(formData.complaints.masterProblemId);
+          console.log('Fetched Sub Complaints:', subComplaintsData);
           setDropdown(prevDropdown => ({
             ...prevDropdown,
             subComplaints: subComplaintsData.map(data => ({
@@ -46,6 +47,7 @@ const Complaints = ({ formData, onFieldChange, errors }) => {
               label: data.name, 
             })),
           }));
+          
         } catch (error) {
           console.error('Error fetching sub-complaints dropdown data:', error);
         }

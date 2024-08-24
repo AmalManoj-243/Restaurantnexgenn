@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
 import { DropdownSheet } from '@components/common/BottomSheets';
-import { fetchDeviceDropdown, fetchBrandDropdown, fetchconsumerModelDropdown } from '@api/dropdowns/dropdownApi';
+import { fetchDeviceDropdown, fetchBrandDropdown, fetchConsumerModelDropdown } from '@api/dropdowns/dropdownApi';
 
 const Product = ({ formData, onFieldChange, errors }) => {
 
@@ -56,10 +56,10 @@ const Product = ({ formData, onFieldChange, errors }) => {
   }, [formData.device]);
 
   useEffect(() => {
-    if (formData.brand){
+    if (formData.brand && formData.device){
     const fetchconsumerModelData = async () => {
       try {
-        const consumerModelData = await fetchconsumerModelDropdown(formData.device.id);
+        const consumerModelData = await fetchConsumerModelDropdown(formData.device.id, formData.brand.id);
         setDropdown(prevDropdown => ({
           ...prevDropdown,
           consumerModel: consumerModelData.map(data => ({
@@ -73,7 +73,7 @@ const Product = ({ formData, onFieldChange, errors }) => {
     };
     fetchconsumerModelData();
   }
-  }, [formData.brand]);
+  }, [formData.brand, formData.device]);
 
   const toggleBottomSheet = (type) => {
     setSelectedType(type);

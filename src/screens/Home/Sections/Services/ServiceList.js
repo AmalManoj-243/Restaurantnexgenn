@@ -2,20 +2,23 @@ import React from 'react';
 import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import Text from '@components/Text';
 import { FONT_FAMILY } from '@constants/theme';
-import { formatDate } from '@utils/common/date';
+import { formatDate, formatDateTime } from '@utils/common/date';
 
 const ServiceList = ({ item, onPress }) => {
+  // const visitPurpose = item?.purpose_of_visit?.map(purpose => purpose?.name).join(', ')
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={styles.itemContainer}>
       <View style={styles.leftColumn}>
         <Text style={styles.head}>{item?.sequence_no || '-'}</Text>
-        <Text style={styles.contentRight}>{formatDate(item?.date) || '-'}</Text>
-        <Text style={styles.content}>{item?.customer_name}</Text>
-       </View> 
+        <Text style={styles.content}>{item?.customer_name?.trim() || '-'}</Text>
+      </View>
       <View style={styles.rightColumn}>
-        <Text style={styles.content}>{item?.assignee_name}</Text>
         <Text style={styles.content}>{item?.device_name}</Text>
-        <Text style={[styles.contentStage, {color: 'red'}]}>{item?.job_stage}</Text>
+        <Text style={[styles.contentRight]}>{formatDate(item?.date_time, 'dd MMM yyyy') || '-'}</Text>
+      </View>
+      <View style={styles.rightColumn}>
+        <Text style={styles.content}>{item?.assignee_name?.trim() || '-'}</Text>
+        <Text style={[styles.contentRight, { color: 'red' }]}>{item?.job_stage || '-'}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -41,11 +44,11 @@ const styles = StyleSheet.create({
   },
   leftColumn: {
     flex: 1,
-    flexDirection: 'column', 
   },
   rightColumn: {
-    flex: 1,
-    flexDirection: 'column', 
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    flex: 1
   },
   head: {
     fontFamily: FONT_FAMILY.urbanistBold,
@@ -54,25 +57,16 @@ const styles = StyleSheet.create({
   },
   content: {
     color: '#666666',
-    marginTop: 5,
-    fontSize: 16,
+    marginBottom: 5,
+    fontSize: 14,
     fontFamily: FONT_FAMILY.urbanistSemiBold,
-    textTransform: 'capitalize',
+    textTransform: 'capitalize'
   },
-  contentStage: {
-    color: '#666666',
-    marginTop: 5,
-    fontSize: 16,
-    fontFamily: FONT_FAMILY.urbanistSemiBold,
-    textTransform: 'capitalize',
-  },
+
   contentRight: {
     color: '#666666',
     fontFamily: FONT_FAMILY.urbanistSemiBold,
-    fontSize: 16,
-  },
-  additionalFields: {
-    marginTop: 10,
+    fontSize: 14,
   },
 });
 

@@ -86,8 +86,24 @@ export const allValidationRules = {
         message: 'Please select box name',
         validate: validateRequired,
     },
+    device: {
+        message: 'Please Select Device Name',
+        validate: validateRequired,
+    },
     brand: {
-        message: 'Please select brand',
+        message: 'Please select Brand Name',
+        validate: validateRequired,
+    },
+    consumerModel: {
+        message: 'Please select Consumer Model',
+        validate: validateRequired,
+    },
+    serialNumber: {
+        message: 'Please select Serial Number',
+        validate: validateRequired,
+    },
+    assignedTo: {
+        message: 'Please select Assigned To',
         validate: validateRequired,
     }
 
