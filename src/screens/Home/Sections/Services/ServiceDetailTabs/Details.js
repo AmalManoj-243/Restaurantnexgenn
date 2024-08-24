@@ -104,7 +104,10 @@ const Details = ({ serviceId }) => {
             setIsUpdateModalVisible(false);
         }
     };
-    
+
+    // Create a string of accessories
+    const accessoriesString = details?.accessories?.map(acc => acc.accessory_name).join(', ') || '-';
+
     return (
         <RoundedScrollContainer>
             <DetailField label="Customer" value={details?.customer_name || '-'}
@@ -129,7 +132,7 @@ const Details = ({ serviceId }) => {
                 textAlignVertical={'top'} />
             <DetailField label="Pre Condition" value={details?.pre_condition || '-'} />
             <DetailField label="Estimation" value={details?.estimation?.toString() || '-'} />
-            <DetailField label="Accessories" value={details?.accessory_name || '-'} />
+            <DetailField label="Accessories" value={accessoriesString} />
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20 }}>
                 <LoadingButton

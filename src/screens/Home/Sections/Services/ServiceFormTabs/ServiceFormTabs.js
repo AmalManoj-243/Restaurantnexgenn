@@ -28,43 +28,43 @@ const ServiceFormTabs = ({ navigation }) => {
     { key: 'fifth', title: 'Complaints' },
   ]);
 
-    const [formData, setFormData] = useState({
-        customerName: "",
-        phoneNumber: "",
-        emailAddress: "",
-        address: "",
-        trn: null,
-        warehouse: "",
-        device: "",
-        brand: "",
-        consumerModel: "",
-        serialNumber: "",
-        imeiNumber: "",
-        assignedTo: "",
-        preCondition: "",
-        estimation: "",
-        remarks: "",
-        accessories: [],
-        complaints: "",
-        subComplaints: "",
-    });
+  const [formData, setFormData] = useState({
+    customerName: "",
+    phoneNumber: "",
+    emailAddress: "",
+    address: "",
+    trn: null,
+    warehouse: "",
+    device: "",
+    brand: "",
+    consumerModel: "",
+    serialNumber: "",
+    imeiNumber: "",
+    assignedTo: "",
+    preCondition: "",
+    estimation: "",
+    remarks: "",
+    accessories: [],
+    complaints: "",
+    subComplaints: "",
+  });
 
-    const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
 
-    const handleFieldChange = (field, value) => {
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            [field]: value
-        }));
-        if (errors[field]) {
-            setErrors(prevErrors => ({
-                ...prevErrors,
-                [field]: null
-            }));
-        }
-    };
+  const handleFieldChange = (field, value) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [field]: value
+    }));
+    if (errors[field]) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [field]: null
+      }));
+    }
+  };
 
-    console.log("🚀 ~ ServiceFormTabs ~ formData:", JSON.stringify(formData, null, 2));
+  console.log("🚀 ~ ServiceFormTabs ~ formData:", JSON.stringify(formData, null, 2));
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -81,45 +81,69 @@ const ServiceFormTabs = ({ navigation }) => {
       default:
         return null;
     }
-};
+  };
 
-    const validateForm = (fieldsToValidate) => {
-        Keyboard.dismiss();
-        const { isValid, errors } = validateFields(formData, fieldsToValidate);
-        console.log("Validation errors:", errors);
-        setErrors(errors);
-        return isValid;
-    };
+  const validateForm = (fieldsToValidate) => {
+    Keyboard.dismiss();
+    const { isValid, errors } = validateFields(formData, fieldsToValidate);
+    console.log("Validation errors:", errors);
+    setErrors(errors);
+    return isValid;
+  };
 
-const handleSubmit = async () => {
-  const fieldsToValidate = ['customerName', 'phoneNumber', 'device', 'brand', 'consumerModel', 'serialNumber', 'assignedTo'];
+  const handleSubmit = async () => {
+    const fieldsToValidate = ['customerName', 'phoneNumber', 'device', 'brand', 'consumerModel', 'serialNumber', 'assignedTo'];
     if (validateForm(fieldsToValidate)) {
       setIsSubmitting(true);
       const serviceData = {
+        customer_id: formData?.customerName.id ?? null,
         customer_name: formData.customerName?.label ?? null,
         customer_mobile: formData.phoneNumber || null,
         customer_email: formData.emailAddress || null,
         address: formData.address || null,
         trn_no: parseInt(formData.trn, 10) || null,
+        warehouse_id: formData?.warehouse.id ?? null,
         warehouse_name: formData.warehouse?.label ?? null,
+        brand_id: formData?.brand.id ?? null,
         brand_name: formData.brand?.label ?? null,
+        device_id: formData?.device.id ?? null,
         device_name: formData.device?.label ?? null,
+        consumer_model_id: formData?.consumerModel.id ?? null,
         consumer_model_name: formData.consumerModel?.label ?? null,
         serial_no: formData.serialNumber || null,
         imei_no: formData.imeiNumber || null,
+        is_rma: false,
         job_stage: "new",
         job_registration_type: "quick",
+        assignee_id: formData?.assignedTo.id ?? null,
         assignee_name: formData.assignedTo?.label ?? null,
         pre_condition: formData.preCondition || null,
         estimation: formData.estimation || null,
         remarks: formData.remarks || null,
-        accessories:formData.accessories?.map(accessories=>({
+        sales_person_id: formData?.assignedTo.id ?? null,
+        sales_person_name: formData.assignedTo?.label ?? null,
+        remarks: formData.remarks || null,
+        accessories: formData.accessories?.map(accessories => ({
           accessory_id: accessories.id,
-          accessory_name: accessories.label
+          accessory_name: accessories.label,
         })),
-        complaints: formData.complaints?.label ?? null,
-        sub_complaints: formData.subComplaints?.label ?? null,
-      };
+        service_register_complaints: [
+          {
+            editable: false,
+            no: 0,
+            master_problem_id: formData?.complaints.id ?? null,
+            master_problem_name: formData.complaints?.label ?? null,
+            uom: null,
+            sub_problems_ids: [
+              {
+                sub_problem_id: formData?.subComplaints.id ?? null,
+                sub_problem_name: formData.subComplaints?.label ?? null,
+              }
+            ],
+            remarks: ""
+          }
+        ],
+      }
       console.log("🚀 ~ submit ~ serviceData:", JSON.stringify(serviceData, null, 2));
 
       try {
@@ -150,32 +174,32 @@ const handleSubmit = async () => {
         });
       } finally {
         setIsSubmitting(false);
-        }
+      }
     }
-};
+  };
 
-return (
+  return (
     <SafeAreaView>
       <NavigationHeader
-      title="Job Quick Registration "
-      onBackPress={() => navigation.goBack()}
+        title="Job Quick Registration "
+        onBackPress={() => navigation.goBack()}
       // logo={false}
       // iconOneName='edit'
       // iconOnePress={() => navigation.navigate('EditService', { serviceId: id })}
       />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{ flex: 1 }}>
         <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        renderTabBar={props => <CustomTabBar {...props} />} onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          renderTabBar={props => <CustomTabBar {...props} />} onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
         />
-        </KeyboardAvoidingView>
-        <View style={{ backgroundColor: 'white', paddingHorizontal: 50, paddingBottom: 12 }}>
-          <LoadingButton onPress={handleSubmit} title={'Submit'} loading={isSubmitting} />
-        </View>
-      </SafeAreaView>
-    );
+      </KeyboardAvoidingView>
+      <View style={{ backgroundColor: 'white', paddingHorizontal: 50, paddingBottom: 12 }}>
+        <LoadingButton onPress={handleSubmit} title={'Submit'} loading={isSubmitting} />
+      </View>
+    </SafeAreaView>
+  );
 };
 
 export default ServiceFormTabs;
