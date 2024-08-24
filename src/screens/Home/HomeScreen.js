@@ -105,9 +105,9 @@ const HomeScreen = ({ navigation }) => {
   const snapPoints = useMemo(() => {
     if (height < 700) {
       return ["33%", "79%"];
-    } else if (height < 810) {
-      return ["48%", "83%"];
     } else if (height < 800) {
+      return ["45%", "83%"];
+    } else if (height < 810) {
       return ["45%", "83%"];
     } else {
       return ["50%", "85%"];

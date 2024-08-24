@@ -4,7 +4,7 @@ import { SafeAreaView } from '@components/containers';
 import { NavigationHeader } from '@components/Header';
 import { LoadingButton } from '@components/common/Button';
 import { showToast } from '@utils/common';
-import { post, put } from '@api/services/utils';
+import { post } from '@api/services/utils';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
 import { useAuthStore } from '@stores/auth';
@@ -16,13 +16,15 @@ import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { OverlayLoader } from '@components/Loader';
 import { EmptyState } from '@components/common/empty';
 import Text from '@components/Text';
+import { useInspectionStore } from '@stores/box';
 
 const BoxInspectionForm = ({ navigation, route }) => {
-  const { params: { item: { boxId, boxName } = {}, groupId } = {} } = route;
+  const { params: { item: { boxId, boxName } = {} } = {} } = route;
   const currentUser = useAuthStore(state => state.user);
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [boxItems, setBoxItems] = useState([])
+  const { addInspectedId } = useInspectionStore();
 
   const [formData] = useState({
     date: new Date(),
@@ -97,20 +99,6 @@ const BoxInspectionForm = ({ navigation, route }) => {
     return isValid;
   };
 
-  const updatedInspectedBoxes = async (inspectedId) => {
-    try {
-      const requestPayload = {
-        box_inspection_grouping_id: groupId,
-        box_inspection_id: [inspectedId],
-        end_date_time: new Date(),
-      };
-      await put('/updateBoxInspectionGrouping', requestPayload);
-    } catch (error) {
-      // console.error('Failed to update box inspection grouping:', error);
-      showToast({ type: 'error', title: 'Error', message: 'An error occurred while updating box inspection grouping.' });
-    }
-  }
-
   const handleSubmit = async () => {
     const fieldsToValidate = ['boxName'];
     if (validateForm(fieldsToValidate)) {
@@ -133,8 +121,7 @@ const BoxInspectionForm = ({ navigation, route }) => {
         const response = await post("/createBoxInspection", requestPayload);
         if (response.success) {
           const inspectedId = response.data?._id;
-          // when success pass inspectedId  through the update api
-          updatedInspectedBoxes(inspectedId)
+          addInspectedId(inspectedId);
           showToast({
             type: "success",
             title: "Success",

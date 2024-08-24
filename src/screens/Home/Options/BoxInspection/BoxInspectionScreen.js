@@ -14,6 +14,7 @@ import { fetchInventoryDetails } from '@api/details/detailApi';
 import { formatData } from '@utils/formatters';
 import { ConfirmationModal } from '@components/Modal';
 import { BackHandler } from 'react-native';
+import { useInspectionStore } from '@stores/box';
 
 const BoxInspectionScreen = ({ navigation, route }) => {
   const [data, setData] = useState([]);
@@ -21,6 +22,7 @@ const BoxInspectionScreen = ({ navigation, route }) => {
   const currentUser = useAuthStore(state => state.user);
   const warehouseId = currentUser?.warehouse?.warehouse_id || '';
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+  const { inspectedIds, resetInspectedIds } = useInspectionStore();
 
   const { groupId } = route?.params || {};
 
@@ -104,13 +106,16 @@ const BoxInspectionScreen = ({ navigation, route }) => {
       const requestPayload = {
         box_inspection_grouping_id: groupId,
         end_date_time: new Date(),
+        box_inspection_id: inspectedIds,
       };
       const response = await put('/updateBoxInspectionGrouping', requestPayload);
       if (response.success) {
+        resetInspectedIds(); 
         navigation.goBack();
       }
     } catch (error) {
-      console.error('Failed to update box inspection grouping:', error);}
+      console.error('Failed to update box inspection grouping:', error);
+    }
   };
 
   const renderItem = useCallback(

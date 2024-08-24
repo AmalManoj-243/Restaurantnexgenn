@@ -85,6 +85,11 @@ export const allValidationRules = {
     box: {
         message: 'Please select box name',
         validate: validateRequired,
+    },
+    brand: {
+        message: 'Please select brand',
+        validate: validateRequired,
     }
+
     // Add other fields as needed
 };
