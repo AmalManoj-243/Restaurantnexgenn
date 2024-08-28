@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { useWindowDimensions, StyleSheet, FlatList, View, Text } from 'react-native';
+import { useWindowDimensions, StyleSheet, FlatList, View, Text, TouchableOpacity } from 'react-native';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from '@components/containers';
 import NavigationHeader from '@components/Header/NavigationHeader';
@@ -16,6 +16,7 @@ import { showToastMessage } from '@components/Toast';
 import { fetchServiceDetails } from '@api/details/detailApi';
 import { fetchProductsDropdown, fetchUnitOfMeasureDropdown } from '@api/dropdowns/dropdownApi';
 import { COLORS, FONT_FAMILY } from '@constants/theme';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const UpdateDetails = () => {
     const route = useRoute();
@@ -206,7 +207,12 @@ const UpdateDetails = () => {
                 <DetailField label="Brand Name" value={details?.brand_name || '-'} />
                 <DetailField label="Device Name" value={details?.device_name || '-'} />
                 <DetailField label="Consumer Model" value={details?.consumer_model_name || '-'} />
-                <Button onPress={() => setShowForm(!showForm)} title={'Add Item'} backgroundColor={COLORS.primaryThemeColor} width={'50%'} alignSelf={'center'} />
+                <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginVertical: 10 }}>
+                    <Text style={styles.label}>Add spare parts</Text>
+                    <TouchableOpacity activeOpacity={0.7} onPress={()=> navigation.navigate('AddSpareParts')}>
+                    <AntDesign name="pluscircle" size={26} color={COLORS.orange} />
+                    </TouchableOpacity>
+                </View>
                 {showForm && (
                     <>
                         <FormInput

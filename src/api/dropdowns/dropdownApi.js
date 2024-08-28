@@ -147,7 +147,6 @@ export const fetchBrandDropdown = async (deviceId) => {
 }
 
 export const fetchConsumerModelDropdown = async (deviceId, brandId) => {
-  console.log("🚀 ~ file: dropdownApi.js:150 ~ fetchConsumerModelDropdown ~ deviceId:", deviceId)
   return fetchData(`${DROP_DOWN_API_ENDPOINTS.CONSUMER_MODEL}?job_device_id=${deviceId}&job_brand_id=${brandId}`);
 }
 

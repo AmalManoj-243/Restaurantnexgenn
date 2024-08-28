@@ -11,8 +11,8 @@ const ServiceScreen = ({ navigation }) => {
 
     const options =
         [
-            { title: 'Quick Service', image: require('@assets/images/Home/options/crm/enquiry_register.png'), onPress: () => navigation.navigate('QuickServiceScreen') },
-            { title: 'Spare Parts Request', image: require('@assets/images/Home/options/crm/enquiry_register.png'), onPress: () => navigation.navigate('SparePartsRequestScreen') },
+            { title: 'Quick Service', image: require('@assets/images/Home/section/service.png'), onPress: () => navigation.navigate('QuickServiceScreen') },
+            { title: 'Spare Parts Request', image: require('@assets/images/Home/section/spare_parts.png'), onPress: () => navigation.navigate('SparePartsRequestScreen') },
         ]
 
     const renderItem = ({ item }) => {

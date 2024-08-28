@@ -1,4 +1,6 @@
 import ServiceScreen from "./QuickServiceScreen";
-import ServiceForm from "./QuickServiceForm";
+import ServiceDetails from "./ServiceDetails";
+import UpdateDetails from "./UpdateDetail";
+import AddSpareParts from "./AddSpareParts";
 
-export { ServiceForm, ServiceScreen}
+export { ServiceScreen, ServiceDetails, UpdateDetails, AddSpareParts}

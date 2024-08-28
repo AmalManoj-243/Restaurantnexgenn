@@ -28,16 +28,12 @@ import { PickupScreen } from "@screens/Home/Options/Pickup";
 import { BoxInspectionForm, BoxInspectionScreen } from "@screens/Home/Options/BoxInspection";
 import { AttendanceScreen } from "@screens/Home/Options/Attendance";
 import { MarkAttendance, PunchingScreen } from "@screens/Home/Options/Attendance/Punching";
-import QuickServiceDetailTabs from "@screens/Home/Sections/Services/QuickService/QuickServiceDetailTabs/QuickServiceDetailTabs";
 import QuickServiceFormTabs from "@screens/Home/Sections/Services/QuickService/QuickServiceFormTabs/QuickServiceFormTabs";
 import QuickServiceScreen from "@screens/Home/Sections/Services/QuickService/QuickServiceScreen";
-import { UpdateDetailTabs } from "@screens/Home/Sections/Services/QuickService/UpdateDetailTabs";
-import UpdateDetail from "@screens/Home/Sections/Services/QuickService/UpdateDetailTabs/UpdateDetail";
 import { ServiceScreen } from "@screens/Home/Sections/Services";
 import { SparePartsRequestScreen } from "@screens/Home/Sections/Services/SparePartsRequest";
-import SparePartsRequestList from "@screens/Home/Sections/Services/SparePartsRequest/SparePartsRequestList";
 import SparePartsRequestDetails from "@screens/Home/Sections/Services/SparePartsRequest/SparePartsRequestDetails";
-import ServiceDetails from "@screens/Home/Sections/Services/QuickService/QuickServiceDetailTabs/ServiceDetails";
+import { AddSpareParts, ServiceDetails, UpdateDetails } from "@screens/Home/Sections/Services/QuickService";
 
 const Stack = createNativeStackNavigator();
 
@@ -165,11 +161,7 @@ const StackNavigator = () => {
         component={QuickServiceScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="QuickServiceDetailTabs"
-        component={QuickServiceDetailTabs}
-        options={{ headerShown: false }}
-      />
+
       <Stack.Screen
         name="QuickServiceFormTabs"
         component={QuickServiceFormTabs}
@@ -177,7 +169,13 @@ const StackNavigator = () => {
       />
       <Stack.Screen
         name="UpdateDetail"
-        component={UpdateDetail}
+        component={UpdateDetails}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="AddSpareParts"
+        component={AddSpareParts}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -189,17 +187,12 @@ const StackNavigator = () => {
       {/* Spare Parts */}
       <Stack.Screen
         name="SparePartsRequestScreen"
-        component={SparePartsRequestScreen} 
+        component={SparePartsRequestScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SparePartsRequestDetails"
         component={SparePartsRequestDetails}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SparePartsRequestList"
-        component={SparePartsRequestList}
         options={{ headerShown: false }}
       />
 
