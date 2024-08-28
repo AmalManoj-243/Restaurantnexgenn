@@ -345,6 +345,14 @@ const AuditForm = ({ navigation }) => {
           auditingData.register_payment_sequence_no = scannedBillDetails?.register_payments[0].sequence_no
           auditingData.supplier_id = scannedBillDetails?.supplier?.supplier_id ?? null;
           auditingData.supplier_name = scannedBillDetails?.supplier?.supplier_name ?? null;
+          // latest updates keys
+          auditingData.chart_of_accounts_id = scannedBillDetails?.register_payments[0]?.chart_of_accounts_id ?? null;
+          auditingData.chart_of_accounts_name = scannedBillDetails?.register_payments[0]?.chart_of_accounts_name ?? null;
+          auditingData.online_transaction_type = scannedBillDetails?.register_payments[0]?.online_transaction_type ?? null;
+          auditingData.online_status = scannedBillDetails?.register_payments[0]?.online_status ?? null;
+          auditingData.ledger_id = scannedBillDetails?.register_payments[0]?.ledger_id ?? null;
+          auditingData.ledger_type = scannedBillDetails?.register_payments[0]?.ledger_type ?? null;
+          auditingData.ledger_display_name = scannedBillDetails?.register_payments[0]?.ledger_display_name ?? null;
           break;
         case "Vendor Bill":
           // Handling for Vendor Bill
