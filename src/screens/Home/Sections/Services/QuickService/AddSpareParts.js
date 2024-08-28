@@ -1,21 +1,32 @@
 import { View, Text } from 'react-native'
 import React, {useEffect, useState} from 'react'
-import { SafeAreaView } from '@components/containers'
+import { RoundedScrollContainer, SafeAreaView } from '@components/containers'
 import { NavigationHeader } from '@components/Header'
 import { TextInput as FormInput } from '@components/common/TextInput'
 import { fetchProductsDropdown, fetchUnitOfMeasureDropdown } from '@api/dropdowns/dropdownApi'
+import { Button } from '@components/common/Button'
+import { COLORS } from '@constants/theme'
+import { DropdownSheet } from '@components/common/BottomSheets'
 
-const AddSpareParts = () => {
+const AddSpareParts = ({navigation}) => {
 
     const [dropdown, setDropdown] = useState({ products: [], unitofmeasure: [] });
     const [formData, setFormData] = useState({
-        spareName: '',
+        spareParts: '',
         description: '',
         quantity: '',
         uom: '',
         unitPrice: '',
         servicecharge: '',
     })
+    const [selectedType, setSelectedType] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+
+    const toggleBottomSheet = (type) => {
+        setSelectedType(type);
+        setIsVisible(!isVisible);
+    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -26,8 +37,8 @@ const AddSpareParts = () => {
                     products: ProductsData.map(data => ({
                         id: data._id,
                         label: data.product_name?.trim(),
-                        unit_price: data.sale_price,
-                        product_description: data.product_description,
+                        unitPrice: data.sale_price,
+                        productDescription: data.product_description,
                     })),
                 }));
             } catch (error) {
@@ -47,7 +58,6 @@ const AddSpareParts = () => {
                     unitofmeasure: UnitOfMeasureData.map(data => ({
                         id: data._id,
                         label: data.uom_name,
-                        product_description: data.product_description,
                     })),
                 }));
             } catch (error) {
@@ -57,6 +67,7 @@ const AddSpareParts = () => {
 
         fetchUnitOfMeasure();
     }, []);
+
 
     const renderBottomSheet = () => {
         let items = [];
@@ -74,6 +85,19 @@ const AddSpareParts = () => {
             default:
                 return null;
         }
+
+        return (
+            <DropdownSheet
+                isVisible={isVisible}
+                items={items}
+                title={selectedType}
+                onClose={() => setIsVisible(false)}
+                onValueChange={(value) => {
+                    if (fieldName === 'spareName') handleProductSelection(value);
+                    else if (fieldName === 'uom') setUom(value);
+                }}
+            />
+        );
     };
     return (
         <SafeAreaView>
@@ -81,6 +105,7 @@ const AddSpareParts = () => {
                 title="Add Spare Parts"
                 onBackPress={() => navigation.goBack()}
             />
+            <RoundedScrollContainer>
             <FormInput
                 label="Spare Name"
                 placeholder="Select Product Name"
@@ -88,32 +113,31 @@ const AddSpareParts = () => {
                 multiline
                 required
                 editable={false}
-                items={dropdown.products}
-                value={spareName?.label?.trim()}
+                value={formData.spareParts?.label?.trim()}
                 onPress={() => toggleBottomSheet('SpareName')}
             />
             <FormInput
                 label="Description"
                 placeholder="Enter Description"
                 editable={true}
-                value={description}
-                onChangeText={setDescription}
+                // value={description}
+                // onChangeText={setDescription}
             />
             <FormInput
                 label="Quantity"
                 placeholder="Enter Quantity"
                 editable={true}
                 keyboardType="numeric"
-                value={quantity}
-                onChangeText={handleQuantityChange}
+                // value={quantity}
+                // onChangeText={handleQuantityChange}
             />
             <FormInput
                 label="UOM"
                 placeholder="Select Unit Of Measure"
                 dropIcon="menu-down"
                 editable={false}
-                items={dropdown.unitofmeasure}
-                value={uom?.label}
+                // items={dropdown.unitofmeasure}
+                // value={uom?.label}
                 onPress={() => toggleBottomSheet('UOM')}
             />
             <FormInput
@@ -121,8 +145,8 @@ const AddSpareParts = () => {
                 placeholder="Enter Unit Price"
                 editable={false}
                 keyboardType="numeric"
-                value={unitPrice}
-                onChangeText={setUnitPrice}
+                // value={unitPrice}
+                // onChangeText={setUnitPrice}
             />
             <FormInput
                 label="Taxes"
@@ -130,25 +154,20 @@ const AddSpareParts = () => {
                 editable={true}
                 required
                 keyboardType="numeric"
-                value={tax}
-                onChangeText={setTax}
-            />
-            <FormInput
-                label="Service Charge"
-                placeholder="Enter Service Charge"
-                editable={true}
-                keyboardType="numeric"
-                value={serviceCharge}
-                onChangeText={setServiceCharge}
+                // value={tax}
+                // onChangeText={setTax}
             />
             <FormInput
                 label="Sub Total"
                 placeholder="Enter Sub Total"
                 editable={false}
                 keyboardType="numeric"
-                value={subTotal}
-                onChangeText={setSubTotal}
+                // value={subTotal}
+                // onChangeText={setSubTotal}
             />
+            {renderBottomSheet()}
+            <Button title={'SAVE'} width={'50%'} alignSelf={'center'} backgroundColor={COLORS.primaryThemeColor} />
+            </RoundedScrollContainer>
         </SafeAreaView>
     )
 }

@@ -213,93 +213,12 @@ const UpdateDetails = () => {
                     <AntDesign name="pluscircle" size={26} color={COLORS.orange} />
                     </TouchableOpacity>
                 </View>
-                {showForm && (
-                    <>
-                        <FormInput
-                            label="Spare Name"
-                            placeholder="Select Product Name"
-                            dropIcon="menu-down"
-                            multiline
-                            required
-                            editable={false}
-                            items={dropdown.products}
-                            value={spareName?.label?.trim()}
-                            onPress={() => toggleBottomSheet('SpareName')}
-                        />
-                        <FormInput
-                            label="Description"
-                            placeholder="Enter Description"
-                            editable={true}
-                            value={description}
-                            onChangeText={setDescription}
-                        />
-                        <FormInput
-                            label="Quantity"
-                            placeholder="Enter Quantity"
-                            editable={true}
-                            keyboardType="numeric"
-                            value={quantity}
-                            onChangeText={handleQuantityChange}
-                        />
-                        <FormInput
-                            label="UOM"
-                            placeholder="Select Unit Of Measure"
-                            dropIcon="menu-down"
-                            editable={false}
-                            items={dropdown.unitofmeasure}
-                            value={uom?.label}
-                            onPress={() => toggleBottomSheet('UOM')}
-                        />
-                        <FormInput
-                            label="Unit Price"
-                            placeholder="Enter Unit Price"
-                            editable={false}
-                            keyboardType="numeric"
-                            value={unitPrice}
-                            onChangeText={setUnitPrice}
-                        />
-                        <FormInput
-                            label="Taxes"
-                            placeholder="Enter Tax"
-                            editable={true}
-                            required
-                            keyboardType="numeric"
-                            value={tax}
-                            onChangeText={setTax}
-                        />
-                        <FormInput
-                            label="Service Charge"
-                            placeholder="Enter Service Charge"
-                            editable={true}
-                            keyboardType="numeric"
-                            value={serviceCharge}
-                            onChangeText={setServiceCharge}
-                        />
-                        <FormInput
-                            label="Sub Total"
-                            placeholder="Enter Sub Total"
-                            editable={false}
-                            keyboardType="numeric"
-                            value={subTotal}
-                            onChangeText={setSubTotal}
-                        />
-                        <Button
-                            onPress={handleSubmit}
-                            title="Save Item"
-                            backgroundColor={COLORS.primaryThemeColor}
-                            width="50%"
-                            alignSelf="center"
-                        />
-                    </>
-                )}
-
                 <FlatList
                     data={savedItems}
                     renderItem={({ item }) => (
                         <SparePartsList item={item} />
                     )}
                     keyExtractor={(item, index) => index.toString()}
-                    ListHeaderComponent={() => savedItems.length > 0 && <Text style={styles.label}>Spare Parts</Text>}
                 />
             </RoundedScrollContainer>
             {renderBottomSheet()}

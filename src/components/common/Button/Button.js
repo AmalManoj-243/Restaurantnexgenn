@@ -24,7 +24,7 @@ const Button = ({
         backgroundColor: backgroundColor,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10,
+        borderRadius: 8,
         marginVertical:10,
         paddingHorizontal:8,
         ...props
