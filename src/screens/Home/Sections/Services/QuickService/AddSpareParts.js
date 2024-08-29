@@ -23,7 +23,7 @@ const AddSpareParts = ({ navigation, route }) => {
     });
 
     const [formData, setFormData] = useState({
-        spareParts: '',
+        product: '',
         description: '',
         quantity: '1',
         uom: '',
@@ -60,7 +60,7 @@ const AddSpareParts = ({ navigation, route }) => {
 
         setFormData(prevFormData => ({
             ...prevFormData,
-            spareParts: selectedProduct,
+            product: selectedProduct,
             description,
             unitPrice,
             quantity: defaultQuantity,
@@ -132,20 +132,20 @@ const AddSpareParts = ({ navigation, route }) => {
         return isValid;
     };
 
-    const handleSubmit = () => {
-        const fieldsToValidate = ['spareParts', 'tax'];
+    const handleAddItems = () => {
+        const fieldsToValidate = ['product', 'tax'];
         if (validateForm(fieldsToValidate)) {
             const spareItem = {
-                spareParts: formData.spareParts?.label || '',
+                product: formData.product || '',
                 description: formData.description || '',
                 quantity: formData.quantity || '',
-                uom: formData.uom?.label || '',
+                uom: formData.uom || '',
                 unitPrice: formData.unitPrice || '',
                 tax: formData.tax || '',
                 subTotal: formData.subTotal || '',
             };
             addSpareParts(spareItem);
-            navigation.navigate('UpdateDetail', { updatedItem: spareItem });
+            navigation.navigate('UpdateDetail', { updatedItem: spareItem, id });
         }
     };
 
@@ -156,7 +156,7 @@ const AddSpareParts = ({ navigation, route }) => {
         switch (selectedType) {
             case 'Spare Name':
                 items = dropdown.products;
-                fieldName = 'spareParts';
+                fieldName = 'product';
                 break;
             case 'UOM':
                 items = dropdown.unitofmeasure;
@@ -196,21 +196,19 @@ const AddSpareParts = ({ navigation, route }) => {
                     multiline
                     required
                     editable={false}
-                    validate={errors.spareParts}
-                    value={formData.spareParts?.label?.trim()}
+                    validate={errors.product}
+                    value={formData.product?.label?.trim()}
                     onPress={() => toggleBottomSheet('Spare Name')}
                 />
                 <FormInput
                     label="Description"
                     placeholder="Enter Description"
-                    editable={true}
                     value={formData.description}
                     onChangeText={(value) => handleFieldChange('description', value)}
                 />
                 <FormInput
                     label="Quantity"
                     placeholder="Enter Quantity"
-                    editable={true}
                     keyboardType="numeric"
                     value={formData.quantity}
                     onChangeText={(value) => handleQuantityChange(value)}
@@ -233,7 +231,6 @@ const AddSpareParts = ({ navigation, route }) => {
                 <FormInput
                     label="Taxes"
                     placeholder="Enter Tax"
-                    editable={true}
                     required
                     keyboardType="numeric"
                     value={formData.tax}
@@ -252,7 +249,7 @@ const AddSpareParts = ({ navigation, route }) => {
                     width={'50%'}
                     alignSelf={'center'}
                     backgroundColor={COLORS.primaryThemeColor}
-                    onPress={handleSubmit}
+                    onPress={handleAddItems}
                 />
             </RoundedScrollContainer>
         </SafeAreaView>

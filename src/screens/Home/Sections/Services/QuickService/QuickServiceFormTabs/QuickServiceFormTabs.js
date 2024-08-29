@@ -96,6 +96,7 @@ const QuickServiceFormTabs = ({ navigation }) => {
     if (validateForm(fieldsToValidate)) {
       setIsSubmitting(true);
       const serviceData = {
+        date: new Date(),
         customer_id: formData?.customerName.id ?? null,
         customer_name: formData.customerName?.label ?? null,
         customer_mobile: formData.phoneNumber || null,

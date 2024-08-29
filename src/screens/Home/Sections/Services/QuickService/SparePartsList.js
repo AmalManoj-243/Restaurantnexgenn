@@ -7,14 +7,14 @@ const SparePartsList = ({ item }) => {
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.itemContainer}>
       <View style={styles.leftColumn}>
-        <Text style={styles.head}>{item?.spareParts?.trim() || '-'}</Text>
+        <Text style={styles.head}>{item?.product?.label?.trim() || '-'}</Text>
         <View style={styles.rightColumn}>
           <Text style={styles.content}>{item?.description || '-'}</Text>
           <Text style={[styles.contentRight]}>{item?.quantity}</Text>
         </View>
       </View>
       <View style={styles.rightColumn}>
-        <Text style={styles.content}>{item?.uom || '-'}</Text>
+        <Text style={styles.content}>{item?.uom?.label || '-'}</Text>
         <Text style={styles.contentRight}>{item?.unitPrice || '-'}</Text>
       </View>
       <View style={styles.rightColumn}>

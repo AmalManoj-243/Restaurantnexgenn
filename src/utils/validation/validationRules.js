@@ -106,7 +106,7 @@ export const allValidationRules = {
         message: 'Please select Assigned To',
         validate: validateRequired,
     },
-    spareParts: {
+    product: {
         message: 'Please select Spare Name',
         validate: validateRequired,
     }
