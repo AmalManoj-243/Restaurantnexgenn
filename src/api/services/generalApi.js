@@ -249,7 +249,6 @@ export const fetchKPIDashboardData = async ({userId}) => {
   try{
     const queryParams = {login_employee_id: userId};
     const response = await get(API_ENDPOINTS.VIEW_KPI,queryParams);
-    console.log("API Response:", response.data);
     return response.data;
   } catch(error) {
     handleApiError(error);

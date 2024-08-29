@@ -83,7 +83,7 @@ const KPIDashboardScreen = ({ navigation }) => {
         { name: 'Important', value: dashBoardDetails.importantKpiData.length || 0, color: '#36A2EB' },
         { name: 'Service', value: dashBoardDetails.serviceKpiData.length || 0, color: '#FFCE56' },
         { name: 'In Progress', value: dashBoardDetails.inProgressKpi.length || 0, color: '#bddb02' },
-        { name: 'Completed ', value: dashBoardDetails.completedKpi.length || 0, color: '#4BC0C0' },
+        { name: 'Completed', value: dashBoardDetails.completedKpi.length || 0, color: '#4BC0C0' },
     ];
 
     const PieSection = ({ data, title, count }) => (

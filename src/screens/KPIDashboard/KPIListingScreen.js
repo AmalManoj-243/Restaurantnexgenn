@@ -41,15 +41,6 @@ const KPIListingScreen = ({ navigation }) => {
                 inProgressKpi: data.in_progress_kpi || [],
                 completedKpi: data.completed_kpi || []
         });
-        // console.log("Updated dashBoardDetails State:", {
-        //     assignedKpiData: data.assigned_kpi_data || [],
-        //     importantKpiData: data.important_kpi_data || [],
-        //     urgentKpiData: data.urgent_kpi_data || [],
-        //     serviceKpiData: data.service_kpi_data || [],
-        //     taskManagements: data.task_managments || [],
-        //     inProgressKpi: data.in_progress_kpi || [],
-        //     completedKpi: data.completed_kpi || []
-        // });
         } catch(error){
             console.error('Error fetching visit details:', error);
             showToastMessage('Failed to fetch visit details');
