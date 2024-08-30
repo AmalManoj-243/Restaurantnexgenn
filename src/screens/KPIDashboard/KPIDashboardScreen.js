@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Text, Platform } from 'react-native';
-// import { PieChart } from 'react-native-chart-kit';
+import { View, StyleSheet, Dimensions, Text, Platform } from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationHeader } from '@components/Header';
 import { COLORS, FONT_FAMILY } from '@constants/theme';
-import { RoundedContainer, RoundedScrollContainer } from '@components/containers';
+import { RoundedContainer, RoundedScrollContainer, SafeAreaView } from '@components/containers';
 import { useIsFocused } from '@react-navigation/native';
 import { useAuthStore } from '@stores/auth';
 import { useDataFetching } from '@hooks';
@@ -66,8 +64,8 @@ const KPIDashboardScreen = ({ navigation }) => {
         '#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000'
     ).slice(0, 7);
 
-     // Define fixed colors for each KPI category
-     const colorMapping = {
+    // Define fixed colors for each KPI category
+    const colorMapping = {
         'Assigned': '#d802db',
         'Urgent': '#FFDE43',
         'Important': '#36A2EB',
@@ -133,25 +131,25 @@ const KPIDashboardScreen = ({ navigation }) => {
                         style={styles.pieChart}
                         data={data}
                         padAngle={0}
-                        
+
                     />
                 </View>
                 <View style={styles.legendContainer}>
-                {pieData.map((item, index) => (
-                <View key={index} style={styles.legendItem}>
-                    <View style={[styles.legendDot, { backgroundColor: item.svg.fill }]} />
-                        <Text style={styles.legendLabel}>{`${item.name}: ${item.value}`}</Text>
-                </View>
-    ))}
+                    {pieData.map((item, index) => (
+                        <View key={index} style={styles.legendItem}>
+                            <View style={[styles.legendDot, { backgroundColor: item.svg.fill }]} />
+                            <Text style={styles.legendLabel}>{`${item.name}: ${item.value}`}</Text>
+                        </View>
+                    ))}
                 </View>
             </View>
         </View>
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView>
             <NavigationHeader title="KPI Dashboard" onBackPress={() => navigation.goBack()} />
-            <RoundedScrollContainer contentContainerStyle={styles.scrollViewContent}>
+            <RoundedScrollContainer>
                 <PieSection data={pieData} title="Action Screens" />
             </RoundedScrollContainer>
         </SafeAreaView>
@@ -159,40 +157,16 @@ const KPIDashboardScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    itemContainer: {
-        marginHorizontal: 5,
-        marginVertical: 5,
-        backgroundColor: 'white',
-        borderRadius: 15,
-        padding: 15,
-        ...Platform.select({
-            android: {
-                elevation: 4,
-            },
-            ios: {
-                shadowColor: 'black',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-            },
-        }),
-    },
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.themeapp,
-    },
-    scrollViewContent: {
-        paddingVertical: 10,
-    },
     chartContainer: {
-        margin: 20,
-        borderRadius: 10,
-        padding: 10,
-        backgroundColor: '#FFFFFF',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
+        // margin: 20,
+        // borderRadius: 10,
+        // padding: 10,
+        // backgroundColor: '#FFFFFF',
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 4 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 8,
+        // elevation: 3,
     },
     chartLegendContainer: {
         flexDirection: 'row',
@@ -208,9 +182,9 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
-        fontWeight: 'bold',
         color: COLORS.themeapp,
         textAlign: 'center',
+        fontFamily: FONT_FAMILY.urbanistBlack,
         marginBottom: 10,
     },
     countText: {
@@ -227,11 +201,25 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         paddingVertical: 10,
+        // backgroundColor: 'red'
     },
     legendItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 5,
+        marginVertical: 8,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 10,
+        ...Platform.select({
+            android: {
+                elevation: 4,
+            },
+            ios: {
+                shadowColor: 'black',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+            },
+        }),
     },
     legendDot: {
         width: 10,
@@ -244,7 +232,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'black',
         flexShrink: 1,
-        text:FONT_FAMILY.urbanistExtraBold
+        fontFamily: FONT_FAMILY.urbanistBold
     },
 });
 
