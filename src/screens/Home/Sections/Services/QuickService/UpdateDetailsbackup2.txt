@@ -25,7 +25,7 @@ const UpdateDetails = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sparePartsItems, setSparePartsItems] = useState([]);
-  // console.log("🚀 ~ file: UpdateDetail.js:28 ~ UpdateDetails ~ sparePartsItems:", JSON.stringify(sparePartsItems, null, 3))
+  // console.log("🚀 ~ file: UpdateDetail.js:28 ~ UpdateDetails ~ sparePartsItems:", sparePartsItems)
   const [subTotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [formData, setFormData] = useState({
@@ -65,24 +65,52 @@ const UpdateDetails = ({ route, navigation }) => {
   useEffect(() => {
     calculateTotals();
   }, [sparePartsItems, formData.serviceCharge]);
+  
+
+  const extractJobDiagnosisParts = (jobDiagnoses, existingParts = []) => {
+    const existingPartIds = new Set(existingParts.map(part => part._id));
+    console.log("🚀 ~ file: UpdateDetail.js:71 ~ extractJobDiagnosisParts ~ existingPartIds:", existingPartIds)
+  
+    return jobDiagnoses
+      .flatMap(diagnosis => diagnosis.job_diagnosis_parts)
+      .filter(part => !existingPartIds.has(part._id))
+      .map(part => ({
+        _id: part._id,
+        product_id: part.product_id,
+        product_name: part.product_name,
+        description: part.description,
+        quantity: part.quantity,
+        unit_price: part.unit_price,
+        unit_cost: null,
+        tax_type_id: part.tax_type_id,
+        tax_type_name: part.tax_type_name,
+        job_diagnosis_id: part.job_diagnosis_id,
+        status: 'Requested',
+      }));
+  };
+  
 
   const fetchDetails = async () => {
     setIsLoading(true);
     try {
       const [updatedDetails] = await fetchServiceDetails(id);
       setDetails(updatedDetails || {});
-      const jobDiagnosisParts = updatedDetails?.job_diagnoses?.flatMap(diagnosis =>
-        diagnosis.job_diagnosis_parts?.map(part => {
-          // Destructure the part object to exclude spare_parts_line_lists and product_lists
-          const { spare_parts_line_lists, product_lists, ...cleanPart } = part;
-          return cleanPart;
-        }) || []
-      ) || [];
-      setSparePartsItems(prevItems => {
-        const existingPartIds = new Set(prevItems.map(item => item._id));
-        const newItems = jobDiagnosisParts.filter(item => !existingPartIds.has(item._id));
-        return [...prevItems, ...newItems];
-      });
+      
+    // // Extract job diagnosis parts and filter out duplicates
+    // const jobDiagnosisParts = extractJobDiagnosisParts(updatedDetails?.job_diagnoses || [], sparePartsItems);
+
+    // // Update state with new spare parts, ensuring no duplicates
+    // setSparePartsItems(prevItems => {
+    //   const existingPartIds = new Set(prevItems.map(item => item._id));
+    //   const newItems = jobDiagnosisParts.filter(item => !existingPartIds.has(item._id));
+    //   return [...prevItems, ...newItems];
+    // });
+    const jobDiagnosisParts = updatedDetails?.job_diagnoses?.flatMap(diagnosis =>
+        diagnosis.job_diagnosis_parts || []
+    ) || [];
+    
+    setSparePartsItems(jobDiagnosisParts)
+    console.log("🚀 ~ file: UpdateDetail.js:109 ~ fetchDetails ~ jobDiagnosisParts:", jobDiagnosisParts)
     } catch (error) {
       console.error('Error fetching service details:', error);
       showToastMessage('Failed to fetch service details. Please try again.');
@@ -90,6 +118,7 @@ const UpdateDetails = ({ route, navigation }) => {
       setIsLoading(false);
     }
   };
+
 
   useFocusEffect(
     useCallback(() => {
@@ -253,19 +282,19 @@ const UpdateDetails = ({ route, navigation }) => {
           )}
           keyExtractor={(item, index) => index.toString()}
         />
-        {sparePartsItems.length > 0 && <><View style={styles.totalSection}>
+      {sparePartsItems.length > 0 && <><View style={styles.totalSection}>
           <Text style={styles.totalLabel}>Subtotal: </Text>
           <Text style={styles.totalValue}>{subTotal.toFixed(2)}</Text>
         </View>
-          <View style={styles.totalSection}>
-            <Text style={styles.totalLabel}>Service Charge: </Text>
-            <Text style={styles.totalValue}>{formData.serviceCharge}</Text>
-          </View>
-          <View style={styles.totalSection}>
-            <Text style={styles.totalLabel}>Total: </Text>
-            <Text style={styles.totalValue}>{total.toFixed(2)}</Text>
-          </View>
-        </>
+        <View style={styles.totalSection}>
+          <Text style={styles.totalLabel}>Service Charge: </Text>
+          <Text style={styles.totalValue}>{formData.serviceCharge}</Text>
+        </View>
+        <View style={styles.totalSection}>
+          <Text style={styles.totalLabel}>Total: </Text>
+          <Text style={styles.totalValue}>{total.toFixed(2)}</Text>
+        </View>
+        </> 
         }
         <Button
           title={'SUBMIT'}

@@ -93,7 +93,7 @@ const AddSpareParts = ({ navigation, route }) => {
                         unitPrice: data.sale_price,
                         productDescription: data.product_description,
                     })),
-                }));
+                }));   
             } catch (error) {
                 console.error('Error fetching Products dropdown data:', error);
             }

@@ -32,7 +32,12 @@
 │   │   │   ├── order.png
 │   │   │   └── profile.png
 │   │   ├── common
-│   │   │   └── user_bg.png
+│   │   │   ├── box.png
+│   │   │   ├── call_history.png
+│   │   │   ├── gmail_history.png
+│   │   │   ├── map_icon.png
+│   │   │   ├── user_bg.png
+│   │   │   └── watsapp.png
 │   │   └── modal
 │   │       ├── camera.png
 │   │       ├── cancel.png
@@ -45,12 +50,16 @@
 │   │   │   ├── empty_data.png
 │   │   │   ├── empty_inventory_box.png
 │   │   │   ├── empty_items.png
+│   │   │   ├── empty.png
+│   │   │   ├── empty_visits.png
 │   │   │   └── transaction_empty.png
 │   │   ├── error
 │   │   │   └── error.png
 │   │   ├── header
+│   │   │   ├── check_button.png
 │   │   │   ├── logo_header_bg_white.png
 │   │   │   ├── logo_header.png
+│   │   │   ├── refresh_button.png
 │   │   │   └── transparent_logo_header.png
 │   │   ├── Home
 │   │   │   ├── Banner
@@ -64,26 +73,43 @@
 │   │   │   │   ├── barcode_scanner.png
 │   │   │   │   ├── header.png
 │   │   │   │   ├── header_transparent_bg.png
-│   │   │   │   ├── notification.gif
+│   │   │   │   ├── notification_2.png
+│   │   │   │   ├── notification.png
 │   │   │   │   └── search.png
 │   │   │   ├── options
+│   │   │   │   ├── attendance
+│   │   │   │   │   ├── attendance_requests.png
+│   │   │   │   │   ├── dashboard.png
+│   │   │   │   │   ├── leave_request.png
+│   │   │   │   │   └── punching.png
 │   │   │   │   ├── attendance.png
+│   │   │   │   ├── box_inspection.png
+│   │   │   │   ├── crm
+│   │   │   │   │   ├── enquiry_register.png
+│   │   │   │   │   ├── lead.png
+│   │   │   │   │   └── pipeline.png
+│   │   │   │   ├── crm.png
+│   │   │   │   ├── customer_visit.png
 │   │   │   │   ├── inventory_management_1.png
 │   │   │   │   ├── inventory_management.png
 │   │   │   │   ├── market_study_1.png
 │   │   │   │   ├── market_study.png
+│   │   │   │   ├── pickup.png
 │   │   │   │   ├── product_enquiry.png
 │   │   │   │   ├── product_purchase_requisition.png
 │   │   │   │   ├── scan_barcode.png
 │   │   │   │   ├── search_product.png
 │   │   │   │   ├── tasK_manager_1.png
 │   │   │   │   ├── task_manager.png
-│   │   │   │   └── transaction_auditing.png
+│   │   │   │   ├── transaction_auditing.png
+│   │   │   │   └── visits_plan.png
 │   │   │   └── section
 │   │   │       ├── customer.png
 │   │   │       ├── inventory_management.png
 │   │   │       ├── pickup.png
-│   │   │       └── services.png
+│   │   │       ├── service.png
+│   │   │       ├── services.png
+│   │   │       └── spare_parts.png
 │   │   ├── logo
 │   │   │   └── logo.png
 │   │   ├── Profile
@@ -124,6 +150,7 @@
 │   │       └── handleApiError.js
 │   ├── components
 │   │   ├── Calendar
+│   │   │   ├── CalendarScreen.js
 │   │   │   ├── index.js
 │   │   │   └── VerticalScrollableCalendar.js
 │   │   ├── Categories
@@ -132,11 +159,14 @@
 │   │   ├── common
 │   │   │   ├── BottomSheets
 │   │   │   │   ├── DropdownSheet.js
-│   │   │   │   └── index.js
+│   │   │   │   ├── index.js
+│   │   │   │   └── MultiSelectDropdownSheet.js
 │   │   │   ├── Button
 │   │   │   │   ├── Button.js
 │   │   │   │   ├── FABButton.js
-│   │   │   │   └── index.js
+│   │   │   │   ├── index.js
+│   │   │   │   ├── LoadingButton.js
+│   │   │   │   └── PressableInput.js
 │   │   │   ├── CheckBox
 │   │   │   │   ├── CheckBox.js
 │   │   │   │   └── index.js
@@ -163,6 +193,11 @@
 │   │   │   ├── RoundedScrollContainer.js
 │   │   │   ├── SafeAreaView.js
 │   │   │   └── SearchContainer.js
+│   │   ├── CRM
+│   │   │   ├── FollowUpList.js
+│   │   │   ├── index.js
+│   │   │   ├── Meetingslist.js
+│   │   │   └── VisitList.js
 │   │   ├── Header
 │   │   │   ├── BottomSheetHeader.js
 │   │   │   ├── index.js
@@ -178,14 +213,22 @@
 │   │   │   ├── AnimatedLoader.js
 │   │   │   ├── index.js
 │   │   │   └── OverlayLoader.js
+│   │   ├── MapViewScreen
+│   │   │   ├── index.js
+│   │   │   ├── MapViewComponent.js
+│   │   │   └── MapViewScreen.js
 │   │   ├── Modal
 │   │   │   ├── ActionModal.js
+│   │   │   ├── AddUpdateModal.js
 │   │   │   ├── backupEmployeeListModal.txt
+│   │   │   ├── ConfirmationModal.js
 │   │   │   ├── CustomListModal.js
 │   │   │   ├── EmployeeLIstModal.js
 │   │   │   ├── index.js
 │   │   │   ├── InputModal.js
-│   │   │   └── LogoutModal.js
+│   │   │   ├── LogoutModal.js
+│   │   │   ├── MeetingsScheduleModal.js
+│   │   │   └── RulesModal.js
 │   │   ├── Options
 │   │   │   ├── index.js
 │   │   │   └── ListItem.js
@@ -199,6 +242,7 @@
 │   │   │   └── Scanner.js
 │   │   ├── SignaturePad.js
 │   │   ├── TabBar
+│   │   │   ├── CustomTabBar.js
 │   │   │   ├── index.js
 │   │   │   └── TabBarIcon.js
 │   │   ├── Text.js
@@ -240,12 +284,65 @@
 │   │   │   ├── Options
 │   │   │   │   ├── Attendance
 │   │   │   │   │   ├── AttendanceScreen.js
-│   │   │   │   │   └── index.js
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   └── Punching
+│   │   │   │   │       ├── index.js
+│   │   │   │   │       ├── MarkAttendance.js
+│   │   │   │   │       └── PunchingScreen.js
 │   │   │   │   ├── Audit
 │   │   │   │   │   ├── AuditForm.js
 │   │   │   │   │   ├── AuditList.js
 │   │   │   │   │   ├── AuditScreen.js
 │   │   │   │   │   └── index.js
+│   │   │   │   ├── BoxInspection
+│   │   │   │   │   ├── BoxInspectionForm.js
+│   │   │   │   │   ├── BoxInspectionList.js
+│   │   │   │   │   ├── BoxInspectionScreen.js
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   └── NonInspectedBoxItems.js
+│   │   │   │   ├── CRM
+│   │   │   │   │   ├── CRMScreen.js
+│   │   │   │   │   ├── EnquiryRegister
+│   │   │   │   │   │   ├── EnquiryDetailTabs
+│   │   │   │   │   │   │   ├── Details.js
+│   │   │   │   │   │   │   ├── EnquiryDetailTabs.js
+│   │   │   │   │   │   │   ├── FollowUp.js
+│   │   │   │   │   │   │   └── index.js
+│   │   │   │   │   │   ├── EnquiryRegisterForm.js
+│   │   │   │   │   │   ├── EnquiryRegisterList.js
+│   │   │   │   │   │   ├── EnquiryRegisterScreen.js
+│   │   │   │   │   │   └── index.js
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   ├── Leads
+│   │   │   │   │   │   ├── EditLead.js
+│   │   │   │   │   │   ├── index.js
+│   │   │   │   │   │   ├── LeadDetailTabs
+│   │   │   │   │   │   │   ├── CallHistory.js
+│   │   │   │   │   │   │   ├── Details.js
+│   │   │   │   │   │   │   ├── EmailHistory.js
+│   │   │   │   │   │   │   ├── FollowUp.js
+│   │   │   │   │   │   │   ├── index.js
+│   │   │   │   │   │   │   ├── LeadDetailTabs.js
+│   │   │   │   │   │   │   └── WhatsAppHistory.js
+│   │   │   │   │   │   ├── LeadForm.js
+│   │   │   │   │   │   ├── LeadList.js
+│   │   │   │   │   │   └── LeadScreen.js
+│   │   │   │   │   └── Pipeline
+│   │   │   │   │       ├── EditPipeline.js
+│   │   │   │   │       ├── index.js
+│   │   │   │   │       ├── PipelineDetailTabs
+│   │   │   │   │       │   ├── CallHistory.js
+│   │   │   │   │       │   ├── CustomerVisit.js
+│   │   │   │   │       │   ├── Details.js
+│   │   │   │   │       │   ├── EmailHistory.js
+│   │   │   │   │       │   ├── FollowUp.js
+│   │   │   │   │       │   ├── index.js
+│   │   │   │   │       │   ├── Meetings.js
+│   │   │   │   │       │   ├── PipelineDetailTabs.js
+│   │   │   │   │       │   └── WhatsAppHistory.js
+│   │   │   │   │       ├── PipelineForm.js
+│   │   │   │   │       ├── PipelineList.js
+│   │   │   │   │       └── PipelineScreen.js
 │   │   │   │   ├── index.js
 │   │   │   │   ├── Inventory
 │   │   │   │   │   ├── index.js
@@ -262,26 +359,85 @@
 │   │   │   │   │   ├── MarketStudyList.js
 │   │   │   │   │   └── MarketStudyScreen.js
 │   │   │   │   ├── OptionsScreen.js
-│   │   │   │   └── TaskManager
+│   │   │   │   ├── Pickup
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   ├── PickupDetailTabs
+│   │   │   │   │   │   ├── Details.js
+│   │   │   │   │   │   ├── FollowUp.js
+│   │   │   │   │   │   └── PickupDetailsTabs.js
+│   │   │   │   │   ├── PickupList.js
+│   │   │   │   │   └── PickupScreen.js
+│   │   │   │   ├── TaskManager
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   ├── TaskManagerDetails.js
+│   │   │   │   │   ├── TaskManagerForm.js
+│   │   │   │   │   ├── TaskManagerList.js
+│   │   │   │   │   └── TaskManagerScreen.js
+│   │   │   │   ├── Visits
+│   │   │   │   │   ├── EditVisit.js
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   ├── VisitDetails.js
+│   │   │   │   │   ├── VisitForm.js
+│   │   │   │   │   └── VisitScreen.js
+│   │   │   │   └── VisitsPlan
+│   │   │   │       ├── EditVisitPlan.js
 │   │   │   │       ├── index.js
-│   │   │   │       ├── TaskManagerDetails.js
-│   │   │   │       ├── TaskManagerForm.js
-│   │   │   │       ├── TaskManagerList.js
-│   │   │   │       └── TaskManagerScreen.js
+│   │   │   │       ├── VisitPlanDetails.js
+│   │   │   │       ├── VisitPlanDetailTabs
+│   │   │   │       │   ├── CustomerVisit.js
+│   │   │   │       │   ├── Details.js
+│   │   │   │       │   ├── index.js
+│   │   │   │       │   └── VisitPlanDetailTabs.js
+│   │   │   │       ├── VisitPlanForm.js
+│   │   │   │       ├── VisitPlanList.js
+│   │   │   │       └── VisitsPlanScreen.js
 │   │   │   └── Sections
 │   │   │       ├── Customer
-│   │   │       │   ├── backupstyles.txt
 │   │   │       │   ├── CustomerDetails.js
+│   │   │       │   ├── CustomerFormTabs
+│   │   │       │   │   ├── Address.js
+│   │   │       │   │   ├── ContactPerson.js
+│   │   │       │   │   ├── CustomerFormTabs.js
+│   │   │       │   │   ├── Details.js
+│   │   │       │   │   ├── index.js
+│   │   │       │   │   └── OtherDetails.js
 │   │   │       │   ├── CustomerList.js
 │   │   │       │   ├── CustomerScreen.js
 │   │   │       │   ├── index.js
 │   │   │       │   └── styles.js
-│   │   │       ├── index.js
 │   │   │       ├── Pickup
 │   │   │       │   └── index.js
 │   │   │       └── Services
-│   │   │           └── index.js
+│   │   │           ├── index.js
+│   │   │           ├── QuickService
+│   │   │           │   ├── AddSpareParts.js
+│   │   │           │   ├── index.js
+│   │   │           │   ├── QuickServiceFormTabs
+│   │   │           │   │   ├── Accessories.js
+│   │   │           │   │   ├── Assignee.js
+│   │   │           │   │   ├── Complaints.js
+│   │   │           │   │   ├── CustomerDetails.js
+│   │   │           │   │   ├── index.js
+│   │   │           │   │   ├── Product.js
+│   │   │           │   │   └── QuickServiceFormTabs.js
+│   │   │           │   ├── QuickServiceList.js
+│   │   │           │   ├── QuickServiceScreen.js
+│   │   │           │   ├── ServiceDetails.js
+│   │   │           │   ├── SparePartsList.js
+│   │   │           │   ├── UpdateDetail.js
+│   │   │           │   └── UpdateDetails.backup.txt
+│   │   │           ├── ServiceScreen.js
+│   │   │           └── SparePartsRequest
+│   │   │               ├── index.js
+│   │   │               ├── SparePartsRequestDetails.js
+│   │   │               ├── SparePartsRequestList.js
+│   │   │               └── SparePartsRequestScreen.js
 │   │   ├── index.js
+│   │   ├── KPIDashboard
+│   │   │   ├── index.js
+│   │   │   ├── KPIDashboardScreen.js
+│   │   │   ├── KPIListingScreen.js
+│   │   │   └── KpiList.js
 │   │   ├── MyOrders
 │   │   │   ├── index.js
 │   │   │   └── MyOrdersScreen.js
@@ -299,6 +455,9 @@
 │   │   ├── auth
 │   │   │   ├── index.js
 │   │   │   └── useAuthStore.js
+│   │   ├── box
+│   │   │   ├── index.js
+│   │   │   └── useInspectionStore.js
 │   │   ├── currency
 │   │   │   ├── index.js
 │   │   │   └── useCurrencyStore.js
@@ -312,16 +471,20 @@
 │       │   │   ├── formatDateTime.js
 │       │   │   └── index.js
 │       │   ├── index.js
-│       │   └── StringUtils.js
+│       │   ├── StringUtils.js
+│       │   └── toastUtils.js
 │       ├── config
 │       │   ├── getConfig.js
 │       │   └── index.js
 │       ├── formatters
 │       │   ├── formatData.js
 │       │   └── index.js
-│       └── validators
-├── Structure.txt
+│       └── validation
+│           ├── index.js
+│           ├── validationFunction.js
+│           ├── validation.js
+│           └── validationRules.js
 ├── tailwind.config.js
 └── yarn.lock
 
-86 directories, 239 files
+110 directories, 378 files
