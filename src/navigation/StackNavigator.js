@@ -28,19 +28,17 @@ import { PickupScreen } from "@screens/Home/Options/Pickup";
 import { BoxInspectionForm, BoxInspectionScreen } from "@screens/Home/Options/BoxInspection";
 import { AttendanceScreen } from "@screens/Home/Options/Attendance";
 import { MarkAttendance, PunchingScreen } from "@screens/Home/Options/Attendance/Punching";
-import QuickServiceFormTabs from "@screens/Home/Sections/Services/QuickService/QuickServiceFormTabs/QuickServiceFormTabs";
-import QuickServiceScreen from "@screens/Home/Sections/Services/QuickService/QuickServiceScreen";
-
-import { SparePartsRequestScreen } from "@screens/Home/Sections/Services/SparePartsRequest";
-import { AddSpareParts, ServiceDetails, UpdateDetails } from "@screens/Home/Sections/Services/QuickService";
 import { KPIListingScreen } from "@screens/KPIDashboard";
-import SparePartsRequestDetails from "@screens/Home/Sections/Services/SparePartsRequest/SparePartsRequestDetails";
-import SparePartsIssueCreation from "@screens/Home/Sections/Services/SparePartsRequest/SparePartsIssueCreation";
 import ServicesScreen from "@screens/Home/Sections/Services/ServicesScreen";
-import { ServiceScreen } from "@screens/Home/Sections/Services";
 import ConfigurationsScreen from "@screens/Home/Sections/Services/Configurations/ConfigurationsScreen";
 import SpareManagementsScreen from "@screens/Home/Sections/Services/SpareManagements/SpareManagementsScreen";
 import ServiceScreens from "@screens/Home/Sections/Services/Service/ServiceScreens";
+import QuickServiceFormTabs from "@screens/Home/Sections/Services/Service/QuickService/QuickServiceFormTabs/QuickServiceFormTabs";
+import SparePartsRequestDetails from "@screens/Home/Sections/Services/SpareManagements/SparePartsRequest/SparePartsRequestDetails";
+import { SparePartsRequestScreen } from "@screens/Home/Sections/Services/SpareManagements/SparePartsRequest";
+import SparePartsIssueCreation from "@screens/Home/Sections/Services/SpareManagements/SparePartsRequest/SparePartsIssueCreation";
+import QuickServiceScreen from "@screens/Home/Sections/Services/Service/QuickService/QuickServiceScreen";
+import { AddSpareParts, ServiceDetails, UpdateDetails } from "@screens/Home/Sections/Services/Service/QuickService";
 
 const Stack = createNativeStackNavigator();
 
@@ -174,12 +172,7 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="QuickServiceFormTabs"
-        component={QuickServiceFormTabs}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="UpdateDetail"
+        name="UpdateDetails"
         component={UpdateDetails}
         options={{ headerShown: false }}
       />
@@ -191,6 +184,11 @@ const StackNavigator = () => {
       <Stack.Screen
         name="ServiceDetails"
         component={ServiceDetails}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="QuickServiceFormTabs"
+        component={QuickServiceFormTabs}
         options={{ headerShown: false }}
       />
 
@@ -213,13 +211,13 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="SparePartsRequestDetails"
-        component={SparePartsRequestDetails}
+        name="SparePartsIssueCreation"
+        component={SparePartsIssueCreation}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="SparePartsIssueCreation"
-        component={SparePartsIssueCreation}
+        name="SparePartsRequestDetails"
+        component={SparePartsRequestDetails}
         options={{ headerShown: false }}
       />
 
