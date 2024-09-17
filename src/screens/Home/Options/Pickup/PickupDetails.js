@@ -12,7 +12,6 @@ const PickupDetails = ({ navigation, route }) => {
     const { id: pickupId } = route?.params || {};
     const [details, setDetails] = useState({});
     const [isLoading, setIsLoading] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const fetchDetails = async () => {
         setIsLoading(true);
@@ -20,13 +19,13 @@ const PickupDetails = ({ navigation, route }) => {
             const updatedDetails = await fetchPickupDetails(pickupId);
             setDetails(updatedDetails[0] || {});
         } catch (error) {
-            console.error('Error fetching service details:', error);
-            showToastMessage('Failed to fetch service details. Please try again.');
+            console.error('Error fetching Pickup details:', error);
+            showToastMessage('Failed to fetch Pickup details. Please try again.');
         } finally {
             setIsLoading(false);
         }
     };
-
+      
     useFocusEffect(
         useCallback(() => {
             if (pickupId) {
@@ -37,50 +36,55 @@ const PickupDetails = ({ navigation, route }) => {
 
     return (
         <SafeAreaView>
-            <NavigationHeader
-                title= {details?.sequence_no || 'Pickup Details'}
-                onBackPress={() => navigation.goBack()}
-                logo={false}
-                iconOneName='edit'
-                iconOnePress={() => navigation.navigate('EditPickup', { pickupId: id })}
+        <NavigationHeader
+            title={details?.sequence_no || 'Pickup Details'}
+            onBackPress={() => navigation.goBack()}
+            logo={false}
+            iconOneName='edit'
+            iconOnePress={() => navigation.navigate('EditPickup', { pickupId})}
+        />
+        <RoundedScrollContainer>
+            <DetailField
+                label="Customer Name"
+                value={details?.customer_name ? details.customer_name.trim() : '-'}
+                multiline
+                numberOfLines={3}
+                textAlignVertical={'top'}
             />
-            <RoundedScrollContainer>
-                <DetailField label="Customer"
-                    value={details?.customer_name ? details.customer_name.trim() : '-'} 
-                    multiline
-                    numberOfLines={3}
-                    textAlignVertical={'top'} />
-                <DetailField label="Brand Name" value={details?.brand_name || '-'} />
-                <DetailField label="Device Name" value={details?.device_name || '-'} />
-                <DetailField label="Consumer Model" value={details?.consumer_model_name || '-'} />
-                <DetailField label="Sequence No" value={details?.customer_mobile || '-'} />
-                <DetailField label="Mobile Number" value={details?.customer_mobile || '-'} />
-                <DetailField label="Date" value={formatDate(details.date)} />
-                <DetailField label="Email" value={details?.customer_email || '-'} />
-                <DetailField label="SalesPerson Name" value={''} />
-                <DetailField label="Warehouse Name" value={details?.warehouse_name || '-'} />
-                <DetailField label="Contact Name" value={''} />
-                <DetailField label="Contact No" value={''} />
-                <DetailField label="Contact Email" value={''} />
-                <DetailField label="PickUp Scheduled Time" value={''} />
-                <DetailField label="Assignee Namer" value={''} />
-                <DetailField label="Serial No" value={''} />
-                <DetailField label="Remarks"
-                    value={details?.remarks || '-'}
-                    multiline
-                    numberOfLines={2}
-                    textAlignVertical={'top'} />
-                <DetailField label="Customer Address"
-                    value={details?.pre_condition || '-'}
-                    multiline
-                    numberOfLines={2}
-                    textAlignVertical={'top'} />
-                <DetailField label="Customer Signature" value={''} />
-                <DetailField label="Driver Signature" value={''} />
-                <DetailField label="Coordinator Signature" value={''} />
+            <DetailField label="Brand Name" value={details?.brand_name || '-'} />
+            <DetailField label="Device Name" value={details?.device_name || '-'} />
+            <DetailField label="Consumer Model" value={details?.consumer_model_name || '-'} />
+            <DetailField label="Sequence No" value={details?.sequence_no || '-'} />
+            <DetailField label="Date" value={details?.date} />
+            <DetailField label="SalesPerson Name" value={details?.salesperson_name || '-'} />
+            <DetailField label="Warehouse" value={details?.warehouse_name || '-'} />
+            <DetailField label="Contact Name" value={details?.contact_name || '-'} />
+            <DetailField label="Contact No" value={details?.contact_no || '-'} />
+            <DetailField label="Contact Email" value={details?.contact_email || '-'} />
 
-                <OverlayLoader visible={isLoading || isSubmitting} />
-            </RoundedScrollContainer>
+            {/* <DetailField label="Check Box" value={details?.contact_email || '-'} /> */}
+
+            <DetailField label="PickUp Schedule" value={details?.pickup_scheduled_time || '-'} />
+            <DetailField label="Assignee Name" value={details?.assignee_name || '-'} />
+            <DetailField label="Serial No" value={details?.serial_no || '-'} />
+            <DetailField label="Customer Signature" value={details?.customer_signature || '-'} />
+            <DetailField label="Driver Signature" value={details?.driver_signature || '-'} />
+            <DetailField label="Coordinator Signature" value={details?.coordinator_signature || '-'} />
+            <DetailField label="Remarks"
+                value={details?.remarks || '-'}
+                multiline
+                numberOfLines={2}
+                textAlignVertical={'top'}
+            />
+            <DetailField
+                label="Customer Address"
+                value={details?.pre_condition || '-'}
+                multiline
+                numberOfLines={2}
+                textAlignVertical={'top'}
+            />
+            <OverlayLoader visible={isLoading} />
+        </RoundedScrollContainer>
         </SafeAreaView>
     );
 };

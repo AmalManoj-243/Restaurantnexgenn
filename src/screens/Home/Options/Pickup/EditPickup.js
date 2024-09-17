@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Keyboard, View } from 'react-native';
+import { Keyboard, View, StyleSheet, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from '@components/containers';
 import { NavigationHeader } from '@components/Header';
 import { LoadingButton } from '@components/common/Button';
@@ -8,14 +8,21 @@ import { put } from '@api/services/utils';
 import { RoundedScrollContainer } from '@components/containers';
 import { TextInput as FormInput } from '@components/common/TextInput';
 import { DropdownSheet } from '@components/common/BottomSheets';
-import { fetchAssigneeDropdown, fetchCustomerNameDropdown, fetchDeviceDropdown, fetchBrandDropdown,
-fetchConsumerModelDropdown, fetchWarehouseDropdown, fetchSalesPersonDropdown } from '@api/dropdowns/dropdownApi';
+import { fetchAssigneeDropdown, fetchCustomerNameDropdown, fetchDeviceDropdown, fetchBrandDropdown, fetchConsumerModelDropdown, fetchWarehouseDropdown, fetchSalesPersonDropdown } from '@api/dropdowns/dropdownApi';
+import { formatDateTime } from '@utils/common/date';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { formatDate } from '@utils/common/date';
+import { ActionModal } from '@components/Modal'
+import { FlatList } from 'react-native-gesture-handler';
+import SignaturePad from '@components/SignaturePad'
 import { validateFields } from '@utils/validation';
+import { formatData } from '@utils/formatters';
+import { CheckBox } from '@components/common/CheckBox';
+import { formatDate } from '@utils/common/date';
+import { AntDesign } from '@expo/vector-icons';
 import { fetchPickupDetails } from '@api/details/detailApi';
 import { useFocusEffect } from '@react-navigation/native';
 import { OverlayLoader } from '@components/Loader';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 
 const EditPickup = ({ navigation, route }) => {
 
@@ -23,9 +30,16 @@ const EditPickup = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [url, setUrl] = useState('')
+  const [imageUrls, setImageUrls] = useState([])
+  const [driverSignatureUrl, setDriverSignatureUrl] = useState('');
+  const [customerSignatureUrl, setCustomerSignatureUrl] = useState('');
+  const [coordinatorSignatureUrl, setCoordinatorSignatureUrl] = useState('');
   const [selectedDropdownType, setSelectedDropdownType] = useState(null);
   const [isDropdownSheetVisible, setIsDropdownSheetVisible] = useState(false);
   const [formData, setFormData] = useState({})
+  const [scrollEnabled, setScrollEnabled] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [dropdown, setDropdown] = useState({
     customerName: [],
@@ -37,6 +51,7 @@ const EditPickup = ({ navigation, route }) => {
     salesPerson: []
   });
 
+  const isCoordinatorSignatureActive = driverSignatureUrl && customerSignatureUrl;
   const fetchDetails = async (pickupId) => {
     setIsLoading(true);
     try {
@@ -49,7 +64,7 @@ const EditPickup = ({ navigation, route }) => {
         brand: detail?.brand || '',
         consumerModel: detail?.consumer_Model || '',
         serialNumber: detail?.serial_Number || '',
-        warehouse: detail?.consumer_Model || '',
+        warehouse: detail?.warehouse || '',
         pickupScheduledTime: detail?.pickup_scheduled_time || null,
         assignee: detail?.assignee_name || '',
         salesPerson: detail?.sales_person || '',
@@ -57,7 +72,7 @@ const EditPickup = ({ navigation, route }) => {
       }));
     } catch (error) {
       console.error('Error fetching enquiry details:', error);
-      showToast({ type: 'error', title: 'Error', message: 'Failed to fetch enquiry details. Please try again.' });
+      showToast({ type: 'error', title: 'Error', message: 'Failed to fetch pickup details. Please try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +98,12 @@ const EditPickup = ({ navigation, route }) => {
         const salesPersonDropdown = await fetchSalesPersonDropdown();
 
         setDropdown({
-          customerNameDropdown: customerNameDropdown.map(data => ({ id: data._id, label: data.name })),
-          deviceDropdown: deviceDropdown.map(data => ({ id: data._id, label: data.model_name })),
-          brandDropdown: brandDropdown.map(data => ({ id: data._id, label: data.brand_name })),
-          consumerModelDropdown: consumerModelDropdown.map(data => ({ id: data._id, label: data.model_name })),
-          warehouseDropdown: warehouseDropdown.map(data => ({ id: data._id, label: data.warehouse_name })),
-          assigneeDropdown: assigneeDropdown.map(data => ({ id: data._id, label: data.name })),
+          customerName: customerNameDropdown.map(data => ({ id: data._id, label: data.name })),
+          device: deviceDropdown.map(data => ({ id: data._id, label: data.model_name })),
+          brand: brandDropdown.map(data => ({ id: data._id, label: data.brand_name })),
+          consumerModel: consumerModelDropdown.map(data => ({ id: data._id, label: data.model_name })),
+          warehouse: warehouseDropdown.map(data => ({ id: data._id, label: data.warehouse_name })),
+          assignee: assigneeDropdown.map(data => ({ id: data._id, label: data.name })),
           salesPerson: salesPersonDropdown.map(data => ({ id: data._id, label: data.name })),
         });
       } catch (error) {
@@ -111,10 +126,31 @@ const EditPickup = ({ navigation, route }) => {
     setIsDropdownSheetVisible(!isDropdownSheetVisible);
   };
 
+  const handleDeleteImage = (index) => {
+    const newImageUrls = [...imageUrls];
+    newImageUrls.splice(index, 1);
+    setImageUrls(newImageUrls);
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setImageLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   const handleDateConfirm = (date) => {
     const formattedDate = formatDate(date, 'yyyy-MM-dd');
     handleFieldChange('pickupScheduledTime', formattedDate);
     setIsDatePickerVisible(false);
+  };
+
+  const validateForm = (fieldsToValidate) => {
+    Keyboard.dismiss();
+    const { isValid, errors } = validateFields(formData, fieldsToValidate);
+    setErrors(errors);
+    return isValid;
   };
 
   const renderBottomSheet = () => {
@@ -164,19 +200,14 @@ const EditPickup = ({ navigation, route }) => {
     );
   };
 
-  const validateForm = (fieldsToValidate) => {
-    Keyboard.dismiss();
-    const { isValid, errors } = validateFields(formData, fieldsToValidate);
-    setErrors(errors);
-    return isValid;
-  };
 
   const handleSubmit = async () => {
     const fieldsToValidate = ['device', 'brand'];
     if (validateForm(fieldsToValidate)) {
       setIsSubmitting(true);
       const pickupData = {
-        //pickup_id: pickupId,
+        pickup_id: pickupId,
+        date: formatDate(formData.date, 'yyyy-MM-dd'),
         //BODYYY OF
       };
       try {
@@ -204,10 +235,35 @@ const EditPickup = ({ navigation, route }) => {
     }
   };
 
+  const ListAction = ({ image, onPress, index }) => {
+    return (
+      <View style={styles.listContainer} onPress={onPress}>
+        {imageLoading && <ActivityIndicator size="small" color={'black'} style={{ position: 'absolute', top: 30 }} />}
+        <Image source={{ uri: image }} style={styles.image}
+          onLoad={() => setImageLoading(true)}
+        />
+        <View style={styles.deleteIconContainer}>
+          <TouchableOpacity onPress={() => handleDeleteImage(index)}>
+            <AntDesign name="delete" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const renderItem = ({ index, item }) => {
+    if (item.empty) {
+      return <View style={[styles.itemStyle, styles.itemInvisible]} />
+    }
+    return <ListAction image={item} index={index} />;
+  };
+
   return (
     <SafeAreaView>
-      <NavigationHeader title="Edit Pickup" onBackPress={() => navigation.goBack()} />
-      <RoundedScrollContainer>
+      <NavigationHeader
+        title="Edit Pickup"
+        onBackPress={() => navigation.goBack()} />
+      <RoundedScrollContainer scrollEnabled={scrollEnabled} >
         <FormInput
           label="Date"
           dropIcon="calendar"
@@ -269,12 +325,17 @@ const EditPickup = ({ navigation, route }) => {
           value={formData.warehouse?.label}
           onPress={() => toggleDropdownSheet('Warehouse')}
         />
+        <CheckBox
+          label="From Website Pickup"
+          checked={formData.isActive}
+          onPress={() => handleFieldChange('isActive', !formData.isActive)}
+        />
         <FormInput
           label={"Pickup Scheduled Time"}
           placeholder={"Select Pickup Scheduled Time"}
-          editable={false}
-          value={formData.pickupScheduledTime ? formatDate(formData.pickupScheduledTime) : ''}
           dropIcon={"clock-outline"}
+          editable={false}
+          value={formData.pickupScheduledTime ? formatDateTime(formData.pickupScheduledTime) : ''}
           validate={errors.pickupScheduledTime}
           onPress={() => setIsDatePickerVisible(true)}
         />
@@ -296,25 +357,107 @@ const EditPickup = ({ navigation, route }) => {
           value={formData.salesPerson?.label}
           onPress={() => toggleDropdownSheet('Sales Person')}
         />
+        <SignaturePad
+          setScrollEnabled={setScrollEnabled}
+          setUrl={setDriverSignatureUrl}
+          title={'Driver Signature'}
+        />
+        <SignaturePad
+          setScrollEnabled={setScrollEnabled}
+          setUrl={setCustomerSignatureUrl}
+          title={'Customer Signature'}
+        />
+        <SignaturePad
+          setScrollEnabled={setScrollEnabled}
+          setUrl={setCoordinatorSignatureUrl}
+          title={'Co-Ordinator Signature'}
+          disabled={!isCoordinatorSignatureActive}
+          onPress={() => {
+            if (!customerSignatureUrl || !driverSignatureUrl) {
+              showToast({ type: 'error', title: 'Error', message: 'Fill the Customer and Driver signature' });
+            }
+          }}
+        />
+
         <FormInput
           label={"Remarks"}
           placeholder={"Enter Remarks"}
           editable={true}
           onChangeText={(value) => handleFieldChange('remarks', value)}
         />
+        <ActionModal title={'Attach file'} setImageUrl={(url) => setImageUrls(prevUrls => [...prevUrls, url])} />
+        {imageUrls && imageUrls.length > 0 && (
+          <View style={styles.uploadsContainer}>
+            <Text style={styles.labell}>Uploads</Text>
+            <FlatList
+              data={formatData(imageUrls, 4)}
+              numColumns={4}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={{ padding: 10 }}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderItem}
+            />
+          </View>
+        )}
         {renderBottomSheet()}
         <LoadingButton title="SAVE" onPress={handleSubmit} marginTop={10} loading={isSubmitting} />
+        <View style={{ marginBottom: 10 }} />
+        <OverlayLoader visible={isLoading} />
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
-          mode="date"
+          mode="datetime"
           onConfirm={handleDateConfirm}
           onCancel={() => setIsDatePickerVisible(false)}
         />
-        <View style={{ marginBottom: 10 }} />
-        <OverlayLoader visible={isLoading} />
       </RoundedScrollContainer>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  uploadsContainer: {
+    flex: 1,
+    borderRadius: 6,
+    borderWidth: 0.8,
+    borderColor: '#BBB7B7',
+    backgroundColor: 'white',
+    marginVertical: 5,
+  },
+  listContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 8,
+  },
+  image: {
+    width: 90,
+    height: 90,
+    borderRadius: 8
+  },
+  labell: {
+    fontSize: 16,
+    fontFamily: FONT_FAMILY.urbanistBold,
+    color: COLORS.black,
+    paddingHorizontal: 10,
+    marginTop: 5
+  },
+  itemInvisible: {
+    backgroundColor: 'transparent',
+  },
+  itemStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 8,
+  },
+  deleteIconContainer: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 12,
+    padding: 5,
+  },
+});
 
 export default EditPickup;
