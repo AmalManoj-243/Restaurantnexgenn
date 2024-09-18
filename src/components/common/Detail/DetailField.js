@@ -5,7 +5,6 @@ import { COLORS } from '@constants/theme';
 import { FONT_FAMILY } from '@constants/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
 const DetailField = ({
   label,
   iconName,

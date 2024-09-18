@@ -24,7 +24,6 @@ import { EnquiryDetailTabs } from "@screens/Home/Options/CRM/EnquiryRegister/Enq
 import { LeadDetailTabs } from "@screens/Home/Options/CRM/Leads/LeadDetailTabs";
 import { EditPipeline, PipelineForm, PipelineScreen } from "@screens/Home/Options/CRM/Pipeline";
 import { PipelineDetailTabs } from "@screens/Home/Options/CRM/Pipeline/PipelineDetailTabs";
-import { EditPickup, PickupDetails, PickupScreen } from "@screens/Home/Options/Pickup";
 import { BoxInspectionForm, BoxInspectionScreen } from "@screens/Home/Options/BoxInspection";
 import { AttendanceScreen } from "@screens/Home/Options/Attendance";
 import { MarkAttendance, PunchingScreen } from "@screens/Home/Options/Attendance/Punching";
@@ -35,6 +34,7 @@ import { ServiceScreens } from "@screens/Home/Sections/Services/Service";
 import { ServicesScreen } from "@screens/Home/Sections/Services";
 import { SpareManagementsScreen } from "@screens/Home/Sections/Services/SpareManagements";
 import { QuickServiceFormTabs } from "@screens/Home/Sections/Services/Service/QuickService/QuickServiceFormTabs";
+import { EditPickup, PickupDetails, PickupScreen } from "@screens/Home/Sections/Services/Service/Pickup";
 
 const Stack = createNativeStackNavigator();
 
@@ -329,7 +329,7 @@ const StackNavigator = () => {
 
       {/* Pickup */}
       <Stack.Screen
-        name="Pickup"
+        name="PickupScreen"
         component={PickupScreen}
         options={{ headerShown: false }}
       />

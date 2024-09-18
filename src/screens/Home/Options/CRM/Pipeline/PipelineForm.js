@@ -13,7 +13,7 @@ import {
   fetchSalesPersonDropdown,
   fetchCustomersDropdown,
   fetchOpportunityDropdown,
-  fetchenquiryTypeDropdown
+  fetchEnquiryTypeDropdown
 } from '@api/dropdowns/dropdownApi';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useAuthStore } from '@stores/auth';
@@ -52,7 +52,7 @@ const PipelineForm = ({ navigation }) => {
       try {
         const [sourceData, enquiryTypeData, salesPersonData, customerData, opportunityData] = await Promise.all([
           fetchSourceDropdown(),
-          fetchenquiryTypeDropdown(),
+          fetchEnquiryTypeDropdown(),
           fetchSalesPersonDropdown(),
           fetchCustomersDropdown(),
           fetchOpportunityDropdown(),

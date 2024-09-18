@@ -13,11 +13,11 @@ const PickupList = ({ item, onPress }) => {
       </View>
       <View style={styles.rightColumn}>
         <Text style={styles.content}>{item?.device_name}</Text>
-        <Text style={styles.content}>Salesperson</Text>
+        <Text style={styles.content}>{item?.warehouse_name}</Text>
         <Text style={[styles.contentRight]}>{formatDate(item?.date_time, 'dd MMM yyyy') || '-'}</Text>
       </View>
       <View style={styles.rightColumn}>
-        <Text style={styles.content}>Warehouse</Text>
+        <Text style={styles.content}>{item?.sales_person_name}</Text>
         <Text style={[styles.contentRight, { color: 'red' }]}>{item?.job_stage || '-'}</Text>
       </View>
     </TouchableOpacity>
@@ -60,9 +60,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize:14,
     fontFamily: FONT_FAMILY.urbanistSemiBold,
-    textTransform:'capitalize'
+    textTransform:'capitalize',
   },
- 
   contentRight: {
     color: '#666666',
     fontFamily: FONT_FAMILY.urbanistSemiBold,

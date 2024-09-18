@@ -90,7 +90,7 @@ export const fetchSalesPersonDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_SALESPERSON);
 }
 
-export const fetchcollectionAgentDropdown = async () => {
+export const fetchCollectionAgentDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_COLLECTIONAGENT);
 }
 
@@ -114,7 +114,7 @@ export const fetchOpportunityDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.OPPORTUNITY);
 }
 
-export const fetchenquiryTypeDropdown = async () => {
+export const fetchEnquiryTypeDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.ENQUIRY_TYPE);
 }
 

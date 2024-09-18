@@ -12,6 +12,7 @@ const ServiceScreens = ({ navigation }) => {
     const options =
         [
             { title: 'Quick Service', image: require('@assets/images/Home/options/crm/enquiry_register.png'), onPress: () => navigation.navigate('QuickServiceScreen') },
+            { title: 'Pick Up', image: require('@assets/images/Home/options/pickup.png'), onPress: () => navigation.navigate('PickupScreen') },
         ]
 
     const renderItem = ({ item }) => {
