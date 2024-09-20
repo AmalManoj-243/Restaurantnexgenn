@@ -33,7 +33,6 @@ const AuditForm = ({ navigation }) => {
   const [splittedBillName, setSplittedBillName] = useState('')
   const loginUser = useAuthStore(state => state.user)
   const warehouseId = loginUser?.warehouse?.warehouse_id
-  // console.log("🚀 ~ file: AuditForm.js:36 ~ AuditForm ~ warehouseId:", warehouseId)
 
   useEffect(() => {
     resetFormState();
@@ -287,13 +286,23 @@ const AuditForm = ({ navigation }) => {
         isValid = false;
       }
 
-      if (scannedBillDetails && scannedBillDetails.warehouse) {
-        if (warehouseId !== scannedBillDetails?.warehouse?.warehouses_id) {
-          showToast({ type: 'error', title: 'Error', message: "Warehouse doesn't match the logged-in user's warehouse." });
+      if (scannedBillDetails?.warehouse || scannedBillDetails?.from_warehouse_id) {
+        const warehouses_id = scannedBillDetails?.warehouse?.warehouses_id || null;
+        const from_warehouse_id = scannedBillDetails?.from_warehouse_id || null;
+        // Debugging logs to inspect the variables before the condition
+        // Enhanced condition to handle potential undefined/null values
+        if (warehouseId !== warehouses_id && warehouseId !== from_warehouse_id) {
+          console.log("Condition triggered: Warehouse ID doesn't match either the warehouse or from_warehouse_id.");
+          showToast({
+            type: 'error',
+            title: 'Error',
+            message: "Warehouse doesn't match the logged-in user's warehouse.",
+          });
           isValid = false;
+        } else {
+          console.log("Condition not triggered: Warehouse ID matches.");
         }
       }
-
     }
     if (isValid) {
       handleSubmitAudit();
@@ -608,11 +617,17 @@ const AuditForm = ({ navigation }) => {
           auditingData.to_warehouse_id = scannedBillDetails?.to_warehouse_id ?? null;
           auditingData.to_warehouse_name = scannedBillDetails?.to_warehouse_name ?? null;
           break;
+        case "Fund rec":
+          auditingData.amount = scannedBillDetails?.amount ?? 0;
+          auditingData.to_warehouse_id = scannedBillDetails?.to_warehouse_id ?? null;
+          auditingData.to_warehouse_name = scannedBillDetails?.to_warehouse_name ?? null;
+          auditingData.un_taxed_amount = scannedBillDetails?.amount ?? 0;
+          break;
         default:
           break;
       }
       setIsSubmiting(true);
-      // console.log("handle Auditing DATA:", JSON.stringify(auditingData, null, 2));
+      console.log("handle Auditing DATA:", JSON.stringify(auditingData, null, 2));
       // return auditingData;
       const response = await post('/createAuditing', auditingData);
       if (response.success === 'true') {
