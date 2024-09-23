@@ -338,7 +338,7 @@ const VisitForm = ({ navigation, route }) => {
           onPress={() => isCustomerSelected ? toggleBottomSheet('Contact Person') : showToastMessage('Select Customer !')}
         />
         <FormInput
-          label={"Cotact No"}
+          label={"Contact No"}
           placeholder={"Contact person"}
           dropIcon={"menu-down"}
           editable={false}

@@ -261,8 +261,8 @@ const LeadForm = ({ navigation, route }) => {
           onChangeText={(value) => handleFieldChange('phoneNumber', value)}
         />
         <FormInput
-          label="Watsapp no."
-          placeholder="Enter watsapp no."
+          label="Whatsapp no."
+          placeholder="Enter whatsapp no."
           keyboardType="numeric"
           onChangeText={(value) => handleFieldChange('watsappNumber', value)}
         />

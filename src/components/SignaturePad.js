@@ -55,7 +55,7 @@ const SignaturePad = ({ setUrl, setScrollEnabled, title, previousSignature = '' 
 
     const handleConfirm = () => {
         console.log("end");
-        ref.current.readSignature();
+        ref.current.readSignature()
     };
 
     const handleEnd = () => {
