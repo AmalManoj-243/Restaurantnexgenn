@@ -5,7 +5,7 @@ import { fetchProductsDropdown, fetchUnitOfMeasureDropdown, fetchTaxDropdown } f
 import { DropdownSheet } from '@components/common/BottomSheets';
 import { NavigationHeader } from '@components/Header';
 import { Button } from '@components/common/Button';
-import { COLORS, FONT_FAMILY } from '@constants/theme';
+import { COLORS } from '@constants/theme';
 import { Keyboard } from 'react-native';
 import { validateFields } from '@utils/validation';
 import { CheckBox } from '@components/common/CheckBox';
