@@ -256,7 +256,7 @@ const AddSpareParts = ({ navigation, route }) => {
                 taxType: formData.taxType || '',
             };
             addSpareParts(spareItem);
-            navigation.navigate('UpdateDetail', { id });
+            navigation.navigate('QuickServiceUpdateDetails', { id });
         }
     };
 

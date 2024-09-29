@@ -22,11 +22,12 @@ const KPIActionDetails = ({ navigation, route }) => {
     const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
     const [isStartModalVisible, setIsStartModalVisible] = useState(false);
     const [actionToPerform, setActionToPerform] = useState(null);
+    const [participants, setParticipants] = useState(null);
 
     const fetchDetails = async () => {
         setIsLoading(true);
         try {
-            const updatedDetails = await fetchKPIDashboardDetails(id); 
+            const updatedDetails = await fetchKPIDashboardDetails(id);
             setDetails(updatedDetails[0] || {});
         } catch (error) {
             console.error('Error fetching KPI details:', error);
@@ -36,7 +37,7 @@ const KPIActionDetails = ({ navigation, route }) => {
         }
     };
 
-    useFocusEffect( 
+    useFocusEffect(
         useCallback(() => {
             if (id) {
                 fetchDetails(id);
@@ -46,14 +47,12 @@ const KPIActionDetails = ({ navigation, route }) => {
 
     const addParticipants = (addedItems) => {
         const structureParticipants = {
-          product_id: addedItems?.product.id,
-          product_name: addedItems?.product.label,
-          description: addedItems?.description,
-          
+            participant_id: addedItems?.employee.id,
+            participant_name: addedItems?.employee.label,
         }
-        setSparePartsItems(prevItems => [...prevItems, structureParticipants]);
-        console.log("Structure Spare Items", structureParticipants)
-      };
+        setParticipants(prevItems => [...prevItems, structureParticipants]);
+        console.log("Structure Participants", structureParticipants)
+    };
 
     // const handleCloseJob = async () => {
     // };
@@ -83,10 +82,10 @@ const KPIActionDetails = ({ navigation, route }) => {
     return (
         <SafeAreaView>
             <NavigationHeader
-                title= {'KPI Action Details'}
+                title={'KPI Action Details'}
                 onBackPress={() => navigation.goBack()} />
             <RoundedScrollContainer>
-                <DetailField label="Sequence No" value={details?.kpi_sequenceNo || '-' } />
+                <DetailField label="Sequence No" value={details?.kpi_sequenceNo || '-'} />
                 <DetailField label="Action Status" value={details?.status || '-'} />
                 <DetailField label="KRA" value={details?.kra?.name || '-'} />
                 <DetailField label="KPI Name" value={details?.kpi_name || '-'} />
@@ -108,13 +107,23 @@ const KPIActionDetails = ({ navigation, route }) => {
                 <DetailField label="Is Customer Review Needed" value={details?.is_customer_review_needed || '-'} />
                 <DetailField label="Guidelines" value={details?.deadline || '-'} />
                 <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginVertical: 10 }}>
-                <Text style={styles.label}>Add Participants</Text>
-                <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('AddParticipants', { id, addParticipants })}>
-                <AntDesign name="pluscircle" size={26} color={COLORS.orange} />
-                </TouchableOpacity>
+                    <Text style={styles.label}>Add Participants</Text>
+                    <TouchableOpacity activeOpacity={0.7}
+                        onPress={() => {
+                            navigation.navigate('AddParticipants', { id, addParticipants });
+                        }}>
+                        <AntDesign name="pluscircle" size={26} color={COLORS.orange} />
+                    </TouchableOpacity>
                 </View>
+                <FlatList
+                    data={participants}
+                    renderItem={({ item }) => (
+                        <SparePartsList item={item} />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                />
 
-                <View style={{ flexDirection: 'row', marginVertical: 5, padding: 1}}>
+                <View style={{ flexDirection: 'row', marginVertical: 5, padding: 1 }}>
                     <LoadingButton
                         width={'25%'}
                         backgroundColor={COLORS.brightBlue}
@@ -180,11 +189,11 @@ const KPIActionDetails = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     label: {
-      marginVertical: 5,
-      fontSize: 16,
-      color: COLORS.primaryThemeColor,
-      fontFamily: FONT_FAMILY.urbanistSemiBold,
+        marginVertical: 5,
+        fontSize: 16,
+        color: COLORS.primaryThemeColor,
+        fontFamily: FONT_FAMILY.urbanistSemiBold,
     },
-  });
+});
 
 export default KPIActionDetails;

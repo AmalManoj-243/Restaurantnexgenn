@@ -1,10 +1,10 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 import { formatData } from '@utils/formatters';
 import { OverlayLoader } from '@components/Loader';
-import { RoundedContainer, SafeAreaView, SearchContainer } from '@components/containers';
+import { RoundedContainer, SafeAreaView } from '@components/containers';
 import { EmptyItem, EmptyState } from '@components/common/empty';
 import { NavigationHeader } from '@components/Header';
 import { fetchKPIDashboard } from '@api/services/generalApi';
