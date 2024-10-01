@@ -46,13 +46,16 @@ const KPIActionDetails = ({ navigation, route }) => {
     );
 
     const addParticipants = (addedItems) => {
-        const structuredParticipants = addedItems?.employees.map(employee => ({
-            assignee_id: employee.id,
-            assignee_name: employee.label,
-        }));
-        setParticipants(prevItems => [...prevItems, structuredParticipants]);
-        console.log("Structure Participants", structuredParticipants)
+        const structureParticipants = {
+            participant_id: addedItems?.employee.id,
+            participant_name: addedItems?.employee.label,
+        }
+        setParticipants(prevItems => [...prevItems, structureParticipants]);
+        console.log("Structure Participants", structureParticipants)
     };
+
+    // const handleCloseJob = async () => {
+    // };
 
     const handleStartTask = async () => {
         setIsSubmitting(true);
@@ -115,9 +118,9 @@ const KPIActionDetails = ({ navigation, route }) => {
                 <FlatList
                     data={participants}
                     renderItem={({ item }) => (
-                        <Text>{item.assignee_name}</Text>
+                        <SparePartsList item={item} />
                     )}
-                    keyExtractor={(item, index) => item.assignee_id || index.toString()}
+                    keyExtractor={(item, index) => index.toString()}
                 />
 
                 <View style={{ flexDirection: 'row', marginVertical: 5, padding: 1 }}>

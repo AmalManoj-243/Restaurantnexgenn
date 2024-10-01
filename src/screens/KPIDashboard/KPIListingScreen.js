@@ -42,8 +42,8 @@ const KPIListingScreen = ({ navigation }) => {
                 completedKpi: data.completed_kpi || []
             });
         } catch (error) {
-            console.error('Error fetching visit details:', error);
-            showToastMessage('Failed to fetch visit details');
+            console.error('Error fetching KPI details:', error);
+            showToastMessage('Failed to fetch KPI details');
         }
     }
     useEffect(() => {
@@ -96,7 +96,7 @@ const KPIListingScreen = ({ navigation }) => {
         />
     );
     const renderKPIList = () => {
-        console.log("kpiData", kpiData);
+        console.log("🚀 ~ kpiData:", JSON.stringify(kpiData, null, 2))
         if (kpiData.length === 0 && !loading) {
             return renderEmptyState();
         }
@@ -115,6 +115,5 @@ const KPIListingScreen = ({ navigation }) => {
             <OverlayLoader visible={loading} />
         </SafeAreaView>
     );
-
 }
 export default KPIListingScreen;

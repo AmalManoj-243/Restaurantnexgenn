@@ -6,12 +6,11 @@ import { DropdownSheet } from '@components/common/BottomSheets';
 import { NavigationHeader } from '@components/Header';
 import { Button } from '@components/common/Button';
 import { COLORS } from '@constants/theme';
-import { Keyboard } from 'react-native';
+import { Keyboard, Alert } from 'react-native';
 import { validateFields } from '@utils/validation';
 
 const AddParticipants = ({ navigation, route }) => {
     const { id, addParticipants } = route?.params || {};
-    console.log("HALOOOOOO id", id);
     const [selectedType, setSelectedType] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
     const [noOfEmployees, setNoOfEmployees] = useState(0);
@@ -65,15 +64,28 @@ const AddParticipants = ({ navigation, route }) => {
         return isValid;
     };
 
-    const handleAddParticipants = async () => {
+    const handleAddParticipants = (addedItems) => {
+        const structuredParticipants = addedItems?.employees.map(employee => ({
+            participant_id: employee.id,
+            participant_name: employee.label,
+        }));
+
+        if (structuredParticipants) {
+            console.log("Structured Participants:", structuredParticipants);
+        } else {
+            console.error("No employees found in addedItems.");
+        }
+    };
+
+    const handleAddItems = async () => {
         const fieldsToValidate = ['noOfEmployees', 'employees'];
         if (validateForm(fieldsToValidate)) {
             const participantData = {
                 employees: formData.employees || [],
             };
-            console.log('Added Participants:', participantData);
-            addParticipants(participantData);
-            navigation.goBack({ id }); // Navigate back to KPIActionDetails
+            // console.log('Added Participants:', participantData);
+            handleAddParticipants(participantData);
+            navigation.navigate('KPIActionDetails', { id });
         }
     };
 
@@ -124,7 +136,7 @@ const AddParticipants = ({ navigation, route }) => {
                     editable={true}
                     keyboardType="numeric"
                     onChangeText={(value) => onFieldChange('noOfEmployees', value)}
-                    value={formData.noOfEmployees.toString()}
+                    value={formData.noOfEmployees}
                 />
                 <FormInput
                     label={"Employee"}
@@ -132,6 +144,7 @@ const AddParticipants = ({ navigation, route }) => {
                     dropIcon={"menu-down"}
                     items={dropdown.employee}
                     editable={false}
+                    required
                     validate={errors.employees}
                     value={selectedEmployees.map(emp => emp.label).join(', ')} 
                     onPress={() => toggleBottomSheet('Employee')}
@@ -141,7 +154,7 @@ const AddParticipants = ({ navigation, route }) => {
                     width={'50%'}
                     alignSelf={'center'}
                     backgroundColor={COLORS.primaryThemeColor}
-                    onPress={handleAddParticipants}
+                    onPress={handleAddItems}
                 />
                 {renderBottomSheet()}
             </RoundedScrollContainer>

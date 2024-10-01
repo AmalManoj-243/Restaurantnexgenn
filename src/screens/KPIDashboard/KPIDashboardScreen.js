@@ -37,8 +37,8 @@ const KPIDashboardScreen = ({ navigation }) => {
                 completedKpi: data.completed_kpi || []
             });
         } catch (error) {
-            console.error('Error fetching visit details:', error);
-            showToastMessage('Failed to fetch visit details');
+            console.error('Error fetching KPI details:', error);
+            showToastMessage('Failed to fetch KPI details');
         }
     };
 
