@@ -13,16 +13,13 @@ import { COLORS, FONT_FAMILY } from '@constants/theme';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { put } from '@api/services/utils';
 import { ConfirmationModal, PauseModal, ReAssignModal, UpdatesModal } from '@components/Modal';
-import { formatDateTime } from '@utils/common/date';
-import { StartList, PauseList, UpdateList } from '@components/CRM';
 import { useAuthStore } from '@stores/auth';
-import KPIUpdateList from '@components/KPI/KPIUpdateList';
+import { KPIUpdateList } from '@components/KPI';
 
 const KPIActionDetails = ({ navigation, route }) => {
 
     const { id } = route?.params || {};
     const currentUser = useAuthStore((state) => state.user);
-  
     const [details, setDetails] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -98,12 +95,15 @@ const KPIActionDetails = ({ navigation, route }) => {
         handleTaskAction(data, 'Task paused successfully', setIsPauseModalVisible);
       };
     
-      const handleReAssignTask = () => {
+      const handleReAssignTask = (reAssignReason) => {
         const data = {
           _id: details._id || id,
           assignee_id: currentUser._id,
           assignee_name: currentUser?.related_profile?.name,
           estimatedTime: details.totalEstimation?.[0]?.estimated_time || 0,
+        //   assignedToId:
+        //   assignedToName:
+        //   reassign_reason: currentUser?.related_profile?.name 'reassigned the task to' Aasif due to reAssignReason,
         };
         handleTaskAction(data, 'Task reassigned successfully', setIsAssignModalVisible);
       };
@@ -151,16 +151,16 @@ const KPIActionDetails = ({ navigation, route }) => {
                 <DetailField label="Action Screen Name" value={details?.action_screen_name || '-'} />
                 <DetailField label="Next KPI Name" value={details?.next_kpi_name || '-'} />
                 <DetailField label="KPI Description" value={details?.kpi_description || '-'} />
-                <DetailField label="Is Mandatory" value={details?.is_mandatory || '-'} />
+                <DetailField label="Is Mandatory" value={details?.is_mandatory ? 'Yes' : 'No'|| '-'} />
                 <DetailField label="Priority" value={details?.priority || '-'} />
                 <DetailField label="Checklists" value={details?.remarks || '-'} />
                 <DetailField label="Reference Document" value={details?.pre_condition || '-'} />
                 <DetailField label="Estimated Time (HR)" value={details?.totalEstimation?.[0]?.estimated_time?.toString() || '-'} />
-                <DetailField label="Deadline" value={details?.deadline || '-'} />
+                <DetailField label="Deadline" value={details?.deadline || 'No Data'} />
                 <DetailField label="KPI Points" value={details?.deadline || '-'} />
                 <DetailField label="Warehouse" value={details?.warehouse?.[0]?.warehouse_name || '-'} />
-                <DetailField label="Is Manager Review Needed" value={details?.is_manager_review_needed || '-'} />
-                <DetailField label="Is Customer Review Needed" value={details?.is_customer_review_needed || '-'} />
+                <DetailField label="Is Manager Review Needed" value={details?.is_manager_review_neededd ? 'Needed' : 'Not needed' || '-'} />
+                <DetailField label="Is Customer Review Needed" value={details?.is_customer_review_needed ? 'Needed' : 'Not needed' || '-'} />
                 <DetailField label="Guidelines" value={details?.deadline || '-'} />
 
                 {/* Participants */}
