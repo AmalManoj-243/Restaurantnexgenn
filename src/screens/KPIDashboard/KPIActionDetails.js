@@ -18,9 +18,7 @@ import { KPIUpdateList } from '@components/KPI';
 import { formatDateTime } from '@utils/common/date';
 
 const KPIActionDetails = ({ navigation, route }) => {
-
   const { id } = route?.params || {};
-  console.log("KPIActionDetails", id)
   const currentUser = useAuthStore((state) => state.user);
   const [details, setDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -43,11 +41,9 @@ const KPIActionDetails = ({ navigation, route }) => {
       const [updatedDetails] = await fetchKPIDashboardDetails(id);
       setDetails(updatedDetails || {});
       setKpiUpdates(updatedDetails?.kpiStatusUpdates || []);
-      const mappedDocuments = updatedDetails?.documentUploads?.files?.map((doc) => ({
-        isDeveloper: upload.isDeveloper || false,
-        assignee_id: upload.assignee_id || '',
-        assignee_name: upload.assignee_name || '',
-        files: upload.files || [],
+      // Map through document uploads and the files
+      const mappedDocuments = updatedDetails?.documentUploads?.map((upload) => ({
+        files: upload.files || []
       })) || [];
       setKpiDocument(mappedDocuments);
     } catch (error) {
@@ -205,7 +201,7 @@ const KPIActionDetails = ({ navigation, route }) => {
         data={documentUrls}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
-          <ListAction document={item} index={index} onDelete={onDelete} />
+          <ListAction document={item.files} index={index} onDelete={onDelete} />
         )}
       />
     );
@@ -226,7 +222,7 @@ const KPIActionDetails = ({ navigation, route }) => {
 
     return (
       <View style={styles.listContainer}>
-        <TouchableOpacity onPress={() => handleOpenDocument(document)}>
+        <TouchableOpacity onPress={() => handleOpenDocument(document[0])}>
           <Image
             source={require('@assets/icons/modal/file_upload.png')}
             style={styles.image}
@@ -252,17 +248,6 @@ const KPIActionDetails = ({ navigation, route }) => {
     const updatedDocuments = [...formData.documentUrls];
     updatedDocuments.splice(index, 1);
     handleFieldChange('documentUrls', updatedDocuments);
-  };
-
-  const addParticipants = (addedParticipants) => {
-    console.log("Received Added Participants:", addedParticipants); 
-    const formattedParticipants = addedParticipants.map(emp => ({
-      assignee_id: emp?.assignee.id,
-      assignee_name: emp?.assignee.name,
-    }));
-
-    setParticipants(prevItems => [...prevItems, ...formattedParticipants]);
-    console.log("Added Participants", formattedParticipants);
   };
 
   const isTaskStarted = details.progress_status === 'Ongoing';
@@ -308,7 +293,7 @@ const KPIActionDetails = ({ navigation, route }) => {
         <DetailField label="Checklists" value={details?.remarks || '-'} />
         <DetailField label="Reference Document" value={details?.pre_condition || '-'} />
         <DetailField label="Estimated Time (HR)" value={details?.totalEstimation?.[0]?.estimated_time?.toString() || '-'} />
-         <DetailField label="Deadline" value={formatDateTime(details?.deadline ) || 'No data'} />
+        <DetailField label="Deadline" value={formatDateTime(details?.deadline) || 'No data'} />
         {/* <DetailField label="Deadline" value={details?.deadline || 'No Data'} /> */}
         <DetailField label="KPI Points" value={details?.kpi_points || '-'} />
         <DetailField label="Warehouse" value={details?.warehouse?.[0]?.warehouse_name || '-'} />
@@ -320,7 +305,7 @@ const KPIActionDetails = ({ navigation, route }) => {
           <Text style={styles.label}>Add Participants</Text>
           <TouchableOpacity activeOpacity={0.7}
             onPress={() => {
-              navigation.navigate('AddParticipants', { id, addParticipants });
+              navigation.navigate('AddParticipants', { id });
             }}>
             <AntDesign name="pluscircle" size={25} color={COLORS.orange} />
           </TouchableOpacity>
@@ -345,15 +330,12 @@ const KPIActionDetails = ({ navigation, route }) => {
           title="Files"
           onClose={() => setIsModalVisible(false)}
           setDocumentUrl={(url) => {
-            console.log("Picked document URL:", url);
-            handleFieldChange('documentUrls', [...(formData.documentUrls || []), url]);
             handleDocumentUploads(url);
-            // handleUploadDocument();
           }}
         />
-        {formData?.documentUrls && formData.documentUrls.length > 0 && (
+        {kpiDocument && kpiDocument?.length > 0 && (
           <UploadsContainer
-            documentUrls={formData.documentUrls}
+            documentUrls={kpiDocument || []}
             onDelete={handleDeleteDocument}
           />
         )}

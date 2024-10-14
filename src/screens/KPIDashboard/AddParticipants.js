@@ -11,7 +11,7 @@ import { validateFields } from '@utils/validation';
 import { put } from '@api/services/utils';
 
 const AddParticipants = ({ navigation, route }) => {
-    const { id, addParticipants } = route?.params || {};
+    const { id, addParticipants } = route || {};
     console.log("Participants Id", id);
     console.log("Add Participants", addParticipants);
     const [details, setDetails] = useState({});
@@ -54,25 +54,24 @@ const AddParticipants = ({ navigation, route }) => {
     };
 
     const handleAddParticipants = async () => {
-      const fieldsToValidate = ['employee'];
-      if (validateForm(fieldsToValidate)) {
-          const participantData = {
-              _id: details._id || id,
-              participants: selectedEmployees.map(emp => ({
-                  assignee_id: emp.id,
-                  assignee_name: emp.label.trim(),
-              })),
-          };
-          try {
-            const response = await put('/updateKpiTasks', participantData);
-            console.log('Participant response:', response);
-            console.log('Added Participants:', participantData);
-            addParticipants(participantData.participants);
-            navigation.navigate('KPIActionDetails',  id );
-          }catch (error) {
-            console.error('Error Adding Participants:', error);
-          }
-      }
+        const fieldsToValidate = ['employee'];
+        if (validateForm(fieldsToValidate)) {
+            const participantData = {
+                _id: details._id || id,
+                participants: selectedEmployees.map(emp => ({
+                    assignee_id: emp.id,
+                    assignee_name: emp.label.trim(),
+                })),
+            };
+            try {
+                const response = await put('/updateKpiTasks', participantData);
+                console.log('Participant response:', response);
+                console.log('Added Participants:', participantData);
+                navigation.navigate('KPIActionDetails', {id});
+            } catch (error) {
+                console.error('Error Adding Participants:', error);
+            }
+        }
     }
 
     const handleEmployeeSelection = (selectedValues) => {
@@ -81,7 +80,7 @@ const AddParticipants = ({ navigation, route }) => {
             ...prevFormData,
             employee: selectedValues,
         }));
-        setIsVisible(false);
+        // setIsVisible(false);
     };
 
     const renderBottomSheet = () => {
@@ -123,7 +122,6 @@ const AddParticipants = ({ navigation, route }) => {
                     items={dropdown.employee}
                     editable={false}
                     multiline={true}
-                    numberOfLines={3}
                     textAlignVertical="top"
                     marginTop={10}
                     validate={errors.employee}
