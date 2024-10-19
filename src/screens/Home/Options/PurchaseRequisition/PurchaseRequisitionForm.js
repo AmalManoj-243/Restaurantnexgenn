@@ -1,14 +1,19 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
 import React, { useEffect, useState } from "react";
 import { RoundedScrollContainer, SafeAreaView } from "@components/containers";
 import { NavigationHeader } from "@components/Header";
-import { fetchEmployeesDropdown, fetchWarehouseDropdown } from "@api/dropdowns/dropdownApi";
+import {
+  fetchEmployeesDropdown,
+  fetchWarehouseDropdown,
+} from "@api/dropdowns/dropdownApi";
 import { DropdownSheet } from "@components/common/BottomSheets";
 import { TextInput as FormInput } from "@components/common/TextInput";
 import { LoadingButton } from "@components/common/Button";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { COLORS, FONT_FAMILY } from "@constants/theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { DatePicker } from "@components/common/DatePicker";
+import { formatDate } from "@utils/common/date";
 
 const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
   const [dropdown, setDropdown] = useState({
@@ -18,6 +23,23 @@ const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    requestDate: new Date().toISOString().slice(0, 10) ,
+    requestedBy: "",
+    requireBy: "",
+    warehouse: "",
+    productLines: [],
+    quantity: "",
+    remarks: "",
+    id: "",
+    supplierId: "",
+    supplierName: "",
+    employeeName: "",
+    requestDetails: [],
+    alternateProducts: [],
+  });
+  console.log("formData is",formData);
 
   useEffect(() => {
     const fetchDropdownData = async () => {
@@ -61,7 +83,8 @@ const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
     setIsVisible(!isVisible);
   };
   const handleDateConfirm = (date) => {
-    handleFieldChange("dateTime", date);
+    const formattedDate = date.toISOString().slice(0, 10);
+    handleFieldChange("requireBy", formattedDate);
     setIsDatePickerVisible(false);
   };
 
@@ -87,9 +110,28 @@ const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
         items={items}
         title={selectedType}
         onClose={() => setIsVisible(false)}
-        onValueChange={(value) => onFieldChange(fieldName, value)}
+        onValueChange={(value) => handleFieldChange(fieldName, value)}
       />
     );
+  };
+
+  const handleFieldChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value,
+    }));
+    if (errors[field]) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [field]: null,
+      }));
+    }
+  };
+  const validateForm = (fieldsToValidate) => {
+    Keyboard.dismiss();
+    const { isValid, errors } = validateFields(formData, fieldsToValidate);
+    setErrors(errors);
+    return isValid;
   };
 
   return (
@@ -119,13 +161,18 @@ const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
           onPress={() => toggleBottomSheet("Warehouse")}
         />
 
-        <FormInput label={"Requested Date"} editable={false} />
+        <FormInput
+         label={"Requested Date"} 
+         editable={false} 
+         value={formatDate(formData.requestDate)}
+         />
 
         <FormInput
           label={"Require By"}
           dropIcon={"calendar"}
           placeholder={"dd-mm-yyyy"}
           editable={false}
+          value={formatDate(formData.requireBy)}
           onPress={() => setIsDatePickerVisible(true)}
         />
 
@@ -154,7 +201,7 @@ const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
         />
         <DateTimePicker
           isVisible={isDatePickerVisible}
-          mode="datetime"
+          mode="date"
           onConfirm={handleDateConfirm}
           onCancel={() => setIsDatePickerVisible(false)}
         />

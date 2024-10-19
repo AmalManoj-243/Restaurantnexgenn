@@ -174,3 +174,8 @@ export const fetchUnitOfMeasureDropdown = async () => {
 export const fetchTaxDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.TAXES);
 }
+
+export const fetchSupplierDropDown = async (searchText='') => {
+  console.log("🚀 ~ file: dropdownApi.js:126 ~ fetchSupplierDropdown ~ searchText:", searchText)
+  return fetchData(`${DROP_DOWN_API_ENDPOINTS.VIEW_SUPPLIERS}?name=${searchText}`);
+}
