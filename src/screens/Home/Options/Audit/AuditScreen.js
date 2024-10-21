@@ -35,7 +35,7 @@ const AuditScreen = ({ navigation }) => {
     if (item.empty) {
       return <EmptyItem />;
     }
-    return <AuditList item={item} />;
+    return <AuditList item={item} onPress={() => navigation.navigate('AuditDetails', { id: item._id })}/>;
   };
 
   const renderEmptyState = () => (

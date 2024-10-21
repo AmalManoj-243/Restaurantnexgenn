@@ -62,7 +62,7 @@ export const DROP_DOWN_API_ENDPOINTS = {
     SUB_COMPLAINTS: "/viewServiceRegisterSubProblem/service_register_sub_problem_list/service_register_sub_problem_dropdown",
     UNIT_OF_MEASURE: "/viewUnitOfMeasure/quality_list/quality_dropdown",
     TAXES: "/viewTaxType/tax_type_list/tax_type_dropdown",
-    VIEW_SUPPLIERS: "/viewsupplier"
+    SUPPLIERS: "/viewsupplier"
 };
 
 

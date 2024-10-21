@@ -377,6 +377,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_type = scannedBillDetails?.register_payments[0]?.ledger_type ?? null;
           auditingData.ledger_display_name = scannedBillDetails?.register_payments[0]?.ledger_display_name ?? null;
           break;
+
         case "Vendor Bill":
           // Handling for Vendor Bill
           auditingData.customer_id = null;
@@ -388,7 +389,9 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_id = scannedBillDetails?.register_payments[0]?.ledger_id ?? null;
           auditingData.ledger_type = scannedBillDetails?.register_payments[0]?.ledger_type ?? null;
           auditingData.ledger_display_name = scannedBillDetails?.register_payments[0]?.ledger_display_name ?? null;
+          auditingData.is_estimation = scannedBillDetails?.register_payments[0]?.is_estimation ?? null;
           break;
+
         case "Sales Return":
           // Handling for Sales Return 
           auditingData.register_payment_id = null;
@@ -400,6 +403,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.customer_name = displayBillDetails?.displayName;
           auditingData.un_taxed_amount = scannedBillDetails?.total_untaxed_amount
           break;
+
         case "Cash rec":
           auditingData.customer_id = null;
           auditingData.chq_no = scannedBillDetails?.chq_type ?? null;
@@ -411,12 +415,14 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           auditingData.ledger_name = ledger?.ledger_name
           break;
+
         case "Cash pay":
           auditingData.ledger_id = ledger?.ledger_id ?? null;
           auditingData.ledger_type = ledger?.ledger_type ?? null;
           auditingData.ledger_name = ledger?.ledger_name ?? null;
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           break;
+
         case "Bank rec": //BNKPAY
           auditingData.un_taxed_amount = displayBillDetails?.totalAmount ?? 0;
           auditingData.ledger_id = ledger?.ledger_id ?? null;
@@ -425,6 +431,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           auditingData.chart_of_accounts_name = scannedBillDetails?.paid_through_chart_of_account_name ?? null;
           break;
+
         case "Bankpay": //BNKREC
           auditingData.ledger_id = ledger?.ledger_id ?? null;
           auditingData.ledger_type = ledger?.ledger_type ?? null;
@@ -432,6 +439,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           auditingData.chart_of_accounts_name = scannedBillDetails?.paid_through_chart_of_account_name ?? null;
           break;
+
         case "SUPREC":
           auditingData.un_taxed_amount = displayBillDetails?.totalAmount ?? null;
           auditingData.supplier_name = scannedBillDetails?.chart_of_account_name ?? '';
@@ -441,6 +449,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_name = ledger?.ledger_name ?? null;
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           break;
+          
         case "SUPPAY":
           auditingData.supplier_id = scannedBillDetails?.supplier?.supplier_id ?? null;
           auditingData.supplier_name = scannedBillDetails?.supplier?.supplier_name ?? null;
@@ -449,6 +458,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_name = ledger?.ledger_name ?? null;
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           break;
+
         case "CUSTREC":
           auditingData.customer_id = scannedBillDetails?.customer?.customer_id ?? null;
           auditingData.customer_name = scannedBillDetails?.customer?.customer_name ?? null;
@@ -458,6 +468,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           auditingData.un_taxed_amount = displayBillDetails?.totalAmount ?? 0;
           break;
+
         case "CUSTPAY":
           auditingData.customer_id = scannedBillDetails?.chart_of_account_id ?? null;
           auditingData.customer_name = scannedBillDetails?.chart_of_account_name ?? null;
@@ -467,6 +478,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           auditingData.un_taxed_amount = displayBillDetails?.totalAmount ?? 0;
           break;
+
         case "CAPREC":
           // Handling for Sales Return 
           auditingData.customer_id = null;
@@ -478,6 +490,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.chart_of_accounts_name = scannedBillDetails?.capital_chart_of_account_name ?? null;
           auditingData.un_taxed_amount = displayBillDetails?.totalAmount ?? 0;
           break;
+
         case "CAPPAY":
           auditingData.chq_no = scannedBillDetails?.chq_no ?? null;
           auditingData.chq_date = scannedBillDetails?.chq_date ?? null;
@@ -500,6 +513,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.sales_person_id = scannedBillDetails?.sales_person?.sales_person_id;
           auditingData.sales_person_name = scannedBillDetails?.sales_person?.sales_person_name;
           break;
+
         case "SALPAY":
           auditingData.supplier_id = null;
           auditingData.supplier_name = null;
@@ -510,6 +524,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_name = ledger?.ledger_name ?? null;
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           break;
+
         case "CHEQREC":
           let totalamount = scannedBillDetails?.debit + scannedBillDetails?.credit
           auditingData.supplier_id = null;
@@ -523,6 +538,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_name = ledger?.ledger_name ?? null;
           auditingData.ledger_display_name = ledger?.ledger_display_name ?? null;
           break;
+
         case "E/PPAY":
           auditingData.supplier_id = null;
           auditingData.supplier_name = null;
@@ -536,6 +552,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.sales_person_id = scannedBillDetails?.sales_person?.sales_person_id;
           auditingData.sales_person_name = scannedBillDetails?.sales_person?.sales_person_name;
           break;
+
         case "PETTYALLOT":
           auditingData.ledger_id = ledger?.ledger_id ?? null;
           auditingData.ledger_type = ledger?.ledger_type ?? null;
@@ -544,6 +561,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.employee_ledger_id = scannedBillDetails?.employee_ledger ?? null;
           auditingData.employee_ledger_name = scannedBillDetails?.employee_ledger ?? null;
           break;
+
         case "PETEXP":
           auditingData.supplier_id = null;
           auditingData.supplier_name = null;
@@ -556,6 +574,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.employee_ledger_display_name = scannedBillDetails?.paid_from_ledger_display_name ?? '';
           auditingData.employee_ledger_name = scannedBillDetails?.paid_from_ledger_name ?? '';
           break;
+
         case "PETTYTRANS":
           auditingData.supplier_id = null;
           auditingData.supplier_name = null;
@@ -568,6 +587,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.employee_ledger_display_name = scannedBillDetails?.paid_from_ledger_display_name ?? '';
           auditingData.employee_ledger_name = scannedBillDetails?.paid_from_ledger_name ?? '';
           break;
+
         case "Purchase Return":
           auditingData.customer_id = loginUser?.company?.company_id ?? null;
           auditingData.customer_name = displayBillDetails?.displayName ?? null;
@@ -584,11 +604,13 @@ const AuditForm = ({ navigation }) => {
           auditingData.employee_ledger_id = scannedBillDetails?.employee_ledger ?? null;
           auditingData.employee_ledger_name = scannedBillDetails?.employee_ledger ?? null;
           break;
+
         case "Spare Issue":
           auditingData.amount = displayBillDetails?.total_purchase_cost ?? 0;
           auditingData.un_taxed_amount = null;
           auditingData.service_product_cost = 0;
           break;
+
         case "JobInvoice":
           auditingData.customer_id = loginUser?.company?.company_id ?? null;
           auditingData.customer_name = displayBillDetails?.displayName ?? null;
@@ -611,12 +633,14 @@ const AuditForm = ({ navigation }) => {
           auditingData.ledger_type = scannedBillDetails?.register_payments[0]?.ledger_type ?? null;
           auditingData.ledger_display_name = scannedBillDetails?.register_payments[0]?.ledger_display_name ?? null;
           break;
+
         case "Stock rec":
           auditingData.amount = scannedBillDetails?.total_purchase_cost ?? 0;
           auditingData.un_taxed_amount = scannedBillDetails?.untaxed_total_amount ?? 0;
           auditingData.to_warehouse_id = scannedBillDetails?.to_warehouse_id ?? null;
           auditingData.to_warehouse_name = scannedBillDetails?.to_warehouse_name ?? null;
           break;
+          
         case "Fund rec":
           auditingData.amount = scannedBillDetails?.amount ?? 0;
           auditingData.to_warehouse_id = scannedBillDetails?.to_warehouse_id ?? null;

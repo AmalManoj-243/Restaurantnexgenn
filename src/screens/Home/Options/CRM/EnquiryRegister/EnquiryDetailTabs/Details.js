@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { RoundedScrollContainer, SafeAreaView } from '@components/containers';
+import { RoundedScrollContainer } from '@components/containers';
 import { useFocusEffect } from '@react-navigation/native';
 import { DetailField } from '@components/common/Detail';
 import { formatDateTime } from '@utils/common/date';

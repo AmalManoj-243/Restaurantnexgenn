@@ -12,7 +12,7 @@ import { Button } from '@components/common/Button';
 import { COLORS, FONT_FAMILY } from '@constants/theme';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { put } from '@api/services/utils';
-import { CompleteModal, ConfirmationModal, DocumentModal, PauseModal, ReAssignModal, UpdatesModal } from '@components/Modal';
+import { CompleteModal, DocumentModal, StartModal, PauseModal, ReAssignModal, UpdatesModal } from '@components/Modal';
 import { useAuthStore } from '@stores/auth';
 import { KPIUpdateList } from '@components/KPI';
 import { formatDateTime } from '@utils/common/date';
@@ -122,7 +122,7 @@ const KPIActionDetails = ({ navigation, route }) => {
       estimatedTime: details.totalEstimation?.[0]?.estimated_time || 0,
       assignedToId: selectedAssignee._id,
       assignedToName: selectedAssignee.name,
-      reassign_reason:` ${currentUser?.related_profile?.name} reassigned the task to ${selectedAssignee.name} due to ${reAssignReason}`,
+      reassign_reason: ` ${currentUser?.related_profile?.name} reassigned the task to ${selectedAssignee.name} due to ${reAssignReason}`,
     };
     handleTaskAction(data, 'Task Re-Assigned Successfully', setIsAssignModalVisible);
   };
@@ -147,8 +147,6 @@ const KPIActionDetails = ({ navigation, route }) => {
           assignee_id: currentUser?.related_profile?._id,
           assignee_name: currentUser?.related_profile?.name,
           updateText: updateText,
-          // file: documentUrls || [],
-          // time: new Date(),
         },
       ],
     };
@@ -243,6 +241,7 @@ const KPIActionDetails = ({ navigation, route }) => {
   const isTaskPaused = details.progress_status === 'Pause';
   const isTaskCompleted = details.progress_status === 'Completed';
   const isNewStatus = details.status === 'New';
+  // const isTaskOngoing = details.progress_status === 'Ongoing';
 
   return (
     <SafeAreaView>
@@ -287,10 +286,12 @@ const KPIActionDetails = ({ navigation, route }) => {
           />
           {details?.documentLink && (
             <TouchableOpacity onPress={() => Linking.openURL(details.documentLink)}>
-              <Text style={{ marginVertical: 8,
+              <Text style={{
+                marginVertical: 8,
                 fontSize: 16,
                 color: COLORS.lightenBoxTheme,
-                fontFamily: FONT_FAMILY.urbanistSemiBold, }}>
+                fontFamily: FONT_FAMILY.urbanistSemiBold,
+              }}>
                 Open Reference Document
               </Text>
             </TouchableOpacity>
@@ -351,10 +352,14 @@ const KPIActionDetails = ({ navigation, route }) => {
             width={'50%'}
             backgroundColor={COLORS.brightBlue}
             onPress={() => {
-              setActionToPerform('start');
-              setIsStartModalVisible(true);
+              if (details?.status === "New") { 
+                setIsStartModalVisible(true);
+              } else {
+                handleStartTask();
+              }
             }}
             disabled={isTaskStarted || isTaskCompleted}
+            // disabled={isTaskStarted || isTaskCompleted || isTaskOngoing}
             title={(
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                 <AntDesign name="rightcircle" size={20} color={COLORS.white} />
@@ -444,11 +449,18 @@ const KPIActionDetails = ({ navigation, route }) => {
           onClose={() => setIsModalVisible(!isModalVisible)}
           onSubmit={saveUpdates}
         />
-        <ConfirmationModal
+        <StartModal
           isVisible={isStartModalVisible}
           onCancel={() => setIsStartModalVisible(false)}
-          headerMessage='Please agree to the guidelines before starting this action, Do you agree?'
-          onConfirm={handleStartTask}
+          headerMessage={
+            <Text>Please agree to the guidelines before starting this action{'\n'}
+              <Text style={{ color: 'red' }}>{details?.guide_lines}</Text>{'\n '}
+              Do you agree? </Text>
+          }
+          onConfirm={() => {
+            handleStartTask();
+            setIsStartModalVisible(false);
+        }}
         />
         <PauseModal
           isVisible={isPauseModalVisible}

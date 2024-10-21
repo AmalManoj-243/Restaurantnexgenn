@@ -149,7 +149,7 @@ const AddProductLines = ({ navigation, route }) => {
   return (
     <SafeAreaView>
       <NavigationHeader
-        title={"Add ProductLine"}
+        title={"Add Product Line"}
         onBackPress={() => navigation.goBack()}
       />
       <RoundedScrollContainer>
@@ -159,6 +159,7 @@ const AddProductLines = ({ navigation, route }) => {
           dropIcon={"menu-down"}
           editable={false}
           required
+          multiline={true}
           value={formData.productName}
           onPress={() => toggleBottomSheet("Product")}
         />
@@ -173,6 +174,7 @@ const AddProductLines = ({ navigation, route }) => {
           placeholder={"Enter remarks"}
           required
           editable={true}
+          multiline={true}
         />
         <FormInput
           label={"Supplier"}

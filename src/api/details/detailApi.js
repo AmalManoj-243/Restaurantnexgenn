@@ -185,6 +185,10 @@ export const fetchMeetingsDetails = async (detailId) => {
   return fetchDetails(API_ENDPOINTS.VIEW_MEETINGS, detailId);
 };
 
+export const fetchAuditingDetails = async (detailId) => {
+  return fetchDetails(API_ENDPOINTS.VIEW_AUDITING, detailId);
+};
+
 export const fetchVisitPlanDetails = async (detailId) => {
   return fetchDetails(API_ENDPOINTS.VIEW_VISIT_PLAN, detailId);
 };

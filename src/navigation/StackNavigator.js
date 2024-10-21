@@ -6,7 +6,7 @@ import AppNavigator from "./AppNavigator";
 import { ProductsScreen, SplashScreen } from "@screens";
 import { OptionsScreen } from "@screens/Home/Options";
 import { TaskManagerScreen } from "@screens/Home/Options/TaskManager";
-import { AuditForm, AuditScreen } from "@screens/Home/Options/Audit";
+import { AuditDetails, AuditForm, AuditScreen } from "@screens/Home/Options/Audit";
 import { LoginScreen, PrivacyPolicy } from "@screens/Auth";
 import { Barcode, Scanner } from "@components/Scanner";
 import { InventoryDetails, InventoryForm, InventoryScreen } from "@screens/Home/Options/Inventory";
@@ -98,6 +98,11 @@ const StackNavigator = () => {
       <Stack.Screen
         name="AuditForm"
         component={AuditForm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AuditDetails"
+        component={AuditDetails}
         options={{ headerShown: false }}
       />
 

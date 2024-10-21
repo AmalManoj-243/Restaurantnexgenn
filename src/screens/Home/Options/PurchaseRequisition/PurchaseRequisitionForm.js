@@ -139,6 +139,7 @@ const PurchaseRequisitionForm = ({ navigation, onFieldChange }) => {
       <NavigationHeader
         title="Purchase Requisition Creation"
         onBackPress={() => navigation.goBack()}
+        logo={false}
       />
       <RoundedScrollContainer>
         <FormInput

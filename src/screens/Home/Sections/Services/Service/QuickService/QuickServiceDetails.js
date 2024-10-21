@@ -5,7 +5,7 @@ import { SafeAreaView } from '@components/containers';
 import NavigationHeader from '@components/Header/NavigationHeader';
 import { RoundedScrollContainer } from '@components/containers';
 import { DetailField } from '@components/common/Detail';
-import { formatDateTime } from '@utils/common/date';
+import { formatDate } from '@utils/common/date';
 import { showToastMessage } from '@components/Toast';
 import { fetchServiceDetails } from '@api/details/detailApi';
 import { OverlayLoader } from '@components/Loader';
@@ -104,7 +104,7 @@ const QuickServiceDetails = ({ navigation, route }) => {
                 <DetailField label="Mobile Number" value={details?.customer_lists?.[0]?.customer_mobile || '-'} />
                 <DetailField label="Email" value={details?.customer_email || '-'} />
                 <DetailField label="Warehouse Name" value={details?.warehouse_name || '-'} />
-                <DetailField label="Created On" value={formatDateTime(details.date)} />
+                <DetailField label="Created On" value={formatDate(details.date)} />
                 <DetailField label="Created By" value={details?.sales_person_name || '-'} />
                 <DetailField label="Brand Name" value={details?.brand_name || '-'} />
                 <DetailField label="Device Name" value={details?.device_name || '-'} />
