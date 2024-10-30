@@ -1,0 +1,32 @@
+viewCurrency
+viewCountry 
+
+creation body
+{
+  "supplier": "66d320c493ae153e21a522dc",
+  "currency": "6540b68c05fb79149c3eb7d8",
+  "purchase_type": "Local Purchase",
+  "country": "6593b9eef75a5a86947788da",
+  "bill_date": "2024-10-31",
+  "company": "66307fc0ceb8eb834bb25507",
+  "order_date": "2024-10-30",
+  "Trn_number": 554848484,
+  "untaxed_total_amount": 10,
+  "total_amount": 10,
+  "warehouse_id": "6630800bceb8eb834bb2551d",
+  "products_lines": [
+    {
+      "product": "6549fbbc170e1456c861c996",
+      "description": "",
+      "quantity": 1,
+      "unit_price": 10,
+      "sub_total": 10,
+      "tax_value": 0,
+      "scheduled_date": "2024-10-30",
+      "recieved_quantity": 0,
+      "billed_quantity": 0,
+      "product_unit_of_measure": "Pcs",
+      "taxes": "648d9b8fef9cd868dfbfa37f"
+    }
+  ]
+}

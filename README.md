@@ -906,7 +906,7 @@ The `dropdownApi.js` file is responsible for fetching data for various dropdown 
 
    ```js
    export const fetchCountryDropdown = async () => {
-     return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_COUNTRY);
+     return fetchData(DROP_DOWN_API_ENDPOINTS.COUNTRY);
    };
    ```
 
@@ -927,7 +927,7 @@ export const DETAIL_API_ENDPOINTS = {
 export const DROP_DOWN_API_ENDPOINTS = {
   INVOICE: `${API_BASE_URL}/dropdown/invoices`,
   PRODUCTS: `${API_BASE_URL}/dropdown/products`,
-  VIEW_COUNTRY: `${API_BASE_URL}/dropdown/countries`,
+  COUNTRY: `${API_BASE_URL}/dropdown/countries`,
   // Add other dropdown endpoints as needed
 };
 ```

@@ -11,6 +11,7 @@ const fetchData = async (endpoint) => {
     throw error;
   }
 };
+
 const fetchDataUsingWarehouse = async (endpoint, id) => {
   try {
     const response = await get(`${endpoint}?warehouse_id=${id}`);
@@ -20,7 +21,6 @@ const fetchDataUsingWarehouse = async (endpoint, id) => {
     throw error;
   }
 };
-
 
 export const fetchInvoiceDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.INVOICE);
@@ -75,23 +75,23 @@ export const fetchSiteLocationDropdown = async (customerId) => {
 }
 
 export const fetchCountryDropdown = async () => {
-  return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_COUNTRY);
+  return fetchData(DROP_DOWN_API_ENDPOINTS.COUNTRY);
 }
 
 export const fetchStateDropdown = async (countryId) => {
-  return fetchData(`${DROP_DOWN_API_ENDPOINTS.VIEW_STATE}?country_id=${countryId}`);
+  return fetchData(`${DROP_DOWN_API_ENDPOINTS.STATE}?country_id=${countryId}`);
 }
 
 export const fetchAreaDropdown = async (stateId) => {
-  return fetchData(`${DROP_DOWN_API_ENDPOINTS.VIEW_AREA}?state_id=${stateId}`);
+  return fetchData(`${DROP_DOWN_API_ENDPOINTS.AREA}?state_id=${stateId}`);
 };
 
 export const fetchSalesPersonDropdown = async () => {
-  return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_SALESPERSON);
+  return fetchData(DROP_DOWN_API_ENDPOINTS.SALESPERSON);
 }
 
 export const fetchCollectionAgentDropdown = async () => {
-  return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_COLLECTIONAGENT);
+  return fetchData(DROP_DOWN_API_ENDPOINTS.COLLECTIONAGENT);
 }
 
 export const fetchCustomerBehaviourDropdown = async () => {
@@ -99,11 +99,11 @@ export const fetchCustomerBehaviourDropdown = async () => {
 }
 
 export const fetchLanguageDropdown = async () => {
-  return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_LANGUAGE);
+  return fetchData(DROP_DOWN_API_ENDPOINTS.LANGUAGE);
 }
 
 export const fetchCurrencyDropdown = async () => {
-  return fetchData(DROP_DOWN_API_ENDPOINTS.VIEW_CURRENCY);
+  return fetchData(DROP_DOWN_API_ENDPOINTS.CURRENCY);
 }
 
 export const fetchSourceDropdown = async () => {
@@ -122,7 +122,7 @@ export const fetchNonInspectedBoxDropdown = async (id) => {
   return fetchDataUsingWarehouse(DROP_DOWN_API_ENDPOINTS.NON_INSPECTED, id);
 }
 
-export const fetchProductsDropdown = async (searchText='') => {
+export const fetchProductsDropdown = async (searchText = '') => {
   // console.log("🚀 ~ file: dropdownApi.js:126 ~ fetchProductsDropdown ~ searchText:", searchText)
   return fetchData(`${DROP_DOWN_API_ENDPOINTS.PRODUCTS}?product_name=${searchText}`);
 }
@@ -161,11 +161,11 @@ export const fetchAccessoriesDropdown = async () => {
 
 export const fetchComplaintsDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.COMPLAINTS);
-} 
+}
 
 export const fetchSubComplaintsDropdown = async (complaintsId) => {
   return fetchData(`${DROP_DOWN_API_ENDPOINTS.SUB_COMPLAINTS}?master_problem_id=${complaintsId}`);
-} 
+}
 
 export const fetchUnitOfMeasureDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.UNIT_OF_MEASURE);
@@ -175,6 +175,6 @@ export const fetchTaxDropdown = async () => {
   return fetchData(DROP_DOWN_API_ENDPOINTS.TAXES);
 }
 
-export const fetchSupplierDropDown = async (searchText='') => {
+export const fetchSupplierDropdown = async (searchText = '') => {
   return fetchData(`${DROP_DOWN_API_ENDPOINTS.SUPPLIERS}?name=${searchText}`);
 }

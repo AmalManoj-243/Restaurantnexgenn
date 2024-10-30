@@ -9,7 +9,7 @@ import { formatDate } from '@utils/common/date';
 import { showToastMessage } from '@components/Toast';
 import { TextInput as FormInput } from "@components/common/TextInput";
 import { fetchPurchaseRequisitionDetails } from '@api/details/detailApi';
-import { fetchSupplierDropDown } from "@api/dropdowns/dropdownApi";
+import { fetchSupplierDropdown } from "@api/dropdowns/dropdownApi";
 import PurchaseDetailList from './PurchaseDetailList';
 import { OverlayLoader } from '@components/Loader';
 import { Button } from '@components/common/Button';
@@ -48,7 +48,7 @@ const EditPurchaseRequisitionDetails = ({ navigation, route }) => {
 
     const fetchSuppliers = async () => {
         try {
-            const supplierData = await fetchSupplierDropDown(searchText);
+            const supplierData = await fetchSupplierDropdown(searchText);
             setDropdown((prevDropdown) => ({
                 ...prevDropdown,
                 suppliers: supplierData?.map((data) => ({
@@ -82,15 +82,15 @@ const EditPurchaseRequisitionDetails = ({ navigation, route }) => {
 
     const handleSupplierSelection = (selectedValues) => {
         const currentSuppliers = details?.request_details?.[0]?.products_lines?.[0]?.suppliers || [];
-    
+
         const currentSupplierMap = new Map(currentSuppliers.map(supplier => [supplier.supplier_id, supplier]));
-    
+
         const selectedSupplierIds = new Set(selectedValues.map(supplier => supplier.id));
-    
+
         const remainingSuppliers = currentSuppliers.filter(supplier => selectedSupplierIds.has(supplier.supplier_id));
-    
+
         const newSuppliers = selectedValues
-            .filter(supplier => !currentSupplierMap.has(supplier.id)) 
+            .filter(supplier => !currentSupplierMap.has(supplier.id))
             .map(supplier => ({
                 supplier_id: supplier.id,
                 status: "submitted",
@@ -99,16 +99,16 @@ const EditPurchaseRequisitionDetails = ({ navigation, route }) => {
                     suplier_name: supplier.label,
                 },
             }));
-    
+
         // Combine remaining suppliers and new ones
         const updatedSuppliers = [...remainingSuppliers, ...newSuppliers];
-    
+
         // **Ensure unique suppliers are updated** (this part makes sure duplicates don't happen)
         const uniqueSuppliers = Array.from(new Map(updatedSuppliers.map(item => [item.supplier_id, item])).values());
-    
+
         // Update the selected suppliers state
         setSelectedSuppliers(uniqueSuppliers);
-    
+
         // Update the details with the new supplier list
         setDetails((prevDetails) => {
             const updatedDetails = { ...prevDetails };
@@ -116,16 +116,16 @@ const EditPurchaseRequisitionDetails = ({ navigation, route }) => {
             return updatedDetails;
         });
     };
-    
+
     const handleEditPurchase = async () => {
         setIsSubmitting(true);
         try {
             const updateData = {
                 _id: details._id,
-                supplier_id: selectedSuppliers.map(supplier => supplier.id), 
-                product_lines: productLines, 
+                supplier_id: selectedSuppliers.map(supplier => supplier.id),
+                product_lines: productLines,
             };
-            console.log("Haii hello : ",updateData)
+            console.log("Haii hello : ", updateData)
             const response = await put('/updatePurchaseRequest', updateData);
             if (response.success === "true") {
                 showToastMessage('Successfully Added Suppliers');
@@ -142,73 +142,73 @@ const EditPurchaseRequisitionDetails = ({ navigation, route }) => {
 
     const renderBottomSheet = () => {
         if (!selectedType)
-        return null;
+            return null;
         let items = dropdown.suppliers;
         let isMultiSelect = true;
 
         return (
-          <MultiSelectDropdownSheet
-            isVisible={isVisible}
-            items={items}
-            title="Supplier"
-            search
-            refreshIcon={false}
-            previousSelections={selectedSuppliers}
-            onSearchText={(value) => setSearchText(value)}
-            onValueChange={handleSupplierSelection}
-            onClose={() => setIsVisible(false)}
-          />
+            <MultiSelectDropdownSheet
+                isVisible={isVisible}
+                items={items}
+                title="Supplier"
+                search
+                refreshIcon={false}
+                previousSelections={selectedSuppliers}
+                onSearchText={(value) => setSearchText(value)}
+                onValueChange={handleSupplierSelection}
+                onClose={() => setIsVisible(false)}
+            />
         );
     };
 
     return (
-      <SafeAreaView>
-        <NavigationHeader
-            title={details?.sequence_no || 'Purchase Requisition Details'}
-            onBackPress={() => navigation.goBack()}
-            logo={false}
-        />
-        <RoundedScrollContainer>
-            <DetailField label="Requested By" value={details?.request_details?.[0]?.requested_by?.employee_name || '-'} />
-            <DetailField label="Request Date" value={formatDate(details?.request_details?.[0]?.request_date)} />
-            <DetailField label="Warehouse" value={details?.request_details?.[0]?.warehouse?.warehouse_name || '-'} />
-            <DetailField label="Require By" value={formatDate(details?.request_details?.[0]?.require_by)} />
-            <FormInput
-                label={"Supplier"}
-                placeholder={"Add Suppliers"}
-                dropIcon={"menu-down"}
-                multiline={true}
-                editable={false}
-                value={selectedSuppliers.map(supplier => supplier.supplier?.suplier_name).join(", ")}
-                onPress={() => toggleBottomSheet("Supplier")}
+        <SafeAreaView>
+            <NavigationHeader
+                title={details?.sequence_no || 'Purchase Requisition Details'}
+                onBackPress={() => navigation.goBack()}
+                logo={false}
             />
-
-            <FlatList
-                data={productLines}
-                renderItem={({ item }) => <PurchaseDetailList item={item} />}
-                keyExtractor={(item) => item._id}
-            />
-
-            <View style={{ flexDirection: 'row', marginVertical: 20 }}>
-                <Button
-                    width={'50%'}
-                    backgroundColor={COLORS.tabIndicator}
-                    title="VIEW"
-                    onPress={() => navigation.navigate('PurchaseRequisitionDetails', { id: purchaseId })}
+            <RoundedScrollContainer>
+                <DetailField label="Requested By" value={details?.request_details?.[0]?.requested_by?.employee_name || '-'} />
+                <DetailField label="Request Date" value={formatDate(details?.request_details?.[0]?.request_date)} />
+                <DetailField label="Warehouse" value={details?.request_details?.[0]?.warehouse?.warehouse_name || '-'} />
+                <DetailField label="Require By" value={formatDate(details?.request_details?.[0]?.require_by)} />
+                <FormInput
+                    label={"Supplier"}
+                    placeholder={"Add Suppliers"}
+                    dropIcon={"menu-down"}
+                    multiline={true}
+                    editable={false}
+                    value={selectedSuppliers.map(supplier => supplier.supplier?.suplier_name).join(", ")}
+                    onPress={() => toggleBottomSheet("Supplier")}
                 />
-                <View style={{ width: 5 }} />
-                <Button
-                    width={'50%'}
-                    backgroundColor={COLORS.green}
-                    title="SAVE"
-                    onPress={handleEditPurchase}
-                />
-            </View>
 
-            <OverlayLoader visible={isLoading || isSubmitting} />
-            {renderBottomSheet()}
-        </RoundedScrollContainer>
-      </SafeAreaView>
+                <FlatList
+                    data={productLines}
+                    renderItem={({ item }) => <PurchaseDetailList item={item} />}
+                    keyExtractor={(item) => item._id}
+                />
+
+                <View style={{ flexDirection: 'row', marginVertical: 20 }}>
+                    <Button
+                        width={'50%'}
+                        backgroundColor={COLORS.tabIndicator}
+                        title="VIEW"
+                        onPress={() => navigation.navigate('PurchaseRequisitionDetails', { id: purchaseId })}
+                    />
+                    <View style={{ width: 5 }} />
+                    <Button
+                        width={'50%'}
+                        backgroundColor={COLORS.green}
+                        title="SAVE"
+                        onPress={handleEditPurchase}
+                    />
+                </View>
+
+                <OverlayLoader visible={isLoading || isSubmitting} />
+                {renderBottomSheet()}
+            </RoundedScrollContainer>
+        </SafeAreaView>
     );
 };
 

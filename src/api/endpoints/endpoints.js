@@ -24,6 +24,7 @@ export const API_ENDPOINTS = {
     VIEW_PICKUP: '/viewJobBooking',
     VIEW_PURCHASE_REQUISITION: '/viewPurchaseRequest',
     VIEW_PRICE: '/viewPriceEnquiry',
+    VIEW_PURCHASE_ORDER: '/viewPurchaseOrder',
 };
 
 export const DROP_DOWN_API_ENDPOINTS = {
@@ -40,13 +41,13 @@ export const DROP_DOWN_API_ENDPOINTS = {
     BRAND_DROPDOWN: '/viewBrands/brand_list/brand_dropdown',
     PURPOSE_OF_VISIT_DROPDOWN: '/viewCustomerPurposeOfVisit/customer_purpose_of_vist/customer_purpose_of_visit_dropdown',
     SITE_LOCATION_DROPDOWN: '/viewSiteLocation/site_location_list/site_location_dropdown',
-    VIEW_COUNTRY: "/viewCountry/country_list/country_dropdown",
-    VIEW_STATE: "/viewState",
-    VIEW_AREA: "/viewArea/area_list/drop_down",
-    VIEW_SALESPERSON: "/viewEmployees/employee_list/employee_dropdown",
-    VIEW_COLLECTIONAGENT: "/viewEmployees/employee_list/employee_dropdown",
-    VIEW_LANGUAGE: "/viewLanguage/language_list/language_dropdown",
-    VIEW_CURRENCY: "/viewCurrency/currency_list/currency_dropdown",
+    COUNTRY: "/viewCountry/country_list/country_dropdown",
+    STATE: "/viewState",
+    AREA: "/viewArea/area_list/drop_down",
+    SALESPERSON: "/viewEmployees/employee_list/employee_dropdown",
+    COLLECTIONAGENT: "/viewEmployees/employee_list/employee_dropdown",
+    LANGUAGE: "/viewLanguage/language_list/language_dropdown",
+    CURRENCY: "/viewCurrency/currency_list/currency_dropdown",
     SOURCE: "/viewSource/source_list/source_dropdown",
     OPPORTUNITY: "/viewOppertunityType/oppertunity_list/oppertunity_dropdown",
     ENQUIRY_TYPE: "/viewEnquiryType/enquiry_list/enquiry_dropdown",
@@ -55,7 +56,7 @@ export const DROP_DOWN_API_ENDPOINTS = {
     UOM: "/viewUnitOfMeasure",
     CUSTOMER_NAME: "/viewCustomers/customer_list/drop_down",
     WAREHOUSE: "/viewWarehouses/warehouse_list/warehouse_dropdown",
-    DEVICE: "/viewJobDevice/job_devices/dropdown", 
+    DEVICE: "/viewJobDevice/job_devices/dropdown",
     BRAND: "/viewJobBrand/job_brand_model/dropdown",
     CONSUMER_MODEL: "/viewJobConsumerModel/job_consumer_model/dropdown",
     ASSIGNED_TO: "/viewEmployees/employee_list/employee_dropdown",
@@ -64,7 +65,7 @@ export const DROP_DOWN_API_ENDPOINTS = {
     SUB_COMPLAINTS: "/viewServiceRegisterSubProblem/service_register_sub_problem_list/service_register_sub_problem_dropdown",
     UNIT_OF_MEASURE: "/viewUnitOfMeasure/quality_list/quality_dropdown",
     TAXES: "/viewTaxType/tax_type_list/tax_type_dropdown",
-    SUPPLIERS: "/viewsupplier"
+    SUPPLIERS: "/viewsupplier",
 };
 
 

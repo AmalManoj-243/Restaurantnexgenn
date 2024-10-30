@@ -5,7 +5,7 @@ import { TextInput as FormInput } from "@components/common/TextInput";
 import { Button } from "@components/common/Button";
 import { DropdownSheet, MultiSelectDropdownSheet } from "@components/common/BottomSheets";
 import { COLORS } from "@constants/theme";
-import { fetchProductsDropdown, fetchSupplierDropDown } from "@api/dropdowns/dropdownApi";
+import { fetchProductsDropdown, fetchSupplierDropdown } from "@api/dropdowns/dropdownApi";
 import { Keyboard, Alert } from "react-native";
 import { validateFields } from '@utils/validation';
 
@@ -51,7 +51,7 @@ const AddPriceLines = ({ navigation, route }) => {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const supplierData = await fetchSupplierDropDown(searchText);
+        const supplierData = await fetchSupplierDropdown(searchText);
         setDropdown((prevDropdown) => ({
           ...prevDropdown,
           suppliers: supplierData?.map((data) => ({
