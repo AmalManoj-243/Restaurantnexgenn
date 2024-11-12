@@ -33,6 +33,7 @@ const AuditForm = ({ navigation }) => {
   const [splittedBillName, setSplittedBillName] = useState('')
   const loginUser = useAuthStore(state => state.user)
   const warehouseId = loginUser?.warehouse?.warehouse_id
+  console.log("Logged In Warehouse Id : ", warehouseId)
 
   useEffect(() => {
     resetFormState();
@@ -53,14 +54,13 @@ const AuditForm = ({ navigation }) => {
   const handleScan = async (data) => {     // VB 203
     const billParts = data.split('-')      // VB-203
     const billName = billParts[0]
-    console.log("🚀 ~ file: AuditForm.js:54 ~ handleScan ~ billName:", billName)
+    console.log("BillName : ", billName)
     const billSequence = billParts.slice(1).join('-')
     setSplittedBillName(billName)
     resetFormState();
 
     try {
       let response, billDetails;
-      console.log("Response of Customer Data :", billDetails)
       switch (billName) {
         case "Invoice":
           response = await fetchBills.invoiceDetails(billSequence);
@@ -178,6 +178,7 @@ const AuditForm = ({ navigation }) => {
           if (response[0]) {
             const spareAuditDetail = await fetchBills.sparePartsIssueAuditDetails(response[0]?._id)
             billDetails = spareAuditDetail[0];
+            console.log("🚀 ~ Scanned Billed Details:", JSON.stringify(billDetails, null, 2));
           }
           break;
 
@@ -279,10 +280,6 @@ const AuditForm = ({ navigation }) => {
         continue;
       }
 
-      // if (splittedBillName === 'Stock rec'){
-
-      // }
-
       if (!displayBillDetails[field]) {
         updateErrorState(errorMessages[field], field);
         isValid = false;
@@ -290,6 +287,7 @@ const AuditForm = ({ navigation }) => {
 
       if (scannedBillDetails?.warehouse || scannedBillDetails?.from_warehouse_id) {
         const warehouses_id = scannedBillDetails?.warehouse?.warehouses_id || scannedBillDetails?.to_warehouse_id;
+        // const warehouse_id = scannedBillDetails?.warehouse_id;
         const from_warehouse_id = scannedBillDetails?.from_warehouse_id || null;
         const to_warehouse_id = scannedBillDetails?.to_warehouse_id || null;
         // Debugging logs to inspect the variables before the condition
@@ -299,6 +297,7 @@ const AuditForm = ({ navigation }) => {
         // console.log("Warehouse Id :", warehouseId)
         // console.log("To Warehouse Id :", to_warehouse_id)
         // console.log("From Warehouse Id :", from_warehouse_id)
+        // if (warehouseId !== warehouses_id && warehouseId !== warehouse_id && warehouseId !== to_warehouse_id && warehouseId !== from_warehouse_id) {
         if (warehouseId !== warehouses_id && warehouseId !== to_warehouse_id && warehouseId !== from_warehouse_id) {
           console.log("Condition triggered: Warehouse ID doesn't match either the warehouse or from_warehouse_id.");
           showToast({
@@ -657,6 +656,7 @@ const AuditForm = ({ navigation }) => {
           auditingData.to_warehouse_name = scannedBillDetails?.to_warehouse_name ?? null;
           auditingData.un_taxed_amount = scannedBillDetails?.amount ?? 0;
           break;
+
         default:
           break;
       }

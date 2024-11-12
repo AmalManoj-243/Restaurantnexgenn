@@ -89,6 +89,32 @@ const PurchaseOrderDetails = ({ navigation, route }) => {
         navigation.navigate('EditPriceEnquiryDetails', { id: purchaseOrderId });
     };
 
+    const handleDeliveryNote = () => {
+        navigation.navigate('DeliveryNoteScreen', { id: purchaseOrderId });
+    };
+
+    const handleCancelPurchaseOrder = async () => {
+        setIsSubmitting(true);
+        try {
+            const response = await updatePurchaseOrder(details._id, {
+                _id: details._id,
+                status: "Cancelled",
+                payment_status: "Cancelled",
+            });
+            console.log("handleCancelPurchaseOrder : ",response)
+            if (response.success || response === success) {
+                showToastMessage('Purchase Order Cancelled Successfully');
+                fetchDetails();
+            } else {
+                showToastMessage('Failed to Cancel Purchase Order. Please try again.');
+            }
+        } catch (error) {
+            showToastMessage('An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <SafeAreaView>
             <NavigationHeader
@@ -153,7 +179,10 @@ const PurchaseOrderDetails = ({ navigation, route }) => {
                     isVisible={isMenuModalVisible}
                     onCancel={() => setIsMenuModalVisible(false)}
                     onOptionSelect={(option) => {
-                        showToastMessage(`${option} selected`);
+                        if (option === 'Delivery Note') handleDeliveryNote();
+                        else if (option === 'PO Cancel') handleCancelPurchaseOrder();
+                        // else if (option === 'Send PO') handleSendPO();
+                        // else if (option === 'Shipment') handleShipment();
                     }}
                 />
 

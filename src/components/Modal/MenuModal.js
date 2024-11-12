@@ -29,7 +29,7 @@ const MenuModal = ({ isVisible, onCancel, onOptionSelect, headerMessage = 'Selec
                                 key={option}
                                 style={styles.optionButton}
                                 onPress={() => {
-                                    onOptionSelect(option);
+                                    if (onOptionSelect) onOptionSelect(option);
                                     onCancel(); // Close modal after selection
                                 }}
                             >

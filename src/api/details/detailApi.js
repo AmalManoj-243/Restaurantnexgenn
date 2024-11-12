@@ -59,6 +59,7 @@ const fetchAuditDetailss = async (endpoint, sequenceNo) => {
 
 // Fetches details for a given endpoint and detail ID.
 const fetchDetails = async (endpoint, detailId) => {
+  console.log("fetchDetails :", detailId)
   try {
     const response = await get(`${endpoint}/${detailId}`)
     return response.data;

@@ -49,42 +49,6 @@ const DeliveryNoteDetails = ({ navigation, route }) => {
         }, [deliveryNoteId])
     );
 
-    const handleVendorBill = async () => {
-        setIsSubmitting(true);
-        try {
-            const response = await post('/createPriceEnquiryPurchaseOrder', { _id: details._id });
-            if (response.success) {
-                showToastMessage('Purchase Order Created Successfully');
-                navigation.navigate('OptionScreen');
-            } else {
-                showToastMessage('Failed to Create Purchase Order. Please try again.');
-            }
-        } catch (error) {
-            showToastMessage('An error occurred. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-            fetchDetails();
-        }
-    };
-
-    const handleDeletePrice = async () => {
-        setIsSubmitting(true);
-        try {
-            const response = await deleteRequest(`//${details._id}`);
-            if (response.success) {
-                showToastMessage('Price Enquiry Deleted Successfully');
-                navigation.navigate('PriceEnquiryScreen');
-            } else {
-                showToastMessage('Failed to Delete Price Enquiry. Please try again.');
-            }
-        } catch (error) {
-            showToastMessage('An error occurred. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-            fetchDetails();
-        }
-    };
-
     const hanldePdfDownload = () => {
         navigation.navigate('EditPriceEnquiryDetails', { id: deliveryNoteId });
     };
@@ -119,7 +83,7 @@ const DeliveryNoteDetails = ({ navigation, route }) => {
                         width={'50%'}
                         backgroundColor={COLORS.tabIndicator}
                         title="Vendor Bill"
-                        onPress={handleVendorBill}
+                        onPress={() => navigation.navigate('VendorBillScreen', { id: details._id })}
                     />
                     <View style={{ width: 5 }} />
                     <Button
