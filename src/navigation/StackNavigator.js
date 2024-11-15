@@ -42,6 +42,7 @@ import { AddProductLines, EditPurchaseRequisitionDetails, PurchaseRequisitionDet
 import { AddPurchaseLines, PurchaseOrderDetails, PurchaseOrderForm, PurchaseOrderList, PurchaseOrderScreen } from "@screens/Home/Options/Purchases/PurchaseOrder";
 import { DeliveryNoteDetails, DeliveryNoteScreen } from "@screens/Home/Options/Purchases/DeliveryNote";
 import { VendorBillScreen } from "@screens/Home/Options/Purchases/VendorBill";
+import DeliveryNoteCreation from "@screens/Home/Options/Purchases/DeliveryNote/DeliveryNoteCreation";
 
 const Stack = createNativeStackNavigator();
 
@@ -487,6 +488,11 @@ const StackNavigator = () => {
       <Stack.Screen
         name="DeliveryNoteScreen"
         component={DeliveryNoteScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DeliveryNoteCreation"
+        component={DeliveryNoteCreation}
         options={{ headerShown: false }}
       />
       <Stack.Screen

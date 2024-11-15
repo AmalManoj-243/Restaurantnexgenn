@@ -19,7 +19,6 @@ import { COLORS, FONT_FAMILY } from "@constants/theme";
 
 const PurchaseOrderForm = ({ route, navigation }) => {
   const currentUser = useAuthStore((state) => state.user);
-  console.log(currentUser);
   const [isVisible, setIsVisible] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);

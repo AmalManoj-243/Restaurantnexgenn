@@ -207,7 +207,7 @@ const AddSpareParts = ({ navigation, route }) => {
                 }));
 
                 const defaultTax = taxItems.find(tax => tax.label === "vat 5%");
-                console.log("🚀 ~ file: AddSpareParts.js:210 ~ fetchTax ~ defaultTax:", defaultTax)
+                // console.log("Default Tax : ", defaultTax)
                 // setDropdown(prevDropdown => ({
                 //     ...prevDropdown,
                 //     taxes: taxItems,

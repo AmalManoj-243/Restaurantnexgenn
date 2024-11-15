@@ -285,9 +285,9 @@ const AuditForm = ({ navigation }) => {
         isValid = false;
       }
 
-      if (scannedBillDetails?.job_registrations[0]?.warehouse_id || scannedBillDetails?.warehouse || scannedBillDetails?.from_warehouse_id) {
-        const warehouses_id = scannedBillDetails?.warehouse?.warehouses_id || scannedBillDetails?.to_warehouse_id || scannedBillDetails?.job_registrations[0]?.warehouse_id;
-        console.log("Job Registrations : ", warehouses_id)
+      if (scannedBillDetails?.warehouse || scannedBillDetails?.from_warehouse_id) {
+        const warehouses_id = scannedBillDetails?.warehouse?.warehouses_id || scannedBillDetails?.to_warehouse_id;
+        // const warehouse_id = scannedBillDetails?.warehouse_id;
         const from_warehouse_id = scannedBillDetails?.from_warehouse_id || null;
         const to_warehouse_id = scannedBillDetails?.to_warehouse_id || null;
         // Debugging logs to inspect the variables before the condition
@@ -329,7 +329,6 @@ const AuditForm = ({ navigation }) => {
         remarks: remarks || "",
         warehouse_id: loginUser?.warehouse_id ?? null,
         warehouse_name: loginUser?.warehouse?.warehouse_name ?? null,
-        scanned_warehouse_id: scannedBillDetails?.job_registrations[0]?.warehouse_id,
         to_warehouse_id: null,
         to_warehouse_name: '',
         sales_person_id: loginUser?.related_profile?._id ?? null,
@@ -869,4 +868,3 @@ const styles = StyleSheet.create({
   },
 
 });
-

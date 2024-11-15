@@ -90,7 +90,7 @@ const PurchaseOrderDetails = ({ navigation, route }) => {
     };
 
     const handleDeliveryNote = () => {
-        navigation.navigate('DeliveryNoteScreen', { id: purchaseOrderId });
+        navigation.navigate('DeliveryNoteCreation', { id: purchaseOrderId });
     };
 
     const handleCancelPurchaseOrder = async () => {

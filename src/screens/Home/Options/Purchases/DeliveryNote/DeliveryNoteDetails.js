@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, FlatList, Text, Modal, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from '@components/containers';
+import { FlatList } from 'react-native';
 import NavigationHeader from '@components/Header/NavigationHeader';
-import { RoundedScrollContainer } from '@components/containers';
+import { RoundedScrollContainer, SafeAreaView } from '@components/containers';
 import { DetailField } from '@components/common/Detail';
 import { formatDate } from '@utils/common/date';
 import { showToastMessage } from '@components/Toast';
@@ -11,8 +10,6 @@ import { fetchDeliveryNoteDetails } from '@api/details/detailApi';
 import { OverlayLoader } from '@components/Loader';
 import { Button } from '@components/common/Button';
 import { COLORS } from '@constants/theme';
-import { post, deleteRequest } from '@api/services/utils';
-import { ConfirmationModal, MenuModal } from '@components/Modal';
 import DeliveryNoteDetailList from './DeliveryNoteDetailList';
 
 const DeliveryNoteDetails = ({ navigation, route }) => {
@@ -21,9 +18,6 @@ const DeliveryNoteDetails = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [deliveryNotes, setDeliveryNotes] = useState([]);
-    const [isMenuModalVisible, setIsMenuModalVisible] = useState(false);
-    const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
 
     const fetchDetails = async () => {
         setIsLoading(true);
@@ -56,12 +50,11 @@ const DeliveryNoteDetails = ({ navigation, route }) => {
     return (
         <SafeAreaView>
             <NavigationHeader
-                title={details?.sequence_no || 'Delivery Note Details'}
+                title={'Delivery Note Creation'}
                 onBackPress={() => navigation.goBack()}
                 logo={false}
             />
             <RoundedScrollContainer>
-                <DetailField label="Sequence No" value={details?.sequence_no || '-'} />
                 <DetailField label="Supplier Name" value={details?.supplier?.supplier_name || '-'} />
                 <DetailField label="LPO No" value={details?.LPO_no || '-'} />
                 <DetailField label="Ordered Date" value={formatDate(details?.order_date)} />
@@ -77,22 +70,12 @@ const DeliveryNoteDetails = ({ navigation, route }) => {
                     keyExtractor={(item) => item._id}
                 />
 
-                <View style={{ flexDirection: 'row', marginVertical: 5 }}>
-                    <View style={{ width: 5 }} />
-                    <Button
-                        width={'50%'}
-                        backgroundColor={COLORS.tabIndicator}
-                        title="Vendor Bill"
-                        onPress={() => navigation.navigate('VendorBillScreen', { id: details._id })}
-                    />
-                    <View style={{ width: 5 }} />
-                    <Button
-                        width={'50%'}
-                        backgroundColor={COLORS.green}
-                        title="PDF Download"
-                        onPress={hanldePdfDownload}
-                    />
-                </View>
+                <Button
+                    width={'50%'}
+                    backgroundColor={COLORS.tabIndicator}
+                    title="Submit"
+                    onPress={() => navigation.navigate('VendorBillScreen', { id: details._id })}
+                />
 
                 <OverlayLoader visible={isLoading || isSubmitting} />
             </RoundedScrollContainer>

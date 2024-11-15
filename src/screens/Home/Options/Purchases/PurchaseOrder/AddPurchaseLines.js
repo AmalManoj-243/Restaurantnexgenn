@@ -5,48 +5,124 @@ import { TextInput as FormInput } from "@components/common/TextInput";
 import { Button } from "@components/common/Button";
 import { DropdownSheet } from "@components/common/BottomSheets";
 import { COLORS } from "@constants/theme";
-import { fetchProductsDropdown } from "@api/dropdowns/dropdownApi";
+import { fetchProductsDropdown, fetchUnitOfMeasureDropdown, fetchTaxDropdown } from "@api/dropdowns/dropdownApi";
 import { Keyboard } from "react-native";
 import { validateFields } from '@utils/validation';
+import { formatDate } from '@utils/common/date';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useAuthStore } from "@stores/auth";
 
 const AddPurchaseLines = ({ navigation }) => {
+  const currentUser = useAuthStore((state) => state.user);
   const [searchText, setSearchText] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [dropdown, setDropdown] = useState({ products: [] });
   const [errors, setErrors] = useState({});
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [selectedType, setSelectedType] = useState(null);
+
+  const [dropdown, setDropdown] = useState({
+    products: [],
+    unitofmeasure: [],
+    taxes: [],
+  });
+
   const [formData, setFormData] = useState({
-    productId: "",
-    productName: "",
+    productId: '',
+    productName: '',
+    description: '',
+    scheduledDate: new Date(),
+    company: { id: currentUser?.company?.company_id || '', label: currentUser?.company?.name },
+    quantity: '1',
+    uom: '',
+    unitPrice: '',
+    taxes: 'vat 5%',
+    subTotal: '',
   });
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const productsData = await fetchProductsDropdown(searchText);
-        setDropdown({
+        setDropdown((prevDropdown) => ({
+          ...prevDropdown,
           products: productsData?.map((data) => ({
             id: data._id,
             label: data.product_name?.trim(),
+            product_description: data.product_description,
+            cost: data.cost,
           })),
-        });
+        }));
       } catch (error) {
         console.error("Error fetching Products dropdown data:", error);
       }
     };
-  
+
     fetchProducts();
   }, [searchText]);
-  
+
+  useEffect(() => {
+    const fetchUnitOfMeasure = async () => {
+      try {
+        const UnitOfMeasureData = await fetchUnitOfMeasureDropdown();
+        const uomItems = UnitOfMeasureData.map(data => ({
+          id: data._id,
+          label: data.uom_name,
+        }));
+
+        const defaultUOM = uomItems.find(uom => uom.label === 'Pcs');
+        setDropdown(prevDropdown => ({
+          ...prevDropdown,
+          unitofmeasure: uomItems,
+        }));
+
+        if (defaultUOM) {
+          setFormData(prevFormData => ({
+            ...prevFormData,
+            uom: defaultUOM,
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching Unit Of Measure dropdown data:', error);
+      }
+    };
+
+    fetchUnitOfMeasure();
+  }, []);
+
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      try {
+        const taxData = await fetchTaxDropdown();
+        setDropdown(prevDropdown => ({
+          ...prevDropdown,
+          taxes: taxData.map(data => ({
+            id: data._id,
+            label: data.tax_type_name,
+          })),
+        }));
+      } catch (error) {
+        console.error('Error fetching tax dropdown data:', error);
+      }
+    };
+
+    fetchDropdownData();
+  }, []);
+
   const handleProductSelection = (selectedProduct) => {
-    setFormData({
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       productId: selectedProduct.id,
       productName: selectedProduct.label,
-    });
+      description: selectedProduct.product_description || '', 
+      unitPrice: selectedProduct.cost || '', 
+      subTotal: (selectedProduct.cost || 0) * (prevFormData.quantity || 1), 
+    }));
     setIsVisible(false);
-  };  
-  
-  const toggleBottomSheet = () => {
-    setIsVisible((prev) => !prev);
+  };
+
+  const toggleBottomSheet = (type) => {
+    setSelectedType(type);
+    setIsVisible(!isVisible);
   };
 
   const validateForm = (fieldsToValidate) => {
@@ -56,16 +132,88 @@ const AddPurchaseLines = ({ navigation }) => {
     return isValid;
   };
 
+  const handleQuantityChange = (value) => {
+    const quantity = parseFloat(value) || 1;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      quantity,
+      subTotal: quantity * (prevFormData.unitPrice || 0),
+    }));
+  };
+
+  const handleFieldChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value,
+    }));
+    if (errors[field]) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [field]: null,
+      }));
+    }
+  };
+
   const handleAddProducts = () => {
     const fieldsToValidate = ['productName'];
     if (validateForm(fieldsToValidate)) {
       const productLine = {
         product_name: formData.productName,
         product_id: formData.productId,
+        description: formData.description || '',
+        scheduledDate: formData.scheduledDate || '',
+        company: formData.company || '',
+        quantity: formData.quantity || '',
+        uom: formData.uom || '',
+        unitPrice: formData.unitPrice || '',
+        taxType: formData.taxType || '',
+        subTotal: formData.subTotal || '',
+        taxes: formData.taxes || '',
+        total: formData.total || '',
       };
       console.log('Product Line Data:', productLine);
       navigation.navigate("PurchaseOrderForm", { newProductLine: productLine });
     }
+  };
+
+  const renderBottomSheet = () => {
+    let items = [];
+    let fieldName = '';
+
+    switch (selectedType) {
+      case 'Product Name':
+        items = dropdown.products;
+        fieldName = 'products';
+        break;
+      case 'UOM':
+        items = dropdown.unitofmeasure;
+        fieldName = 'uom';
+        break;
+      case 'Tax':
+        items = dropdown.taxes;
+        fieldName = 'tax';
+        break;
+      default:
+        return null;
+    }
+    return (
+      <DropdownSheet
+        isVisible={isVisible}
+        items={items}
+        title={selectedType}
+        onClose={() => setIsVisible(false)}
+        search={true}
+        onSearchText={(value) => setSearchText(value)}
+        onValueChange={(value) => {
+          setSearchText('')
+          if (selectedType === 'Product Name') {
+            handleProductSelection(value);
+          } else {
+            handleFieldChange(fieldName, value);
+          }
+        }}
+      />
+    );
   };
 
   return (
@@ -76,16 +224,89 @@ const AddPurchaseLines = ({ navigation }) => {
       />
       <RoundedScrollContainer>
         <FormInput
-          label="Product"
-          placeholder="Select Product"
+          label="Product Name"
+          placeholder="Select Product Name"
           dropIcon="menu-down"
           editable={false}
           required
           multiline={true}
           validate={errors.productName}
-          value={formData.productName} 
-          onPress={toggleBottomSheet}
+          value={formData.productName}
+          onPress={() => toggleBottomSheet('Product Name')}
         />
+        <FormInput
+          label="Description"
+          placeholder="Enter Description"
+          value={formData.description}
+          onChangeText={(value) => handleFieldChange('description', value)}
+        />
+        <FormInput
+          label="Scheduled Date"
+          dropIcon="calendar"
+          placeholder={"dd-mm-yyyy"}
+          editable={false}
+          value={formatDate(formData.scheduledDate)}
+          onPress={() => setIsDatePickerVisible(true)}
+        />
+        <FormInput
+          label="Company"
+          placeholder="Enter Company"
+          value={formData.company?.label}
+          editable={false}
+          onChangeText={(value) => handleFieldChange('company', value)}
+        />
+        <FormInput
+          label="Quantity"
+          placeholder="Enter Quantity"
+          keyboardType="numeric"
+          value={formData.quantity}
+          onChangeText={(value) => handleQuantityChange(value)}
+        />
+        <FormInput
+          label="Product Unit Of Measure"
+          placeholder="Unit Of Measure"
+          dropIcon="menu-down"
+          editable={false}
+          value={formData.uom?.label || ''}
+          onPress={() => toggleBottomSheet('UOM')}
+        />
+        <FormInput
+          label="Unit Price"
+          placeholder="Unit Price"
+          keyboardType="numeric"
+          value={formData.unitPrice.toString()}
+          onChangeText={(value) => handleFieldChange('unitPrice', parseFloat(value))}
+        />
+        <FormInput
+          label="Tax"
+          placeholder="Tax Type"
+          dropIcon="menu-down"
+          editable={false}
+          value={formData.tax?.label || ''}
+          onPress={() => toggleBottomSheet('Tax')}
+        />
+        <FormInput
+          label="Sub Total"
+          placeholder="Sub Total"
+          editable={false}
+          value={formData.subTotal.toString()}
+        />
+        <FormInput
+          label="Untaxed Amount"
+          editable={false}
+          value={formData.addedAmount}
+        />
+        <FormInput
+          label="Taxes"
+          editable={false}
+          value={formData.tax}
+        />
+        <FormInput
+          label="Total"
+          editable={false}
+          value={formData.total}
+        />
+
         <Button
           title="Add Product"
           width="50%"
@@ -93,17 +314,15 @@ const AddPurchaseLines = ({ navigation }) => {
           backgroundColor={COLORS.primaryThemeColor}
           onPress={handleAddProducts}
         />
-        {isVisible && (
-          <DropdownSheet
-            isVisible={isVisible}
-            items={dropdown.products}
-            title="Select Product"
-            onClose={() => setIsVisible(false)}
-            search
-            onSearchText={setSearchText}
-            onValueChange={handleProductSelection}
-          />
-        )}
+
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={(date) => { handleFieldChange("scheduledDate", date); setIsDatePickerVisible(false) }}
+          minimumDate={new Date()}
+          onCancel={() => setIsDatePickerVisible(false)}
+        />
+        {renderBottomSheet()}
       </RoundedScrollContainer>
     </SafeAreaView>
   );
