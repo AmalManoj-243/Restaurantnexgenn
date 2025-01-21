@@ -116,6 +116,8 @@ const AddPurchaseLines = ({ navigation }) => {
 
       if (formData.taxes?.label === "vat 5%") {
         tax = untaxedAmount * 0.05;
+      } else if (formData.taxes?.label === "vat 5% inclusive") {
+        tax = untaxedAmount * 0.05;
       } else if (formData.taxes?.label === "vat 0%") {
         tax = 0;
       }
@@ -198,7 +200,7 @@ const AddPurchaseLines = ({ navigation }) => {
         tax: formData.tax || '',
         totalAmount: formData.totalAmount || '',
       };
-      console.log("🚀 ~ AddPurchaseLines ~ productLine:", JSON.stringify(productLine, null, 2));
+      // console.log("🚀 ~ AddPurchaseLines ~ productLine:", JSON.stringify(productLine, null, 2));
       navigation.navigate("PurchaseOrderForm", { newProductLine: productLine });
     }
   };

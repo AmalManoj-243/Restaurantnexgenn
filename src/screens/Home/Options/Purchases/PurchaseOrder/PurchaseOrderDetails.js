@@ -117,7 +117,7 @@ const PurchaseOrderDetails = ({ navigation, route }) => {
                 onBackPress={() => navigation.goBack()}
                 logo={false}
                 iconOneName='edit'
-                iconOnePress={() => navigation.navigate('EditPoDetails', { id: purchaseOrderId })}
+                iconOnePress={() => navigation.navigate('EditPurchaseOrderDetails', { id: purchaseOrderId })}
                 iconTwoName='menu-fold'
                 iconTwoPress={() => setIsMenuModalVisible(true)}
             />
@@ -147,7 +147,7 @@ const PurchaseOrderDetails = ({ navigation, route }) => {
                 </View>
                 <View style={styles.totalSection}>
                     <Text style={styles.totalLabel}>Taxes : </Text>
-                    <Text style={styles.totalValue}>{(details.total_amount)-(details.untaxed_total_amount)}</Text>
+                    <Text style={styles.totalValue}>{(details.total_amount)-(details.untaxed_total_amount) || 0}</Text>
                     {/* <Text style={styles.totalValue}>{taxTotal}</Text> */}
                 </View>
                 <View style={styles.totalSection}>

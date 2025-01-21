@@ -60,14 +60,10 @@ const PriceEnquiryDetails = ({ navigation, route }) => {
                 employee_id: currentUser?._id || "",
                 product_purchase_enquiry_id: details?._id,
                 employee_name: currentUser?.user_name || "",
-                bill_date: formatDate(new Date, 'dd/mm/yyyy'),
+                bill_date: formatDate(new Date, 'yyyy/MM/dd'),
                 order_date: formatDate(new Date, 'yyyy/MM/dd'),
                 update_date: formatDate(new Date, 'yyyy/MM/dd'),
                 payment_status: "Submitted",
-                purchase_type: "Local Purchase",
-                // currency: "", // currency id
-                // country: details?.nationality?.nationality_id || "",
-                company: currentUser?.company_id || "",
                 purchase_enquiry_lines: priceLines.map(item => ({
                     product_id: item?.products?.product_id,
                     // uom: "", // uom name (units)
@@ -82,6 +78,10 @@ const PriceEnquiryDetails = ({ navigation, route }) => {
                     scheduled_date: formatDate(new Date, 'yyyy/MM/dd'),
                     // description: item?.description || "",
                 })),
+                purchase_type: "Local Purchase",
+                // currency: "", // currency id
+                // country: details?.nationality?.nationality_id || "",
+                company: currentUser?.company_id || "",
             };
             console.log("🚀 ~ PriceEnquiryDetails ~ purchaseOrderData:", JSON.stringify(purchaseOrderData, null, 2));
             const response = await post('/createPriceEnquiryPurchaseOrder', purchaseOrderData);

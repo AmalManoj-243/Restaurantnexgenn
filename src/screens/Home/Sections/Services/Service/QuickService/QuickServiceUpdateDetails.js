@@ -17,6 +17,7 @@ import { post, put } from '@api/services/utils';
 import { useAuthStore } from '@stores/auth';
 import { showToast } from '@utils/common';
 import { TextInput as FormInput } from '@components/common/TextInput';
+import { TitleWithButton } from '@components/Header';
 
 const QuickServiceUpdateDetails = ({ route, navigation }) => {
   const { id } = route.params || {};
@@ -264,6 +265,10 @@ const QuickServiceUpdateDetails = ({ route, navigation }) => {
           value={formData.serviceCharge.toString()}
           onChangeText={(value) => setFormData({ ...formData, serviceCharge: value })}
         />
+        {/* <TitleWithButton
+          label="Add an item"
+          onPress={() => navigation.navigate('AddSpareParts', { id, addSpareParts })}
+        /> */}
         <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginVertical: 10 }}>
           <Text style={styles.label}>Add an Item</Text>
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('AddSpareParts', { id, addSpareParts })}>

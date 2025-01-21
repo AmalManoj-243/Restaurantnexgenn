@@ -18,12 +18,13 @@ import { Button } from '@components/common/Button';
 import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { put } from '@api/services/utils';
 
-const EditPoDetails = ({ navigation, route }) => {
+const EditPurchaseOrderDetails = ({ navigation, route }) => {
   const { id: purchaseOrderId } = route?.params || {};
   const [detail, setDetail] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [purchaseOrderLines, setPurchaseOrderLines] = useState([]);
+  console.log("purchaseOrderLines :",purchaseOrderLines)
   const [isVisible, setIsVisible] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
@@ -46,7 +47,7 @@ const EditPoDetails = ({ navigation, route }) => {
         setFormData((prevFormData) => ({
           ...prevFormData,
           vendorName: { id: detail?.supplier?.supplier_id || '', label: detail?.supplier?.supplier_name?.trim() || '' },
-          trnNumber: detail?.Trn_number.toString() || '',
+          trnNumber: detail?.Trn_number.toString() || '-',
           currency: { id: detail?.currency?.currency_id || '', label: detail?.currency?.currency_name || '' },
           orderDate: detail?.order_date || new Date(),
           purchaseType: detail?.purchase_type || '',
@@ -177,57 +178,157 @@ const EditPoDetails = ({ navigation, route }) => {
     }
   }, [route.params?.newProductLine]);
 
+  // const handleUpdatePurchaseOrder = async () => {
+  //   setIsSubmitting(true);
+  //   const updatedPurchaseOrder = {
+  //     _id: purchaseOrderId,
+  //     supplier: formData?.vendorName?.id ?? null,
+  //     Trn_number: formData?.trnNumber || null,
+  //     status: "Pending",
+  //     currency: formData?.currency?.id ?? null,
+  //     purchase_type: formData?.purchaseType || null,
+  //     country: formData?.countryOfOrigin?.id ?? null,
+  //     bill_date: formatDate(formData.billDate, 'yyyy-MM-dd') || null,
+  //     order_date: formatDate(formData.orderDate, 'yyyy-MM-dd') || null,
+  //     untaxed_total_amount: untaxedTotal || null,
+  //     total_amount: grandTotal || null,
+  //     payment_status: "Pending",
+  //     due_amount: 0,
+  //     paid_amount: 0,
+  //     due_date: 0,
+  //     remarks: "test",
+  //     date: formatDate(formData.billDate, 'yyyy-MM-dd') || null,
+  //     warehouse_id: formData?.warehouse?.id ?? null,
+  //     warehouse_name: formData?.warehouse?.label ?? null,
+  //     update_purchase_line_ids: purchaseOrderLines.map((item) => ({
+  //       purchase_line_ids: item.purchase_line_ids,
+  //       product: item.product.product_id || item.product_id,
+  //       taxes: item.taxes.tax_type_id,
+  //       quantity: item.quantity,
+  //       recieved_quantity: item.recieved_quantity,
+  //       unit_price: item.unit_price,
+  //       sub_total: item.sub_total,
+  //       description: item.description,
+  //       billed_quantity: item.billed_quantity,
+  //       product_unit_of_measure: item.uom,
+  //       scheduled_date: item.scheduled_date,
+  //     })),
+  //     create_purchase_line_ids: purchaseOrderLines.map((item) => ({
+  //       product: item.product_id,
+  //       taxes: item.tax_type_id,
+  //       quantity: item.quantity,
+  //       recieved_quantity: item.receivedQuantity || 0,
+  //       unit_price: item.unitPrice,
+  //       sub_total: item.subTotal,
+  //       description: item.description,
+  //       billed_quantity: item.billedQuantity || 0,
+  //       product_unit_of_measure: item.product_unit_of_measure,
+  //       scheduled_date: item.scheduledDate,
+  //     })),
+  //     delete_purchase_line_ids: [_id],
+  //   };
+  //   console.log("Updated Purchase Order:", updatedPurchaseOrder);
+  //   try {
+  //     const response = await put("/updatePurchaseOrder", updatedPurchaseOrder);
+  //     if (response.success === 'true') {
+  //       showToast({
+  //         type: "success",
+  //         title: "Success",
+  //         message: response.message || "Purchase Order Updated Successfully",
+  //       });
+  //       navigation.navigate("PurchaseOrderDetails");
+  //     } else {
+  //       console.error("Submit Failed:", response.message);
+  //       showToast({
+  //         type: "error",
+  //         title: "ERROR",
+  //         message: response.message || "Purchase Order update failed",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error Submitting Purchase Order Update:", error);
+  //     showToast({
+  //       type: "error",
+  //       title: "ERROR",
+  //       message: "An unexpected error occurred. Please try again later.",
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleUpdatePurchaseOrder = async () => {
     setIsSubmitting(true);
-    const updatedPurchaseOrder = {
-      _id: purchaseOrderId,
-      supplier: formData?.vendorName?.id ?? null,
-      Trn_number: formData?.trnNumber || null,
-      status: "Pending",
-      currency: formData?.currency?.id ?? null,
-      purchase_type: formData?.purchaseType?.label ?? null,
-      country: formData?.countryOfOrigin?.id ?? null,
-      bill_date: formData?.billDate || null,
-      order_date: formData?.orderDate || null,
-      untaxed_total_amount: formData?.untaxedAmount || null,
-      total_amount: formData?.totalAmount || null,
-      payment_status: "Pending",
-      due_amount: 0,
-      paid_amount: 0,
-      due_date: 0,
-      remarks: "test",
-      date: formData?.billDate || null,
-      warehouse_id: formData?.warehouse?.id ?? null,
-      warehouse_name: formData?.warehouse?.label ?? null,
-      update_purchase_line_ids: purchaseOrderLines.map((item) => ({
-        purchase_line_ids: item.purchase_line_ids,
-        product: item.product.product_id || item.product_id,
-        taxes: item.taxes.tax_type_id,
-        quantity: item.quantity,
-        recieved_quantity: item.recieved_quantity,
-        unit_price: item.unit_price,
-        sub_total: item.sub_total,
-        description: item.description,
-        billed_quantity: item.billed_quantity,
-        product_unit_of_measure: item.uom,
-        scheduled_date: item.scheduled_date,
-      })),
-      create_purchase_line_ids: purchaseOrderLines.map((item) => ({
-        product: item.product_id,
-        taxes: item.tax_type_id,
-        quantity: item.quantity,
-        received_quantity: item.receivedQuantity || 0,
-        unit_price: item.unitPrice,
-        sub_total: item.subTotal,
-        description: item.description,
-        billed_quantity: item.billedQuantity || 0,
-        product_unit_of_measure: item.product_unit_of_measure,
-        scheduled_date: item.scheduledDate,
-      })),
-      delete_purchase_line_ids: [_id],
-    };
-    console.log("Updated Purchase Order:", updatedPurchaseOrder);
+  
     try {
+      const updatePurchaseLineIds = purchaseOrderLines.map((item) => {
+        const mappedItem = {
+          purchase_line_ids: item._id,
+          product: item.product?.product_id || item.product_id,
+          taxes: item.taxes?.tax_type_id || null,
+          quantity: item.quantity,
+          recieved_quantity: item.recieved_quantity,
+          unit_price: item.unit_price,
+          sub_total: item.sub_total,
+          description: item.description,
+          billed_quantity: item.billed_quantity,
+          product_unit_of_measure: item.uom,
+          scheduled_date: item.scheduled_date,
+        };
+        console.log("Update Item:", mappedItem);
+        return mappedItem;
+      });
+  
+      const createPurchaseLineIds = purchaseOrderLines.map((item) => {
+        const mappedItems = {
+          product: item.product_id,
+          taxes: item.tax_type_id,
+          quantity: item.quantity,
+          recieved_quantity: item.receivedQuantity || 0,
+          unit_price: item.unitPrice,
+          sub_total: item.subTotal,
+          description: item.description,
+          billed_quantity: item.billedQuantity || 0,
+          product_unit_of_measure: item.product_unit_of_measure,
+          scheduled_date: item.scheduledDate,
+        };
+        console.log("Create Item:", mappedItems);
+        return mappedItems;
+      });
+  
+      console.log("Update Purchase Line IDs:", updatePurchaseLineIds);
+      console.log("Create Purchase Line IDs:", createPurchaseLineIds);
+      // console.log("Delete Purchase Line IDs:", deletePurchaseLineIds);
+  
+      const updatedPurchaseOrder = {
+        _id: purchaseOrderId,
+        supplier: formData?.vendorName?.id ?? null,
+        Trn_number: formData?.trnNumber || null,
+        status: "Pending",
+        currency: formData?.currency?.id ?? null,
+        purchase_type: formData?.purchaseType || null,
+        country: formData?.countryOfOrigin?.id ?? null,
+        bill_date: formatDate(formData.billDate, 'yyyy-MM-dd') || null,
+        order_date: formatDate(formData.orderDate, 'yyyy-MM-dd') || null,
+        untaxed_total_amount: untaxedTotal || null,
+        total_amount: grandTotal || null,
+        payment_status: "Pending",
+        due_amount: 0,
+        paid_amount: 0,
+        due_date: 0,
+        remarks: "test",
+        date: formatDate(formData.billDate, 'yyyy-MM-dd') || null,
+        warehouse_id: formData?.warehouse?.id ?? null,
+        warehouse_name: formData?.warehouse?.label ?? null,
+        update_purchase_line_ids: updatePurchaseLineIds,
+        create_purchase_line_ids: createPurchaseLineIds,
+        // delete_purchase_line_ids: deletePurchaseLineIds,
+      };
+  
+      console.log("Updated Purchase Order:", updatedPurchaseOrder);
+  
+      // Simulate the API call or perform actual submission
+      await put("/updatePurchaseOrder", updatedPurchaseOrder);
       const response = await put("/updatePurchaseOrder", updatedPurchaseOrder);
       if (response.success === 'true') {
         showToast({
@@ -254,7 +355,7 @@ const EditPoDetails = ({ navigation, route }) => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  };  
 
   const renderBottomSheet = () => {
     let items = [];
@@ -314,7 +415,7 @@ const EditPoDetails = ({ navigation, route }) => {
     let untaxed = 0;
     purchaseOrderLines.forEach((item) => {
       untaxed += item.sub_total || 0;
-      taxes += item.tax_value || item.tax || 0;
+      taxes += item.tax_value || 0;
     });
     return {
       untaxedTotal: untaxed.toFixed(2),
@@ -481,4 +582,85 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditPoDetails;
+export default EditPurchaseOrderDetails;
+
+  // const handleUpdatePurchaseOrder = async () => {
+  //   setIsSubmitting(true);
+  //   const updatedPurchaseOrder = {
+  //     _id: purchaseOrderId,
+  //     supplier: formData?.vendorName?.id ?? null,
+  //     Trn_number: formData?.trnNumber || null,
+  //     status: "Pending",
+  //     currency: formData?.currency?.id ?? null,
+  //     purchase_type: formData?.purchaseType || null,
+  //     country: formData?.countryOfOrigin?.id ?? null,
+  //     bill_date: formatDate(formData.billDate, 'yyyy-MM-dd') || null,
+  //     order_date: formatDate(formData.orderDate, 'yyyy-MM-dd') || null,
+  //     untaxed_total_amount: untaxedTotal || null,
+  //     total_amount: grandTotal || null,
+  //     payment_status: "Pending",
+  //     due_amount: 0,
+  //     paid_amount: 0,
+  //     due_date: 0,
+  //     remarks: "test",
+  //     date: formatDate(formData.billDate, 'yyyy-MM-dd') || null,
+  //     warehouse_id: formData?.warehouse?.id ?? null,
+  //     warehouse_name: formData?.warehouse?.label ?? null,
+  //     update_purchase_line_ids: purchaseOrderLines.map((item) => ({
+  //       purchase_line_ids: item.purchase_line_ids,
+  //       product: item.product.product_id || item.product_id,
+  //       taxes: item.taxes.tax_type_id,
+  //       quantity: item.quantity,
+  //       recieved_quantity: item.recieved_quantity,
+  //       unit_price: item.unit_price,
+  //       sub_total: item.sub_total,
+  //       description: item.description,
+  //       billed_quantity: item.billed_quantity,
+  //       product_unit_of_measure: item.uom,
+  //       scheduled_date: item.scheduled_date,
+  //     })),
+  //     create_purchase_line_ids: purchaseOrderLines.map((item) => ({
+  //       product: item.product_id,
+  //       taxes: item.tax_type_id,
+  //       quantity: item.quantity,
+  //       recieved_quantity: item.receivedQuantity || 0,
+  //       unit_price: item.unitPrice,
+  //       sub_total: item.subTotal,
+  //       description: item.description,
+  //       billed_quantity: item.billedQuantity || 0,
+  //       product_unit_of_measure: item.product_unit_of_measure,
+  //       scheduled_date: item.scheduledDate,
+  //     })),
+  //     delete_purchase_line_ids: [_id],
+  //   };
+  //   console.log("Updated Purchase Order:", updatedPurchaseOrder);
+  //   try {
+  //     const response = await put("/updatePurchaseOrder", updatedPurchaseOrder);
+  //     if (response.success === 'true') {
+  //       showToast({
+  //         type: "success",
+  //         title: "Success",
+  //         message: response.message || "Purchase Order Updated Successfully",
+  //       });
+  //       navigation.navigate("PurchaseOrderDetails");
+  //     } else {
+  //       console.error("Submit Failed:", response.message);
+  //       showToast({
+  //         type: "error",
+  //         title: "ERROR",
+  //         message: response.message || "Purchase Order update failed",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error Submitting Purchase Order Update:", error);
+  //     showToast({
+  //       type: "error",
+  //       title: "ERROR",
+  //       message: "An unexpected error occurred. Please try again later.",
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+  

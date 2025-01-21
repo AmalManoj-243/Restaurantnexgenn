@@ -6,6 +6,5 @@ import AddPurchaseLines from "./AddPurchaseLines";
 import AddEditPurchaseLines from "./AddEditPurchaseLines";
 import EditPurchaseLines from "./EditPurchaseLines";
 import EditPurchaseOrderDetails from "./EditPurchaseOrderDetails";
-import EditPoDetails from "./EditPoDetails";
 
-export { AddPurchaseLines, AddEditPurchaseLines, EditPurchaseLines, PurchaseOrderForm, PurchaseOrderScreen, PurchaseOrderList, PurchaseOrderDetails, EditPurchaseOrderDetails, EditPoDetails }
+export { AddPurchaseLines, AddEditPurchaseLines, EditPurchaseLines, PurchaseOrderForm, PurchaseOrderScreen, PurchaseOrderList, PurchaseOrderDetails, EditPurchaseOrderDetails }

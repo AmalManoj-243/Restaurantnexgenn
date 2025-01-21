@@ -13,8 +13,9 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useAuthStore } from "@stores/auth";
 import { showToastMessage } from "@components/Toast";
 
-const AddEditPurchaseLines = ({ navigation }) => {
-  const currentUser = useAuthStore((state) => state.user);
+const AddEditPurchaseLines = ({ navigation, route }) => {
+  // const currentUser = useAuthStore(state => state.user);
+  const { id: purchaseOrderId } = route?.params || {};
   const [searchText, setSearchText] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [errors, setErrors] = useState({});
@@ -118,6 +119,8 @@ const AddEditPurchaseLines = ({ navigation }) => {
 
       if (formData.taxes?.label === "vat 5%") {
         tax = untaxedAmount * 0.05;
+      } else if (formData.taxes?.label === "vat 5% inclusive") {
+        tax = untaxedAmount * 0.05;
       } else if (formData.taxes?.label === "vat 0%") {
         tax = 0;
       }
@@ -190,7 +193,7 @@ const AddEditPurchaseLines = ({ navigation }) => {
       return; 
     }
     if (validateForm(fieldsToValidate)) {
-      const productLine = {
+      const purchaseOrderLines = {
         product_id: formData.productId,
         product_name: formData.productName,
         description: formData.description || '',
@@ -206,8 +209,9 @@ const AddEditPurchaseLines = ({ navigation }) => {
         tax: formData.tax || '',
         totalAmount: formData.totalAmount || '',
       };
-      console.log("🚀 ~ AddEditPurchaseLines ~ productLine:", JSON.stringify(productLine, null, 2));
-      navigation.navigate('EditPoDetails', { newProductLine: productLine });
+      // console.log("🚀 ~ AddEditPurchaseLines ~ purchaseOrderLines:", JSON.stringify(purchaseOrderLines, null, 2));
+      navigation.navigate('EditPurchaseOrderDetails', { purchaseOrderId, newProductLine: purchaseOrderLines });
+      // navigation.navigate('EditPurchaseOrderDetails', { newProductLine: purchaseOrderLines });
     }
   };
 

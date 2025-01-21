@@ -68,9 +68,7 @@ const QuickServiceDetails = ({ navigation, route }) => {
     };
 
     const handleUpdateJob = () => {
-        navigation.navigate('QuickServiceUpdateDetails', {
-            id: serviceId
-        });
+        navigation.navigate('QuickServiceUpdateDetails', { id: serviceId });
     };
 
     const accessoriesString = details?.accessories?.map(acc => acc.accessory_name).join(', ') || '-';
