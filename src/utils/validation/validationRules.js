@@ -58,6 +58,10 @@ export const allValidationRules = {
         message: 'Please select Customer ',
         validate: validateRequired,
     },
+    employee: {
+        message: 'Please select Employee ',
+        validate: validateRequired,
+    },
     opportunity: {
         message: 'Please select Opportunity',
         validate: validateRequired,

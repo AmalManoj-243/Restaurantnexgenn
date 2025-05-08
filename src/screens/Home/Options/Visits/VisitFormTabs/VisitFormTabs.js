@@ -166,7 +166,7 @@ const VisitFormTabs = ({ navigation, route }) => {
     };
 
     const submit = async () => {
-        const fieldsToValidate = ['customer', 'dateAndTime', 'remarks', 'visitPurpose', 'timeIn', 'timeOut'];
+        const fieldsToValidate = ['employee', 'customer', 'dateAndTime', 'remarks', 'visitPurpose', 'timeIn', 'timeOut'];
         if (validateForm(fieldsToValidate)) {
             setIsSubmitting(true);
             const visitData = {
