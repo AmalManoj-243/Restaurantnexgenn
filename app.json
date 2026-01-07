@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "369aiAlphalize",
-    "slug": "369aialphalize",
+    "name": "Nexgenn-Restaurant",
+    "slug": "nexgenn-restaurant",
     "version": "1.0.8",
     "orientation": "portrait",
-    "icon": "./assets/android/icon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -15,7 +15,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSExceptionDomains": {
+            "192.168.29.43": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": true
+            },
+            "192.168.100.175": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": true
+            },
+            "192.168.1.6": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": true
+            }
+          }
+        }
+      }
     },
     "android": {
       "splash": {
@@ -24,36 +43,41 @@
         "backgroundColor": "#ffffff"
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/android/icon_foreground.png",
-        "backgroundImage": "./assets/android/icon_background.png",
-        "monochromeImage": "./assets/android/icon_monochrome.png",
         "backgroundColor": "#ffffff"
       },
-      "icon": "./assets/android/icon.png",
+      "icon": "./assets/icon.png",
       "permissions": [
         "android.permission.RECORD_AUDIO",
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "package": "com.danat.alphalize"
+      "package": "com.danat.alphalize",
+      "usesCleartextTraffic": true,
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      }
     },
     "plugins": [
       [
         "expo-build-properties",
-      
-      ],
-      "expo-font",
-     
-      [
-        "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
       ]
     ],
+    "cli": {
+      "appVersionSource": "local"
+    },
     "extra": {
       "eas": {
-        "projectId": "032682a8-bbb8-403b-8f59-5acc19405566"
+        "projectId": "38aec532-41e7-4331-830f-93c3bc7f2568"
       }
-    }
+    },
+    "owner": "mightyraju"
   }
 }

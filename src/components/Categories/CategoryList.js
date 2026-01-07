@@ -16,21 +16,23 @@ const CategoryList = ({ item, onPress }) => {
     }, []);
 
     const [imageLoading, setImageLoading] = useState(true);
-    const truncatedName =
-        item?.category_name?.length > 15 ? item?.category_name?.substring(0, 14) + '...' : item?.category_name;
+    const title = item?.category_name || item?.name || item?.category || '';
+    const truncatedName = title.length > 15 ? title.substring(0, 14) + '...' : title;
+    // Prefer inline/base64 or direct image URL returned by API (`image`), fallback to `image_url` for older mappings
+    const imageUri = item?.image || item?.image_url || null;
 
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
             {imageLoading && <ActivityIndicator size="small" color={'black'} style={{ position: 'absolute', top: 30 }} />}
             <Image
-                source={item?.image_url ? { uri: item.image_url } : errorImage}
+                source={imageUri ? { uri: imageUri } : errorImage}
                 style={styles.image}
                 onLoad={() => setImageLoading(false)}
                 onError={() => setImageLoading(false)}
             />
-            <View style={{ paddingTop: 50 }} />
+            <View style={{ height: 8 }} />
             <View style={styles.textContainer}>
-                <Text style={styles.name}>{truncatedName}</Text>
+                <Text numberOfLines={2} style={styles.name}>{truncatedName}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -48,28 +50,27 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderColor: 'grey',
         backgroundColor: "white",
+        paddingVertical: 10,
+        minHeight: 140,
     },
     image: {
-        width: 80,
-        height: 80,
-        resizeMode: 'cover',
+        width: 84,
+        height: 84,
+        resizeMode: 'contain',
         borderRadius: 8,
-        marginTop: 10,
+        marginTop: 6,
     },
     textContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: -80,
+        // place text below image
         justifyContent: 'center',
         alignItems: 'center',
+        paddingTop: 10,
     },
     name: {
         fontSize: 14,
         textAlign: 'center',
         textTransform: 'capitalize',
-        color: '#2E2B2B',
+        color: '#1316c5ff',
         fontFamily: FONT_FAMILY.urbanistBold
     },
 });

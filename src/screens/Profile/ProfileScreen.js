@@ -1,80 +1,111 @@
-import React, {useState} from "react";
-import { View, Text, Image } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { ButtonContainer, SafeAreaView } from "@components/containers";
-import { Button } from "@components/common/Button";
-import { COLORS, FONT_FAMILY } from "@constants/theme";
+import React from 'react';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import Text from '@components/Text';
+import { ButtonContainer, SafeAreaView } from '@components/containers';
+import { Button } from '@components/common/Button';
+import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { useAuthStore } from '@stores/auth';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LogoutModal } from "@components/Modal";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialIcons } from '@expo/vector-icons';
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({ navigation }) => {
   const userDetails = useAuthStore(state => state.user);
-
-  const [isVisible, setIsVisible] = useState(false);
-  const hideLogoutAlert = () => setIsVisible(false);
+  const logoutStore = useAuthStore(state => state.logout);
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('userData');
-      const userData = await AsyncStorage.getItem('userData');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Splash' }],
-      });
-      if (!userData) {
-        console.log('User data successfully removed.');
-        hideLogoutAlert();
-      } else {
-        console.log('User data still exists in AsyncStorage:', userData);
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
+      logoutStore();
+    } catch (e) {
+      console.warn('Failed to clear userData on logout', e);
     } finally {
-      hideLogoutAlert();
+      navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
     }
   };
 
+  const name = userDetails?.related_profile?.name || userDetails?.user_name || 'Profile';
+  const company = userDetails?.company?.name || '';
+  const email = userDetails?.email || userDetails?.user_email || '';
+  const phone = userDetails?.phone || userDetails?.mobile || '';
+
+  const initials = name.split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase();
+
   return (
     <SafeAreaView backgroundColor={COLORS.primaryThemeColor}>
-      <View style={{ width: "100%" }}>
-        <Image
-          source={require('@assets/images/Profile/profile_bg.png')}
-          resizeMode="cover"
-          style={{ height: 300, width: "100%" }}
-        />
-      </View>
-      <View style={{ flex: 1, alignItems: "center", backgroundColor: 'white', flex: 1, borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
-        <Image
-          source={require('@assets/images/Profile/user.png')}
-          resizeMode="contain"
-          style={{ height: 155, width: 155, borderWidth: 2, marginTop: -80 }}
-        />
-
-        <Text style={{ fontSize: 30, fontFamily: FONT_FAMILY.urbanistBold, color: '#242760', marginVertical: 8 }}>
-          {userDetails?.related_profile?.name || userDetails?.user_name || 'N/A'}
-        </Text>
-        <Text style={{ color: COLORS.black, fontSize: 20, fontFamily: FONT_FAMILY.urbanistSemiBold }}>
-          {userDetails?.company?.name?.toUpperCase() || 'N/A'}
-        </Text>
-
-        <View style={{ flexDirection: "row", marginVertical: 6, alignItems: "center" }}>
-          <MaterialIcons name="location-on" size={24} color="black" />
-          <Text style={{ fontSize: 14, fontFamily: FONT_FAMILY.urbanistSemiBold, marginLeft: 4 }}>
-            {'N/A'}
-          </Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{initials || 'U'}</Text>
+          </View>
+          <View style={styles.headerText}>
+            <Text style={styles.name}>{name}</Text>
+            {company ? <Text style={styles.company}>{company}</Text> : null}
+          </View>
+          <TouchableOpacity style={styles.editBtn} onPress={() => { /* placeholder for edit */ }}>
+            <MaterialIcons name="edit" size={20} color={COLORS.primaryThemeColor} />
+          </TouchableOpacity>
         </View>
-        <ButtonContainer>
-          <Button paddingHorizontal={50} title={'LOGOUT'} onPress={() => setIsVisible(true)} />
-        </ButtonContainer>
-      </View>
-      <LogoutModal
-        isVisible={isVisible}
-        hideLogoutAlert={hideLogoutAlert}
-        handleLogout={handleLogout}
-      />
+
+        <View style={styles.card}>
+          {/** Display account/login details (exclude email/phone per request) */}
+          <Text style={{ fontFamily: FONT_FAMILY.urbanistSemiBold, color: '#666', marginBottom: 8 }}>
+            Account Details
+          </Text>
+          {(() => {
+            const detailKeys = [
+              { key: 'uid', label: 'UID' },
+              { key: 'login', label: 'Login' },
+              { key: 'user_name', label: 'Username' },
+              { key: 'db', label: 'DB' },
+              { key: 'partner_id', label: 'Partner' },
+              { key: 'company_id', label: 'Company' },
+              { key: 'session_id', label: 'Session' },
+            ];
+
+            return detailKeys.map(({ key, label }) => {
+              const val = userDetails && userDetails[key];
+              if (val === undefined || val === null) return null;
+              let display = '';
+              if (Array.isArray(val)) display = val[1] || String(val[0] || '');
+              else if (typeof val === 'object') display = val.name || JSON.stringify(val);
+              else display = String(val);
+
+              if (!display || display === 'null') return null;
+
+              return (
+                <View key={key} style={styles.row}>
+                  <Text style={styles.rowLabel}>{label}</Text>
+                  <Text style={styles.rowValue}>{display}</Text>
+                </View>
+              );
+            });
+          })()}
+        </View>
+
+        <View style={styles.footer}>
+          <ButtonContainer>
+            <Button title="LOGOUT" onPress={handleLogout} paddingHorizontal={40} />
+          </ButtonContainer>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
+};
+
+const styles = {
+  container: { padding: 20, flexGrow: 1, backgroundColor: '#fff', minHeight: '100%' },
+  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 18 },
+  avatar: { width: 84, height: 84, borderRadius: 42, backgroundColor: COLORS.primaryThemeColor, alignItems: 'center', justifyContent: 'center' },
+  avatarText: { color: '#fff', fontSize: 28, fontFamily: FONT_FAMILY.urbanistBold },
+  headerText: { marginLeft: 12, flex: 1 },
+  name: { fontSize: 20, fontFamily: FONT_FAMILY.urbanistBold, color: '#111' },
+  company: { fontSize: 13, color: '#666', marginTop: 4 },
+  editBtn: { padding: 8, borderRadius: 8, backgroundColor: '#f3f4f6' },
+  card: { borderRadius: 12, padding: 12, backgroundColor: '#fafafa', borderWidth: 1, borderColor: '#eee' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  rowLabel: { color: '#666', fontFamily: FONT_FAMILY.urbanistSemiBold },
+  rowValue: { color: '#111', fontFamily: FONT_FAMILY.urbanistRegular },
+  footer: { marginTop: 20, paddingBottom: 40 },
 };
 
 export default ProfileScreen;

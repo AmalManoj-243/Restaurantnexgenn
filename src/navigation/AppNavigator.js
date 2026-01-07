@@ -2,8 +2,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TabBarIcon } from '@components/TabBar';
-import { HomeScreen, CartScreen, CategoriesScreen, MyOrdersScreen, ProfileScreen } from '@screens';
-import { KPIDashboardScreen } from '@screens/KPIDashboard';
+import { HomeScreen, ProfileScreen } from '@screens';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -36,43 +35,6 @@ const AppNavigator = () => {
               focused={focused}
               iconComponent={require('@assets/icons/bottom_tabs/home.png')}
               label="Home"
-            />
-        }}
-      />
-      <Tab.Screen
-        name="Categories"
-        component={CategoriesScreen}
-        options={{
-          tabBarIcon: ({ focused }) =>
-            <TabBarIcon
-              focused={focused}
-              iconComponent={require('@assets/icons/bottom_tabs/category.png')}
-              label="Categories"
-            />
-        }}
-      />
-      <Tab.Screen
-        name="KPI"
-        component={KPIDashboardScreen}
-        options={{
-          tabBarIcon: ({ focused }) =>
-            <TabBarIcon
-              focused={focused}
-              iconComponent={require('@assets/icons/bottom_tabs/kpi.png')}
-              label="KPI"
-            />
-          // tabBarStyle: { display: 'none' }
-        }}
-      />
-      <Tab.Screen
-        name="MyOrders"
-        component={MyOrdersScreen}
-        options={{
-          tabBarIcon: ({ focused }) =>
-            <TabBarIcon
-              focused={focused}
-              iconComponent={require('@assets/icons/bottom_tabs/order.png')}
-              label="Orders"
             />
         }}
       />

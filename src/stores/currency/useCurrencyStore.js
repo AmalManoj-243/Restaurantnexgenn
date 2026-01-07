@@ -2,9 +2,9 @@
 import { create } from 'zustand';
 
 const useCurrencyStore = create((set) => ({
-    currency: 'AED',
+    currency: 'OMR',
     setCurrency: (packageName) => {
-        let newCurrency = 'AED'; 
+        let newCurrency = 'OMR'; 
 
         if (packageName === process.env.EXPO_PUBLIC_PACKAGE_NAME_OMAN) {
             newCurrency = 'OMR';

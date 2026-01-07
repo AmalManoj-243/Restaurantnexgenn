@@ -11,10 +11,9 @@ import {
   ImageContainer,
   ListHeader,
   Header,
-  NavigationBar,
 } from "@components/Home";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { fetchCategories } from "@api/services/generalApi";
+import { fetchCategoriesOdoo as fetchCategories, fetchProductsByPosCategoryId } from "@api/services/generalApi";
 import { RoundedContainer, SafeAreaView } from "@components/containers";
 import { formatData } from "@utils/formatters";
 import { COLORS } from "@constants/theme";
@@ -80,6 +79,38 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [isFocused]);
 
+  // Log fetched categories for debugging when data changes
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      console.log('[HomeScreen] fetched categories:', data);
+    }
+  }, [data]);
+
+  // Filter out categories named 'Food' or 'Drinks' and dedupe by name keeping last occurrence
+  const filteredCategories = (() => {
+    const raw = Array.isArray(data) ? data : [];
+    const excludeNames = ['food', 'drinks'];
+    const filtered = raw.filter(item => {
+      const name = item && (item.category_name || item.name || (Array.isArray(item) ? item[1] : ''));
+      if (!name) return true;
+      const lower = String(name).toLowerCase();
+      return !(excludeNames.includes(lower) || excludeNames.some(e => lower.includes(e)));
+    });
+    // Deduplicate by name, keeping the last occurrence
+    const seen = new Set();
+    const outReversed = [];
+    for (let i = filtered.length - 1; i >= 0; i--) {
+      const item = filtered[i];
+      const name = item && (item.category_name || item.name || (Array.isArray(item) ? item[1] : ''));
+      const key = name ? String(name).trim().toLowerCase() : `__idx_${i}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        outReversed.push(item);
+      }
+    }
+    return outReversed.reverse();
+  })();
+
   const handleLoadMore = () => {
     fetchMoreData();
   };
@@ -91,7 +122,25 @@ const HomeScreen = ({ navigation }) => {
     return (
       <CategoryList
         item={item}
-        onPress={() => navigation.navigate("Products", { id: item._id })}
+        onPress={async () => {
+          console.log('Category pressed, categoryId:', item._id, 'categoryName:', item.category_name || item.name);
+          try {
+            const products = await fetchProductsByPosCategoryId(item._id);
+            console.log('Fetched products for pos_categ_id', item._id, ':', products);
+            navigation.navigate("Products", {
+              categoryId: item._id,
+              categoryName: item.category_name || item.name,
+              filteredProducts: products
+            });
+          } catch (err) {
+            console.error('Error fetching products for pos_categ_id', item._id, ':', err);
+            navigation.navigate("Products", {
+              categoryId: item._id,
+              categoryName: item.category_name || item.name,
+              filteredProducts: []
+            });
+          }
+        }}
       />
     );
   };
@@ -140,50 +189,27 @@ const HomeScreen = ({ navigation }) => {
       <RoundedContainer>
         {/* Header */}
         <Header />
-        {/* Navigation Header */}
-        <NavigationBar
-          onSearchPress={() => navigation.navigate("Products")}
-          onOptionsPress={() => navigation.navigate("OptionsScreen")}
-          onScannerPress={() => navigation.navigate("Scanner", { onScan: handleScan })}
-        />
+        {/* Navigation Header removed per request */}
         {/* Carousel */}
         <CarouselPagination />
 
         {/* Section */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 8,
-          }}
-        >
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginHorizontal: 8 }}>
           <ImageContainer
-            source={require("@assets/images/Home/section/inventory_management.png")}
-            onPress={() => navigateToScreen("InventoryScreen")}
-            backgroundColor="#f37021"
-            title="INVMGT"
-          />
-          <ImageContainer
-            source={require("@assets/images/Home/section/services.png")}
-            onPress={() => navigateToScreen("ServicesScreen")}
-            backgroundColor="#f37021"
-            title="Services"
-          />
-          <ImageContainer
-            source={require("@assets/images/Home/section/customer.png")}
-            onPress={() => navigateToScreen("CustomerScreen")}
-            backgroundColor="#f37021"
-            title="Sales Order"
+            source={require('@assets/images/logo/logo.png')}
+            backgroundColor="#0ea5a4"
+            title="Take Orders"
+            onPress={() => navigateToScreen("POSRegister")}
           />
         </View>
 
         {/* Bottom sheet */}
         <BottomSheet snapPoints={snapPoints}>
           {/* Product list header */}
-          <ListHeader title="Categories" />
+          <ListHeader title="Our Specials" subtitle="Chef's picks for today" />
           {/* flatlist */}
           <BottomSheetFlatList
-            data={formatData(data, 3)}
+            data={formatData(filteredCategories, 3)}
             numColumns={3}
             initialNumToRender={5}
             renderItem={renderItem}

@@ -35,7 +35,24 @@ const useProductStore = create((set, get) => ({
       };
     } else {
       const updatedCart = currentCart.map((p) =>
-        p.id === product.id ? { ...p, quantity: product.quantity, price: product.price } : p
+        p.id === product.id ? (() => {
+          // determine new qty and unit price
+          const newQty = typeof product.quantity !== 'undefined' ? product.quantity : (typeof product.qty !== 'undefined' ? product.qty : (p.quantity ?? p.qty ?? 1));
+          const newPriceUnit = typeof product.price_unit !== 'undefined' ? product.price_unit : (typeof product.price !== 'undefined' ? product.price : (p.price_unit ?? p.price ?? 0));
+          const newPrice = typeof product.price !== 'undefined' ? product.price : (p.price ?? newPriceUnit);
+          const subtotal = Number(newQty) * Number(newPriceUnit);
+          return {
+            ...p,
+            // keep backwards-compatible fields in sync
+            quantity: newQty,
+            qty: newQty,
+            price: newPrice,
+            price_unit: newPriceUnit,
+            // recalculate subtotal fields so UI uses up-to-date values
+            price_subtotal: subtotal,
+            price_subtotal_incl: subtotal,
+          };
+        })() : p
       );
       return {
         ...state,

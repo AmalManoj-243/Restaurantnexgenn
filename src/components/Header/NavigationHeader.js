@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, Pressable, Animated, Image, TouchableOpacity } from 'react-native';
 import Text from '@components/Text';
 import { COLORS, FONT_FAMILY } from '@constants/theme';
 import { AntDesign, Feather } from '@expo/vector-icons';
@@ -22,15 +22,38 @@ const NavigationHeader = ({
     checkPress = () => { }
 }) => {
 
-    const logoSource = backgroundColor === COLORS.primaryThemeColor
-        ? require('@assets/images/header/transparent_logo_header.png')
-        : require('@assets/images/header/logo_header_bg_white.png');
+    const goBackScale = useRef(new Animated.Value(1)).current;
+
+    // Use the restaurant logo2.png for the header (always)
+    const logoSource = require('@assets/images/logo2.png');
 
     return (
         <View style={[styles.container, { backgroundColor }]}>
-            <TouchableOpacity onPress={onBackPress} style={styles.goBackContainer}>
-                <AntDesign name="left" size={20} color={color} />
-            </TouchableOpacity>
+            <Pressable
+                onPress={() => {
+                    // small press animation then call back
+                    try {
+                        if (onBackPress) {
+                            // animate then navigate
+                            const a = goBackScale;
+                            Animated.sequence([
+                                Animated.timing(a, { toValue: 0.92, duration: 80, useNativeDriver: true }),
+                                Animated.timing(a, { toValue: 1, duration: 120, useNativeDriver: true }),
+                            ]).start(() => onBackPress());
+                        }
+                    } catch (e) {
+                        if (onBackPress) onBackPress();
+                    }
+                }}
+                onPressIn={() => Animated.timing(goBackScale, { toValue: 0.92, duration: 80, useNativeDriver: true }).start()}
+                onPressOut={() => Animated.timing(goBackScale, { toValue: 1, duration: 120, useNativeDriver: true }).start()}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={styles.goBackContainer}
+            >
+                <Animated.View style={{ transform: [{ scale: goBackScale }] }}>
+                    <AntDesign name="left" size={22} color={color} />
+                </Animated.View>
+            </Pressable>
             <Text style={[styles.title, { color }]}>{title}</Text>
             {logo && <Image source={logoSource} style={styles.logoImage} />}
             {iconOneName &&
@@ -72,6 +95,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 15,
         paddingHorizontal: 15,
+        // reserve space on the right so an absolutely positioned large logo
+        // doesn't overlap the header content (title / icons)
+        paddingRight: 420,
     },
     goBackContainer: {
         marginRight: 15,
@@ -83,9 +109,15 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
     logoImage: {
-        width: '30%',
-        height: '150%',
-        alignSelf:'flex-end' //last
+        // absolutely position the logo so increasing its visual size
+        // won't change header layout or push content down
+        position: 'absolute',
+        right: 12,
+        top: -80,
+        width: 320,
+        height: 320,
+        resizeMode: 'contain',
+        zIndex: 999,
     },
     refreshImage: {
         width: 30,

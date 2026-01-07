@@ -7,12 +7,11 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const CarouselPagination = () => {
     const [activeSlide, setActiveSlide] = useState(0);
     const data = [
-        { image: require('@assets/images/Home/Banner/banner_phone_1.jpg') },
-        { image: require('@assets/images/Home/Banner/banner_phone_2.jpg') },
-        { image: require('@assets/images/Home/Banner/banner_phone_3.jpg') },
-        { image: require('@assets/images/Home/Banner/banner_phone_4.jpg') },
-        { image: require('@assets/images/Home/Banner/banner_phone_5.jpg') },
-        { image: require('@assets/images/Home/Banner/banner_phone_6.jpg') }
+        { image: require('@assets/images/Home/Banner/banner_phone_1.png') },
+        { image: require('@assets/images/Home/Banner/banner_phone_2.png') },
+        { image: require('@assets/images/Home/Banner/banner_phone_3.png') },
+        { image: require('@assets/images/Home/Banner/banner_phone_4.png') },
+        { image: require('@assets/images/Home/Banner/banner_phone_5.png') }
     ];
     const carouselMargin = 8;
 
@@ -28,8 +27,12 @@ const CarouselPagination = () => {
                 sliderWidth={screenWidth - 2 * carouselMargin}
                 itemWidth={screenWidth - 2 * carouselMargin}
                 autoplay={true}
-                containerCustomStyle={styles.carouselContainer}
+                loop={true}
+                autoplayDelay={500}
                 autoplayInterval={3000}
+                enableMomentum={false}
+                lockScrollWhileSnapping={true}
+                containerCustomStyle={styles.carouselContainer}
                 onSnapToItem={(index) => setActiveSlide(index)}
             />
             <View style={styles.paginationContainer}>
