@@ -165,7 +165,7 @@ const KitchenBillPreview = ({ navigation, route }) => {
           database: db || 'nexgenn-restaurant',
           uid: userData.uid,
           password: userData.password || 'admin',
-          printerIp: '192.168.100.233', // set your printer IP
+          printerIp: '192.168.100.103', // set your printer IP
           printerPort: 9100,
         });
       } catch (e) {

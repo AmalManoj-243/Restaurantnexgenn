@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Nexgenn-Restaurant",
-    "slug": "nexgenn-restaurant",
+    "name": "Ahaa-Restaurant",
+    "slug": "Ahaa-restaurant",
     "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -75,9 +75,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "38aec532-41e7-4331-830f-93c3bc7f2568"
+        "projectId": "c8ef63cc-d023-4ba1-a916-05b4b6838810"
       }
     },
-    "owner": "mightyraju"
+    "owner": "sajin2004"
   }
 }
